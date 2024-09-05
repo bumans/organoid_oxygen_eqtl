@@ -1,0 +1,88 @@
+{
+    "__default__" :
+    {
+      "mem" : 8000,
+      "n" : 1,
+      "tasks" : 1,
+      "name" : "{rule}-{wildcards}",
+      "partition" : "gilad",
+      "logfile" : "log/{rule}-{wildcards}.out"
+    },
+    "align_human" :
+    {
+      "mem" : 48000,
+      "tasks" : 8,
+      "partition": "gilad"
+    },
+    "saturation" :
+    {
+      "mem" : 48000,
+      "tasks" : 1,
+      "partition": "broadwl"
+    },
+    "human_filtered_bam" :
+    {
+      "mem" : 32000,
+      "tasks" : 8
+    },
+    "make_small_pileup" :
+    {
+      "mem": 48000,
+      "tasks": 2,
+      "partition": "broadwl"
+    },
+    "make_big_pileup" :
+    {
+      "mem": 100000,
+      "tasks": 1,
+      "partition": "gilad"
+    },
+    "run_demuxlet_human" :
+    {
+      "mem": 48000,
+      "tasks": 1,
+      "partition": "broadwl"
+    },
+    "run_freemuxlet_human" :
+    {
+      "mem": 48000,
+      "tasks": 1,
+      "partition": "broadwl"
+    },
+    "run_demuxlet_all_human" :
+    {
+      "mem": 150000,
+      "tasks": 1,
+      "partition": "broadwl"
+    },
+    "render_report_seurat3" :
+    {
+      "mem": 32G,
+      "tasks": 4,
+      "partition": "broadwl"
+    },
+    "render_report_seurat4" :
+    {
+      "mem": 32G,
+      "tasks": 4,
+      "partition": "broadwl"
+    },
+    "run_cellsnp" :
+    {
+      "mem": 10G,
+      "tasks": 8,
+      "partition": "gilad",
+    },
+    "run_vireo" :
+    {
+      "mem": 48G,
+      "tasks": 4,
+      "partition": "gilad",
+    },
+    "velocyto" :
+    {
+      "mem": 32G,
+      "tasks": 12,
+      "partition": "broadwl"
+    }
+}

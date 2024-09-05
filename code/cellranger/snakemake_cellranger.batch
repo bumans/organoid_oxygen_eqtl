@@ -1,0 +1,35 @@
+#!/bin/bash
+
+# sbatch submission script to run main snakemake process. It then submits
+# individual jobs from the compute node.
+
+#SBATCH --job-name=snakemake
+#SBATCH --output=snakelog.out
+#SBATCH --time=30:00:00
+#SBATCH --partition=gilad
+#SBATCH --mem=1G
+#SBATCH --tasks-per-node=1
+
+module load python
+source activate $1
+
+snakemake \
+    --nolock \
+    -kp \
+    --ri \
+    -j 150 \
+    --latency-wait 20 \
+    --use-conda \
+    --conda-prefix "/project2/gilad/kenneth/Pipelines/HumanCellranger/conda" \
+    -c "sbatch \
+        --mem={cluster.mem} \
+        --nodes={cluster.n} \
+        --tasks-per-node={cluster.tasks} \
+        --partition={cluster.partition} \
+        --job-name={cluster.name} \
+	--output={cluster.logfile}" \
+    $2 \
+    $3 \
+    $4 \
+    $5 
+

@@ -1,0 +1,41 @@
+#Snakemake configuration file
+
+#This contains the setup for a human/chimp run on 10x
+
+#directory with additional scripts
+
+ken_scripts: /project2/gilad/kenneth/Pipelines/Scripts
+
+# run options
+run_freemuxlet: FALSE
+run_demuxlet: FALSE
+run_demuxlet_all: FALSE
+run_vireo: TRUE
+
+# logfile
+dir_log: log/
+
+#individuals
+humans: NA18489,NA18501,NA18502,NA18508,NA18511,NA18517,NA18519,NA18853,NA18856,NA18913,NA19093,NA19098,NA19102,NA19128,NA19138,NA19143,NA19144,NA19153,NA19190,NA19207,NA19210,NA18507
+nind: 22
+
+# fastq folders
+# specify the folder to look for the fastqs. The file expects all the sample names to be in this folder
+fastq_dir: /project2/gilad/umans/oxygen_eqtl/data/fastq/
+# any additional fastq folders to be given to cellranger. Snakemake will not look for new sample names here! Add a comma before each new name, or leave blank if nothing new.
+add_fastq_dir: ",/project2/gilad/umans/oxygen_eqtl/data/seq1/"
+
+#Cellranger genome indeces
+human_genome_index: /project2/gilad/kenneth/References/human/cellranger/cellranger4.0/refdata-gex-GRCh38-2020-A
+
+#executables
+cellranger: /project2/gilad/umans/tools/cellranger-7.0.0/cellranger
+demuxlet: /project2/gilad/software/midway2/demuxlet/bin/demuxlet
+
+# demuxlet files. If not running demuxlet these wont be read.
+human_vcf: /project2/gilad/kenneth/References/human/vcfs/human.YRI.hg38.all.AF.gencode.vcf.gz
+all_vcf: /project2/gilad/kenneth/References/human/vcfs/human.YRI.hg38.all.AF.gencode.vcf.gz
+
+# vireo files. If not running viero these wont be read.
+reference_snps: /project2/gilad/kenneth/References/human/vcfs/human.YRI.hg38.all.AF.gencode.vcf.gz
+

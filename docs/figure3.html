@@ -1,0 +1,2685 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Ben Umans" />
+
+<meta name="date" content="2024-08-05" />
+
+<title>figure3</title>
+
+<script src="site_libs/header-attrs-2.26/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">oxygen_eqtl</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">figure3</h1>
+<h4 class="author">Ben Umans</h4>
+<h4 class="date">2024-08-05</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span
+class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2024-09-02
+</p>
+<p>
+<strong>Checks:</strong> <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 5
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> 2
+</p>
+<p>
+<strong>Knit directory:</strong> <code>oxygen_eqtl/</code> <span
+class="glyphicon glyphicon-question-sign" aria-hidden="true"
+title="This is the local directory in which the code in this file was executed.">
+</span>
+</p>
+<p>
+This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a>
+analysis was created with <a
+  href="https://github.com/workflowr/workflowr">workflowr</a> (version
+1.7.0). The <em>Checks</em> tab describes the reproducibility checks
+that were applied when the results were created. The <em>Past
+versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges">
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted
+changes </a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguncommittedchanges"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The R Markdown is untracked by Git. To know which version of the R
+Markdown file created these results, you’ll want to first commit it to
+the Git repo. If you’re still working on the analysis, you can ignore
+this warning. When you’re finished, you can run
+<code>wflow_publish</code> to commit the R Markdown file and build the
+HTML.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the
+global environment can affect the analysis in your R Markdown file in
+unknown ways. For reproduciblity it’s best to always run the code in an
+empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20220621code">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Seed:</strong>
+<code>set.seed(20220621)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20220621code"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20220621)</code> was run prior to running
+the code in the R Markdown file. Setting a seed ensures that any results
+that rely on randomness, e.g. subsampling or permutations, are
+reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Session information:</strong>
+recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package
+versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be
+confident that you successfully produced the results during this
+run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongabsolute">
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> <strong>File paths:</strong> absolute </a>
+</p>
+</div>
+<div id="strongFilepathsstrongabsolute" class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Using absolute paths to the files within your workflowr project makes it
+difficult for you and others to run your code on a different machine.
+Change the absolute path(s) below to the suggested relative path(s) to
+make your code more reproducible.
+</p>
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th style="text-align:left;">
+absolute
+</th>
+<th style="text-align:left;">
+relative
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+/project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/expression/combined_coarse_quality_filter20_032024/
+</td>
+<td style="text-align:left;">
+data/MatrixEQTL/expression/combined_coarse_quality_filter20_032024
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+/project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/expression/combined_fine_quality_filter20_032024/
+</td>
+<td style="text-align:left;">
+data/MatrixEQTL/expression/combined_fine_quality_filter20_032024
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+/project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/output/combined_coarse_quality_filter20_032024/
+</td>
+<td style="text-align:left;">
+data/MatrixEQTL/output/combined_coarse_quality_filter20_032024
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+/project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/output/combined_fine_quality_filter20_032024/
+</td>
+<td style="text-align:left;">
+data/MatrixEQTL/output/combined_fine_quality_filter20_032024
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+/project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/output/combined_coarse_quality_filter20_032024/results_combined_
+</td>
+<td style="text-align:left;">
+data/MatrixEQTL/output/combined_coarse_quality_filter20_032024/results_combined_
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+/project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/output/combined_coarse_quality_filter20_032024/mash/
+</td>
+<td style="text-align:left;">
+data/MatrixEQTL/output/combined_coarse_quality_filter20_032024/mash
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+/project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/output/combined_fine_quality_filter20_032024/results_combined_
+</td>
+<td style="text-align:left;">
+data/MatrixEQTL/output/combined_fine_quality_filter20_032024/results_combined_
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+/project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/output/combined_fine_quality_filter20_032024/mash/
+</td>
+<td style="text-align:left;">
+data/MatrixEQTL/output/combined_fine_quality_filter20_032024/mash
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+/project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/output/combined_fine_quality_filter20_032024/mash/MatrixEQTLSumStats_
+</td>
+<td style="text-align:left;">
+data/MatrixEQTL/output/combined_fine_quality_filter20_032024/mash/MatrixEQTLSumStats_
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+/project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/output/combined_coarse_quality_filter20_032024/mash/MatrixEQTLSumStats_
+</td>
+<td style="text-align:left;">
+data/MatrixEQTL/output/combined_coarse_quality_filter20_032024/mash/MatrixEQTLSumStats_
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+/project2/gilad/umans/oxygen_eqtl/output/topics_pseudocell_counts_nocontrol21_normalized.tsv
+</td>
+<td style="text-align:left;">
+output/topics_pseudocell_counts_nocontrol21_normalized.tsv
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+/project2/gilad/umans/oxygen_eqtl/output/topics_pseudocells_15_de_output_20240124.RDS
+</td>
+<td style="text-align:left;">
+output/topics_pseudocells_15_de_output_20240124.RDS
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+/project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/output/combined_fine_quality_filter20_032024/results_combined_control10_
+</td>
+<td style="text-align:left;">
+data/MatrixEQTL/output/combined_fine_quality_filter20_032024/results_combined_control10_
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+/project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/output/combined_fine_quality_filter20_032024/results_combined_stim1pct_
+</td>
+<td style="text-align:left;">
+data/MatrixEQTL/output/combined_fine_quality_filter20_032024/results_combined_stim1pct_
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+/project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/output/combined_fine_quality_filter20_032024/results_combined_stim21pct_
+</td>
+<td style="text-align:left;">
+data/MatrixEQTL/output/combined_fine_quality_filter20_032024/results_combined_stim21pct_
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+/project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/output/combined_fine_quality_filter20_032024/mash/post-mash_significant_and_equivalent_snp-gene_pairs_EE.txt
+</td>
+<td style="text-align:left;">
+data/MatrixEQTL/output/combined_fine_quality_filter20_032024/mash/post-mash_significant_and_equivalent_snp-gene_pairs_EE.txt
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+/project2/gilad/umans/oxygen_eqtl/topicqtl/mash_and_equivalent_fine_reharmonized.bed
+</td>
+<td style="text-align:left;">
+topicqtl/mash_and_equivalent_fine_reharmonized.bed
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+/project2/gilad/umans/oxygen_eqtl/topicqtl/outputs/topics15/all_genes_merged_fine_fasttopics_15_topics.cellregmap.sighits.tsv
+</td>
+<td style="text-align:left;">
+topicqtl/outputs/topics15/all_genes_merged_fine_fasttopics_15_topics.cellregmap.sighits.tsv
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+/project2/gilad/umans/oxygen_eqtl/topicqtl/outputs/topics15/fasttopics_fine_15_topics.
+</td>
+<td style="text-align:left;">
+topicqtl/outputs/topics15/fasttopics_fine_15_topics.
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+/project2/gilad/umans/oxygen_eqtl/topicqtl/pseudocell_loadings_k15.tsv
+</td>
+<td style="text-align:left;">
+topicqtl/pseudocell_loadings_k15.tsv
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+/project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/snps/YRI_genotypes_maf10hwee-6_full/yri_maf0.1_all.hg38
+</td>
+<td style="text-align:left;">
+data/MatrixEQTL/snps/YRI_genotypes_maf10hwee-6_full/yri_maf0.1_all.hg38
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongNocommitsyet">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Repository version:</strong> No
+commits yet </a>
+</p>
+</div>
+<div id="strongRepositoryversionstrongNocommitsyet"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development
+and connecting the code version to the results is critical for
+reproducibility.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for
+the analysis have been committed to Git prior to generating the results
+(you can use <code>wflow_publish</code> or
+<code>wflow_git_commit</code>). workflowr only checks the R Markdown
+file, but you know if there are other scripts or data files that it
+depends on. Below is the status of the Git repository when the results
+were generated:
+</p>
+<pre><code>
+Untracked files:
+    Untracked:  .DS_Store
+    Untracked:  18519_calling.Rmd
+    Untracked:  TOM/
+    Untracked:  _site.yml
+    Untracked:  about.Rmd
+    Untracked:  batch_variability.Rmd
+    Untracked:  batch_variability.knit.md
+    Untracked:  batch_variability.nb.html
+    Untracked:  cache/
+    Untracked:  cellregmap.Rmd
+    Untracked:  celltype.Rmd
+    Untracked:  celltype2.Rmd
+    Untracked:  celltype2.nb.html
+    Untracked:  construct_seurat.Rmd
+    Untracked:  construct_seurat2.Rmd
+    Untracked:  cormotif_eqtl.Rmd
+    Untracked:  de.Rmd
+    Untracked:  de2.Rmd
+    Untracked:  de2.nb.html
+    Untracked:  de_finalized.Rmd
+    Untracked:  de_finalized_reharmonized.Rmd
+    Untracked:  disease_gene_overlap.Rmd
+    Untracked:  disease_gene_overlap_EE.Rmd
+    Untracked:  disease_gene_overlap_EE_reharmonized.Rmd
+    Untracked:  disease_gene_overlap_EE_reharmonized_fine.Rmd
+    Untracked:  disease_gene_overlap_EE_reharmonized_fine_filter10.Rmd
+    Untracked:  docs/
+    Untracked:  figure1.Rmd
+    Untracked:  figure2.Rmd
+    Untracked:  figure3.Rmd
+    Untracked:  figure4.Rmd
+    Untracked:  figures_for_poster.R
+    Untracked:  for_yunqi_mash.rmd
+    Untracked:  gsea.Rmd
+    Untracked:  gsea.nb.html
+    Untracked:  gsea_reharmonized.Rmd
+    Untracked:  hgwgcna.Rmd
+    Untracked:  hgwgcna.nb.html
+    Untracked:  hippo_eqtl.Rmd
+    Untracked:  index.Rmd
+    Untracked:  index_old.Rmd
+    Untracked:  license.Rmd
+    Untracked:  mash_EE.R
+    Untracked:  mash_EE_PC.R
+    Untracked:  mash_de.Rmd
+    Untracked:  mash_for_peter.r
+    Untracked:  matrixEQTL.Rmd
+    Untracked:  matrixEQTL.nb.html
+    Untracked:  matrixEQTL_reharmonized.Rmd
+    Untracked:  ncell_permtesting.R
+    Untracked:  plot_eqtl.Rmd
+    Untracked:  prep_apex.Rmd
+    Untracked:  qtltools.Rmd
+    Untracked:  seurat.export.library1.h5Seurat
+    Untracked:  shared_functions_style_items.R
+    Untracked:  test.rmd
+    Untracked:  topics.R
+    Untracked:  topics.Rmd
+    Untracked:  topics_all.R
+    Untracked:  topics_pseudocell.R
+    Untracked:  topicsde.R
+    Untracked:  voxhunt.Rmd
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not
+included in this status report because it is ok for generated content to
+have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+<p>
+There are no past versions. Publish this analysis with
+<code>wflow_publish()</code> to start tracking its development.
+</p>
+<hr>
+</div>
+</div>
+</div>
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p>This page describes steps used to map eQTLs, fit a topic model, and
+map topic-interacting eQTLs, corresponding to Figure 3.</p>
+<pre class="r"><code>library(Seurat)</code></pre>
+<pre><code>Attaching SeuratObject</code></pre>
+<pre class="r"><code>library(tidyverse)</code></pre>
+<pre><code>── Attaching packages ─────────────────────────────────────── tidyverse 1.3.1 ──</code></pre>
+<pre><code>✔ ggplot2 3.4.4     ✔ purrr   1.0.2
+✔ tibble  3.2.1     ✔ dplyr   1.1.4
+✔ tidyr   1.3.0     ✔ stringr 1.5.0
+✔ readr   2.1.4     ✔ forcats 0.5.1</code></pre>
+<pre><code>── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()</code></pre>
+<pre class="r"><code>library(pals)
+library(RColorBrewer)
+library(magrittr)</code></pre>
+<pre><code>
+Attaching package: &#39;magrittr&#39;</code></pre>
+<pre><code>The following object is masked from &#39;package:purrr&#39;:
+
+    set_names</code></pre>
+<pre><code>The following object is masked from &#39;package:tidyr&#39;:
+
+    extract</code></pre>
+<pre class="r"><code>library(mashr)</code></pre>
+<pre><code>Loading required package: ashr</code></pre>
+<pre class="r"><code>library(udr)
+library(ggrepel)
+library(pheatmap)
+library(MatrixEQTL)
+library(qvalue)
+library(snpStats)</code></pre>
+<pre><code>Loading required package: survival</code></pre>
+<pre><code>Loading required package: Matrix</code></pre>
+<pre><code>
+Attaching package: &#39;Matrix&#39;</code></pre>
+<pre><code>The following objects are masked from &#39;package:tidyr&#39;:
+
+    expand, pack, unpack</code></pre>
+<pre class="r"><code>library(gdata)</code></pre>
+<pre><code>
+Attaching package: &#39;gdata&#39;</code></pre>
+<pre><code>The following objects are masked from &#39;package:dplyr&#39;:
+
+    combine, first, last</code></pre>
+<pre><code>The following object is masked from &#39;package:purrr&#39;:
+
+    keep</code></pre>
+<pre><code>The following object is masked from &#39;package:stats&#39;:
+
+    nobs</code></pre>
+<pre><code>The following object is masked from &#39;package:utils&#39;:
+
+    object.size</code></pre>
+<pre><code>The following object is masked from &#39;package:base&#39;:
+
+    startsWith</code></pre>
+<pre class="r"><code>library(vroom)</code></pre>
+<pre><code>
+Attaching package: &#39;vroom&#39;</code></pre>
+<pre><code>The following objects are masked from &#39;package:readr&#39;:
+
+    as.col_spec, col_character, col_date, col_datetime, col_double,
+    col_factor, col_guess, col_integer, col_logical, col_number,
+    col_skip, col_time, cols, cols_condense, cols_only, date_names,
+    date_names_lang, date_names_langs, default_locale, fwf_cols,
+    fwf_empty, fwf_positions, fwf_widths, locale, output_column,
+    problems, spec</code></pre>
+<pre class="r"><code>library(ggblend)
+source(&quot;analysis/shared_functions_style_items.R&quot;)</code></pre>
+</div>
+<div id="eqtl-identification-using-matrixeqtl" class="section level2">
+<h2>eQTL identification using MatrixEQTL</h2>
+<p>Mapping eQTLs using MatrixEQTL requires the following inputs: * SNP
+names * SNP locations * gene locations * expression phenotypes *
+covariates * error covariance (relatedness) + estimated relatedness
+matrix from Gemma showed all individuals in our dataset were equally
+unrelated; we therefore did not include kinship information in the
+model</p>
+<div id="snp-names-and-locations" class="section level3">
+<h3>SNP names and locations</h3>
+<p>First, use <code>vcftools</code> to filter the genotype VCF to only
+the cell lines included in this data collection. Further filter loci by
+HWE, minor allele frequency, and maximum number alleles, splitting by
+chromosome.</p>
+<pre class="bash"><code>module load vcftools
+for g in /project/gilad/1KG_HighCoverageCalls2021/*vcf.gz;
+do
+q=&quot;$(basename -- $g)&quot;
+vcftools --gzvcf $g --keep MatrixEQTL/sample_list --maf 0.1 --max-alleles 2 --max-missing 1 --hwe 0.000001 --remove-indels --recode --out MatrixEQTL/snps/YRI_genotypes_maf10hwee-6_full/${q}
+done</code></pre>
+<p>Next, I used bcftools to reformat the output according to
+MatrixEQTL’s input requirements:</p>
+<pre class="bash"><code>for g in MatrixEQTL/snps/YRI_genotypes_maf10hwee-6_full/*recode.vcf
+do
+bcftools query -f &#39;%ID[\t%GT]\n&#39; ${g} &gt; ${g}.snps;
+bcftools query -f &#39;%ID\t%CHROM\t%POS\n&#39; ${g} &gt; ${g}.snploc
+done</code></pre>
+<p>Next, replace genotypes with allele counts, meaning 0/0 becomes 0,
+0/1 becomes 1, and 1/1 becomes 2.</p>
+<p>For the single chromosome:</p>
+<pre class="bash"><code>for i in *.snps
+do
+sed -i &#39;s:1/1:2:g&#39; ${i}; sed -i &#39;s:0/1:1:g&#39; ${i}; sed -i &#39;s:1/0:1:g&#39; ${i}; sed -i &#39;s:0/0:0:g&#39; ${i}
+done
+
+for i in *.snps
+do
+sed -i &#39;s:1|1:2:g&#39; ${i}; sed -i &#39;s:0|1:1:g&#39; ${i}; sed -i &#39;s:1|0:1:g&#39; ${i}; sed -i &#39;s:0|0:0:g&#39; ${i}
+done</code></pre>
+<p>Finally, add back the cell line names (obtained from
+<code>bcftools view -h</code>) to name the columns, which was lost in
+the <code>bcftools query</code> operation.</p>
+<pre class="bash"><code>for i in *.snps
+do
+chromname=`basename $i .snps`;
+cat ../SNP_header ${chromname}.snps &gt; ${chromname}_for_matrixeqtl.snps;
+cat ../SNPloc_header ${chromname}.snploc &gt; ${chromname}_for_matrixeqtl.snploc
+done</code></pre>
+</div>
+<div id="gene-locations" class="section level3">
+<h3>Gene locations</h3>
+<p>We mapped eQTLs within 50 kb of each gene’s TSS, treating each
+chromosome independently.</p>
+<pre class="r"><code>for(d in 1:22){
+  TSSlocs &lt;- read.table(&quot;/project2/gilad/kenneth/References/human/cellranger/cellranger4.0/refdata-gex-GRCh38-2020-A/genes/genes.ucsc.sorted.bed&quot;, header=F) %&gt;% 
+  filter(V9==&quot;protein_coding&quot; | V9==&quot;lncRNA&quot; | V9==&quot;pseudogene&quot;) %&gt;% 
+  group_by(V8) %&gt;% 
+  summarise(chr=V1[1], start=if_else(V6[1]==&quot;+&quot;, min(V2), max(V3)), end=if_else(V6[1]==&quot;+&quot;, min(V2)+1, max(V3)+1), gene=V8[1]) %&gt;% 
+  select(gene, chr, start, end) %&gt;% 
+    filter(chr==paste(&quot;chr&quot;, d, sep = &quot;&quot;)) %&gt;% 
+  arrange(chr, start) 
+write.table(TSSlocs, file = paste(&quot;data/MatrixEQTL/snps/TSSlocs_chr&quot;, d, &quot;.locs&quot;, sep=&quot;&quot;), row.names = F, col.names = T, quote=F, sep = &quot;\t&quot;)
+}</code></pre>
+</div>
+<div id="gene-expression" class="section level3">
+<h3>Gene expression</h3>
+<p>The following function takes pseudobulk input to writes out
+formatted, normalized data for MatrixEQTL.</p>
+<pre class="r"><code>makeExprTableMatrixEQTL_byChr &lt;- function(pseudo, outdir, outprefix, pseudo.classifications, transcriptome, min.count.cpm=0, min.prop.expr=0.5, min.total.count=30) {
+  for (k in unlist(unique(pseudo$meta[[pseudo.classifications[1]]]))){
+    for (j in unlist(unique(pseudo$meta[[pseudo.classifications[2]]]))){
+      counts &lt;- as.matrix(pseudo$counts[, which(pseudo$meta[[pseudo.classifications[1]]]==k &amp; pseudo$meta[[pseudo.classifications[2]]]==j)])
+      print(paste0(ncol(counts), &quot; samples retained for &quot;, k, &quot; and &quot;, j))
+      if (ncol(counts) &lt; 3){
+        next
+      }
+      DEG &lt;- DGEList(counts = as.matrix(counts))
+      keep &lt;- filterByExpr(y = DEG, min.count = min.count.cpm, 
+                           min.prop=min.prop.expr, 
+                           min.total.count = min.total.count)
+      print(paste0(&quot;Retained &quot;, sum(keep), &quot; genes&quot;))
+
+      DEG &lt;- DEG[keep, , keep.lib.sizes=FALSE]
+      keep &lt;- rowSds(cpm(DEG))&gt;summary(rowSds(cpm(DEG)))[2]
+      DEG &lt;- DEG[keep, , keep.lib.sizes=FALSE]
+      DEG &lt;- calcNormFactors(DEG, method=&quot;TMM&quot;)
+      
+      DEG_cpm &lt;- edgeR::cpm(DEG, log = TRUE)
+      colnames(DEG_cpm) &lt;- as.factor(str_sub(colnames(DEG_cpm), start = -7))
+      DEG_cpm &lt;- data.frame(DEG_cpm)
+      
+     DEG_inorm &lt;- DEG_cpm %&gt;% 
+       rownames_to_column(&quot;ID&quot;) %&gt;%
+       gather(&quot;SampleName&quot;, &quot;value&quot;, -ID) %&gt;% 
+       dplyr::group_by(ID) %&gt;% 
+       dplyr::mutate(scaled_values = scale_this(value)) %&gt;% 
+       dplyr::ungroup() %&gt;% 
+       dplyr::group_by(SampleName) %&gt;%
+       dplyr::mutate(scaled_value_percentiles = rank(scaled_values, ties.method = &quot;average&quot;)/(n()+1)) %&gt;%
+       dplyr::mutate(ScaledAndInverseNormalized = qnorm(scaled_value_percentiles)) %&gt;%
+       ungroup() %&gt;% 
+       dplyr::select(ID, SampleName, ScaledAndInverseNormalized) %&gt;% 
+       pivot_wider(names_from=&quot;SampleName&quot;, values_from=&quot;ScaledAndInverseNormalized&quot;) %&gt;%
+       dplyr::select(ID, everything()) 
+ 
+      for (q in 1:22){
+        geneset &lt;- filter(transcriptome, `#chr`==paste(&quot;chr&quot;, q, sep=&quot;&quot;))$id
+        DEG_inorm_write &lt;- DEG_inorm %&gt;% filter(ID %in% geneset)
+        write.table(DEG_inorm_write, file = paste(outdir, &quot;expressiontable_matrixeqtl_&quot;, outprefix, k, &quot;_&quot; , j, &quot;_chr&quot;, q, &quot;_cpm-inorm.bed&quot;, sep=&quot;&quot;), row.names = F, col.names = T, quote=F, sep = &quot;\t&quot;)
+        }
+      }
+      rm(DEG, DEG_cpm, keep, counts, DEG_inorm)
+    }
+  }</code></pre>
+<p>I format the transcriptome and filter to protein coding genes:</p>
+<pre class="r"><code>transcriptome &lt;- read.table(&quot;/project2/gilad/kenneth/References/human/cellranger/cellranger4.0/refdata-gex-GRCh38-2020-A/genes/genes.ucsc.sorted.bed&quot;, header=F) %&gt;% 
+  filter(V9==&quot;protein_coding&quot;) %&gt;% 
+  group_by(V8) %&gt;% 
+  dplyr::summarise(chr=V1[1], start=if_else(V6[1]==&quot;+&quot;, min(V2), max(V3)), end=if_else(V6[1]==&quot;+&quot;, min(V2)+1, max(V3)+1), id=V8[1]) %&gt;% 
+  select(chr, start, end, id) %&gt;% 
+  arrange(chr, start) %&gt;% 
+  dplyr::summarise(&quot;#chr&quot;=chr, start=start, end=end, id=id)</code></pre>
+<pre><code>Warning: Returning more (or less) than 1 row per `summarise()` group was deprecated in
+dplyr 1.1.0.
+ℹ Please use `reframe()` instead.
+ℹ When switching from `summarise()` to `reframe()`, remember that `reframe()`
+  always returns an ungrouped data frame and adjust accordingly.
+Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+generated.</code></pre>
+<p>Then pseudobulk and process the expression data:</p>
+<pre class="r"><code>subset_seurat &lt;- subset(harmony.batchandindividual.sct, subset = vireo.prob.singlet &gt; 0.95 &amp; nCount_RNA&lt;20000 &amp; nCount_RNA&gt;2500 )
+
+pseudo_coarse_quality &lt;- generate.pseudobulk(subset_seurat, labels = c(&quot;combined.annotation.coarse.harmony&quot;, &quot;treatment&quot;, &quot;vireo.individual&quot;))
+
+pseudo_fine_quality &lt;- generate.pseudobulk(subset_seurat, labels = c(&quot;combined.annotation.fine.harmony&quot;, &quot;treatment&quot;, &quot;vireo.individual&quot;))</code></pre>
+<pre class="r"><code>pseudo_coarse_quality &lt;- filter.pseudobulk(pseudo_coarse_quality, threshold = 20)
+
+makeExprTableMatrixEQTL_byChr(pseudo = pseudo_coarse_quality, outdir = &quot;/project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/expression/combined_coarse_quality_filter20_032024/&quot;, outprefix = &quot;combined_coarse_&quot;, pseudo.classifications = c(&quot;treatment&quot;, &quot;combined.annotation.coarse.harmony&quot;), transcriptome = transcriptome, min.count.cpm=6, min.prop.expr=0.5, min.total.count=30)
+
+
+pseudo_fine_quality &lt;- filter.pseudobulk(pseudo_fine_quality, threshold = 20)
+
+makeExprTableMatrixEQTL_byChr(pseudo = pseudo_fine_quality, outdir = &quot;/project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/expression/combined_fine_quality_filter20_032024/&quot;, outprefix = &quot;combined_fine_&quot;, pseudo.classifications = c(&quot;treatment&quot;, &quot;combined.annotation.fine.harmony&quot;), transcriptome = transcriptome, min.count.cpm=6, min.prop.expr=0.5, min.total.count=30)</code></pre>
+</div>
+<div id="covariates" class="section level3">
+<h3>Covariates</h3>
+<p>EQTLs were estimated with a model that included expression principal
+components as covariates. The number of expression PCs was chosen so as
+to explain more variation in the observed data than in a random
+permutation of the expression values.<br />
+This was done in the same way for the coarsely- and finely-clustered
+data:</p>
+<pre class="r"><code>for (condition in c(&quot;control10&quot;, &quot;stim1pct&quot;, &quot;stim21pct&quot;)){
+  for (celltype in c(&quot;Cajal&quot;, &quot;Choroid&quot;,  &quot;Glia&quot;, &quot;Glut&quot;, &quot;Immature&quot;, &quot;IP&quot;, &quot;Inh&quot;, &quot;RG&quot;, &quot;NeuronOther&quot;, &quot;VLMC&quot;)){
+    pheno &lt;- data.frame(t(read.table(paste0(&quot;data/MatrixEQTL/expression/combined_coarse_quality_filter20_032024/expressiontable_matrixeqtl_combined_coarse_&quot;, condition, &quot;_&quot;, celltype, &quot;_chr1_cpm-inorm.bed&quot;), header = TRUE)[,-1])) %&gt;% rownames_to_column(var=&quot;individual&quot;) %&gt;% arrange(individual) %&gt;% column_to_rownames(var=&quot;individual&quot;) %&gt;% as.matrix()
+    for (chrom in 2:22){
+      cbind(pheno, data.frame(t(read.table(paste0(&quot;data/MatrixEQTL/expression/combined_coarse_quality_filter20_032024/expressiontable_matrixeqtl_combined_coarse_&quot;, condition, &quot;_&quot;, celltype, &quot;_chr&quot;, chrom, &quot;_cpm-inorm.bed&quot;), header = TRUE)[,-1])) %&gt;% rownames_to_column(var=&quot;individual&quot;) %&gt;% arrange(individual) %&gt;% column_to_rownames(var=&quot;individual&quot;) %&gt;% as.matrix())
+    }
+    
+     pheno.permuted &lt;- matrix(nrow=nrow(pheno), ncol=ncol(pheno))
+  for (i in 1:nrow(pheno)){
+     pheno.permuted[i,] &lt;- sample(pheno[i,], size=ncol(pheno))
+  }
+  pca.results &lt;- prcomp(pheno)
+    
+  pca &lt;- pca.results %&gt;% summary() %&gt;% extract2(&quot;importance&quot;) %&gt;% 
+    t() %&gt;% 
+    as.data.frame() %&gt;%
+    rownames_to_column(&quot;PC&quot;)
+  pca.permuted &lt;- prcomp(pheno.permuted) %&gt;% summary() %&gt;% extract2(&quot;importance&quot;) %&gt;% t() %&gt;% as.data.frame() %&gt;% rownames_to_column(&quot;PC&quot;)
+  
+  merged &lt;- bind_rows(list(pca=pca, pca.permuted=pca.permuted), .id=&quot;source&quot;) %&gt;%
+        mutate(PC=as.numeric(str_replace(PC, &quot;PC&quot;, &quot;&quot;)))
+    
+    #Get number of PCs
+  NumPCs &lt;- merged %&gt;%
+      dplyr::select(PC, Prop=`Proportion of Variance`, source) %&gt;%
+      spread(key=&quot;source&quot;, value=&quot;Prop&quot;) %&gt;%
+      filter(pca &gt; pca.permuted) %&gt;% pull(PC) %&gt;% max()
+    
+  if (NumPCs &gt;= nrow(pheno)){
+    NumPCs &lt;- nrow(pheno) - 1
+  }
+  for (outchrom in 1:22){
+    pca.results$x[,1:NumPCs] %&gt;% t() %&gt;%
+      round(5) %&gt;%
+      as.data.frame() %&gt;%
+      rownames_to_column(&quot;id&quot;) %&gt;% 
+      write_tsv(paste0(&quot;data/MatrixEQTL/covariates/combined_coarse_quality_filter20_032024/expressiontable_matrixeqtl_combined_coarse_&quot;, condition, &quot;_&quot;, celltype, &quot;_chr&quot;, outchrom, &quot;_cpm-inorm.bed.covs&quot;))
+  }
+  print(paste0(celltype, &quot; done!&quot;, &quot;\n&quot;))
+  rm(pheno, pheno.permuted, pca.results, NumPCs, merged)
+  }
+}</code></pre>
+<p>For finely clustered:</p>
+<pre class="r"><code>for (condition in c(&quot;control10&quot;, &quot;stim1pct&quot;, &quot;stim21pct&quot;)){
+  for (celltype in c(&quot;Cajal&quot;, &quot;Choroid&quot;, &quot;CorticalHem&quot;, &quot;GliaProg&quot;, &quot;Glut&quot;, &quot;GlutNTS&quot;, &quot;Immature&quot;, &quot;IP&quot;, &quot;IPcycling&quot;, &quot;Inh&quot;, &quot;InhGNRH&quot;, &quot;InhThalamic&quot;, &quot;InhSST&quot;, &quot;RG&quot;, &quot;RGcycling&quot;, &quot;NeuronOther&quot;, &quot;VLMC&quot;)){
+    pheno &lt;- data.frame(t(read.table(paste0(&quot;data/MatrixEQTL/expression/combined_fine_quality_filter20_032024/expressiontable_matrixeqtl_combined_fine_&quot;, condition, &quot;_&quot;, celltype, &quot;_chr1_cpm-inorm.bed&quot;), header = TRUE)[,-1])) %&gt;% rownames_to_column(var=&quot;individual&quot;) %&gt;% arrange(individual) %&gt;% column_to_rownames(var=&quot;individual&quot;) %&gt;% as.matrix()
+    for (chrom in 2:22){
+      cbind(pheno, data.frame(t(read.table(paste0(&quot;data/MatrixEQTL/expression/combined_fine_quality_filter20_032024/expressiontable_matrixeqtl_combined_fine_&quot;, condition, &quot;_&quot;, celltype, &quot;_chr&quot;, chrom, &quot;_cpm-inorm.bed&quot;), header = TRUE)[,-1])) %&gt;% rownames_to_column(var=&quot;individual&quot;) %&gt;% arrange(individual) %&gt;% column_to_rownames(var=&quot;individual&quot;) %&gt;% as.matrix())
+    }
+  
+  pheno.permuted &lt;- matrix(nrow=nrow(pheno), ncol=ncol(pheno))
+  for (i in 1:nrow(pheno)){
+     pheno.permuted[i,] &lt;- sample(pheno[i,], size=ncol(pheno))
+  }
+  pca.results &lt;- prcomp(pheno)
+  
+  pca &lt;- pca.results %&gt;% summary() %&gt;% extract2(&quot;importance&quot;) %&gt;% t() %&gt;% as.data.frame() %&gt;%
+    rownames_to_column(&quot;PC&quot;)
+  pca.permuted &lt;- prcomp(pheno.permuted) %&gt;% summary() %&gt;% extract2(&quot;importance&quot;) %&gt;% t() %&gt;% as.data.frame() %&gt;% rownames_to_column(&quot;PC&quot;)
+  
+  merged &lt;- bind_rows(list(pca=pca, pca.permuted=pca.permuted), .id=&quot;source&quot;) %&gt;%
+      mutate(PC=as.numeric(str_replace(PC, &quot;PC&quot;, &quot;&quot;)))
+  
+  #Get number of PCs
+  NumPCs &lt;- merged %&gt;%
+      dplyr::select(PC, Prop=`Proportion of Variance`, source) %&gt;%
+      spread(key=&quot;source&quot;, value=&quot;Prop&quot;) %&gt;%
+      filter(pca &gt; pca.permuted) %&gt;% pull(PC) %&gt;% max()
+
+  if (NumPCs &gt;= nrow(pheno)){
+    NumPCs &lt;- nrow(pheno) - 1
+  }
+  
+  for (outchrom in 1:22){
+    pca.results$x[,1:NumPCs] %&gt;% t() %&gt;%
+      round(5) %&gt;%
+      as.data.frame() %&gt;%
+      rownames_to_column(&quot;id&quot;) %&gt;% 
+      write_tsv(paste0(&quot;data/MatrixEQTL/covariates/combined_fine_quality_filter20_032024/expressiontable_matrixeqtl_combined_fine_&quot;, condition, &quot;_&quot;, celltype, &quot;_chr&quot;, outchrom, &quot;_cpm-inorm.bed.covs&quot;))
+  }
+ 
+  print(paste0(celltype, &quot; done!&quot;, &quot;\n&quot;))
+   rm(pheno, pheno.permuted, pca.results, NumPCs, merged)
+  }
+}</code></pre>
+<p>Going forward, we omit the following cell types, which have too few
+individuals in one conditoin and, consequently, produce unstable
+covariate estimates: Cajal-Retzius cells, SST+ inhibitory neurons,
+VLMC.</p>
+</div>
+</div>
+<div id="matrixeqtl-and-mash-processing-of-results"
+class="section level2">
+<h2>MatrixEQTL and mash processing of results</h2>
+<p>Now I run MatrixEQTL in each cell type and each condition, using
+shell script <code>MatrixEQTL_simple.sh</code>.</p>
+<pre class="bash"><code>module load R/4.2.0
+for celltype in  Choroid Glia Glut Immature IP Inh NeuronOther RG ; 
+do
+sh MatrixEQTL_simple.sh  /project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL &quot;combined_coarse_quality_filter20_032024/expressiontable_matrixeqtl_combined_coarse_control10&quot; &quot;YRI_genotypes_maf10hwee-6_full&quot; /project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/snps/TSSlocs.locs  /project2/gilad/umans/oxygen_eqtl/data/relatedness/YRI_relatedness_gemma.sXX.txt 50000 2 ${celltype}
+sleep 0.1
+done
+
+for celltype in  Choroid Glia Glut Immature IP Inh NeuronOther RG ; 
+do
+sh MatrixEQTL_simple.sh  /project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL &quot;combined_coarse_quality_filter20_032024/expressiontable_matrixeqtl_combined_coarse_stim1pct&quot; &quot;YRI_genotypes_maf10hwee-6_full&quot; /project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/snps/TSSlocs.locs  /project2/gilad/umans/oxygen_eqtl/data/relatedness/YRI_relatedness_gemma.sXX.txt 50000 2 ${celltype}
+sleep 0.1
+done
+for celltype in  Choroid Glia Glut Immature IP Inh NeuronOther RG ; 
+do
+sh MatrixEQTL_simple.sh  /project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL &quot;combined_coarse_quality_filter20_032024/expressiontable_matrixeqtl_combined_coarse_stim21pct&quot; &quot;YRI_genotypes_maf10hwee-6_full&quot; /project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/snps/TSSlocs.locs  /project2/gilad/umans/oxygen_eqtl/data/relatedness/YRI_relatedness_gemma.sXX.txt 50000 2 ${celltype}
+sleep 0.1
+done</code></pre>
+<pre class="bash"><code>module load R/4.2.0
+for celltype in  Choroid CorticalHem GliaProg Glut GlutNTS Immature IP IPcycling Inh InhGNRH  InhThalamic RG RGcycling NeuronOther ;
+do
+sh MatrixEQTL_simple.sh  /project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL &quot;combined_fine_quality_filter20_032024/expressiontable_matrixeqtl_combined_fine_control10&quot; &quot;YRI_genotypes_maf10hwee-6_full&quot; /project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/snps/TSSlocs.locs  /project2/gilad/umans/oxygen_eqtl/data/relatedness/YRI_relatedness_gemma.sXX.txt 50000 2 ${celltype}
+sleep 0.1
+done
+
+for celltype in  Choroid CorticalHem GliaProg Glut GlutNTS Immature IP IPcycling Inh InhGNRH  InhThalamic RG RGcycling NeuronOther ;
+do
+sh MatrixEQTL_simple.sh  /project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL &quot;combined_fine_quality_filter20_032024/expressiontable_matrixeqtl_combined_fine_stim1pct&quot; &quot;YRI_genotypes_maf10hwee-6_full&quot; /project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/snps/TSSlocs.locs  /project2/gilad/umans/oxygen_eqtl/data/relatedness/YRI_relatedness_gemma.sXX.txt 50000 2 ${celltype}
+sleep 0.1
+done
+for celltype in  Choroid CorticalHem GliaProg Glut GlutNTS Immature IP IPcycling Inh InhGNRH  InhThalamic RG RGcycling NeuronOther ;
+do
+sh MatrixEQTL_simple.sh  /project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL &quot;combined_fine_quality_filter20_032024/expressiontable_matrixeqtl_combined_fine_stim21pct&quot; &quot;YRI_genotypes_maf10hwee-6_full&quot; /project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/snps/TSSlocs.locs  /project2/gilad/umans/oxygen_eqtl/data/relatedness/YRI_relatedness_gemma.sXX.txt 50000 2 ${celltype}
+sleep 0.1
+done</code></pre>
+<p>Because I ran each chromosome in parallel, I combine the results
+across chromosomes:</p>
+<pre class="r"><code>for (condition in c(&quot;control10&quot;, &quot;stim1pct&quot;, &quot;stim21pct&quot;)){
+  for (cells in c(&quot;Choroid&quot;,  &quot;Glia&quot;, &quot;Glut&quot;, &quot;Immature&quot;, &quot;IP&quot;, &quot;Inh&quot;, &quot;RG&quot;, &quot;NeuronOther&quot;)){
+    combined_across_chroms(results_directory = &quot;/project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/output/combined_coarse_quality_filter20_032024/&quot;, condition = condition, celltype = cells, results_basename = &quot;expressiontable_matrixeqtl_combined_coarse_&quot;, output_basename = &quot;results_combined_&quot;)
+  }
+}
+
+for (condition in c(&quot;control10&quot;, &quot;stim1pct&quot;, &quot;stim21pct&quot;)){
+  for (cells in c(&quot;Choroid&quot;, &quot;CorticalHem&quot;, &quot;GliaProg&quot;, &quot;Glut&quot;, &quot;GlutNTS&quot;, &quot;Immature&quot;, &quot;IP&quot;, &quot;IPcycling&quot;, &quot;Inh&quot;, &quot;InhGNRH&quot;, &quot;InhThalamic&quot;, &quot;RG&quot;, &quot;RGcycling&quot;, &quot;NeuronOther&quot;)){
+    combined_across_chroms(results_directory = &quot;/project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/output/combined_fine_quality_filter20_032024/&quot;, condition = condition, celltype = cells, results_basename = &quot;expressiontable_matrixeqtl_combined_fine_&quot;, output_basename = &quot;results_combined_&quot;)
+  }
+}</code></pre>
+<p>Next, use mash to combine results across treatment conditions for
+each cell type. I first reformat the output to match the output from
+fastqtl, which allows us to use the <a
+href="https://stephenslab.github.io/gtexresults/fastqtl2mash.html">fastqtl2mash</a>
+tool to prepare for mash.</p>
+<pre class="r"><code>for (i in c(&quot;Choroid&quot;,  &quot;Glia&quot;, &quot;Glut&quot;, &quot;Immature&quot;, &quot;IP&quot;, &quot;Inh&quot;, &quot;RG&quot;, &quot;NeuronOther&quot;)){
+  for (k in c(&quot;control10&quot;, &quot;stim1pct&quot;, &quot;stim21pct&quot;)){
+    results &lt;- read_table(paste0(&quot;/project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/output/combined_coarse_quality_filter20_032024/results_combined_&quot;, k, &quot;_&quot;, i, &quot;_nominal.txt&quot;), col_names = TRUE, progress = FALSE, show_col_types = FALSE) %&gt;%
+      mutate(se_beta=beta/statistic) %&gt;% 
+      dplyr::select(gene, snps, beta, se_beta, pvalue) %&gt;% 
+      na.omit() %&gt;% 
+      arrange(gene)
+   write_tsv(results, file = paste0(&quot;/project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/output/combined_coarse_quality_filter20_032024/mash/&quot;, i, &quot;_&quot;, k, &quot;_formash.out.gz&quot;), col_names = TRUE, quote = &quot;none&quot;)
+  rm(results)
+  print(paste0(i, &quot; &quot;, k))
+  }
+  print(paste0(&quot;finished &quot;, i))
+}
+
+for (i in c(&quot;Choroid&quot;, &quot;CorticalHem&quot;, &quot;GliaProg&quot;, &quot;Glut&quot;, &quot;GlutNTS&quot;, &quot;Immature&quot;, &quot;IP&quot;, &quot;IPcycling&quot;, &quot;Inh&quot;, &quot;InhGNRH&quot;, &quot;InhThalamic&quot;, &quot;RG&quot;, &quot;RGcycling&quot;, &quot;NeuronOther&quot;)){
+  for (k in c(&quot;control10&quot;, &quot;stim1pct&quot;, &quot;stim21pct&quot;)){
+    results &lt;- read_table(paste0(&quot;/project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/output/combined_fine_quality_filter20_032024/results_combined_&quot;, k, &quot;_&quot;, i, &quot;_nominal.txt&quot;), col_names = TRUE, progress = FALSE, show_col_types = FALSE) %&gt;%
+      mutate(se_beta=beta/statistic) %&gt;% 
+      dplyr::select(gene, snps, beta, se_beta, pvalue) %&gt;% 
+      na.omit() %&gt;%
+      arrange(gene)
+   write_tsv(results, file = paste0(&quot;/project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/output/combined_fine_quality_filter20_032024/mash/&quot;, i, &quot;_&quot;, k, &quot;_formash.out.gz&quot;), col_names = TRUE, quote = &quot;none&quot;)
+  rm(results)
+  print(paste0(i, &quot; &quot;, k))
+  }
+  print(paste0(&quot;finished &quot;, i))
+}</code></pre>
+<p>Fastqtl2mash was run separately for each cell type, and then mash was
+run on each cell type.</p>
+<pre class="bash"><code>module load R/4.2.0
+for celltype in Choroid CorticalHem GliaProg Glut GlutNTS Immature Inh InhGNRH InhThalamic IP IPcycling NeuronOther RG RGcycling; 
+do
+sh mash.sh ${celltype} &quot;/project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/output/combined_fine_quality_filter20_032024/mash/&quot;
+sleep 0.1
+done
+
+module load R/4.2.0
+for celltype in Choroid Glia Glut Immature Inh IP NeuronOther RG Combined; 
+do
+sh mash.sh ${celltype} &quot;/project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/output/combined_coarse_quality_filter20_032024/mash/&quot;
+sleep 0.1
+done</code></pre>
+<p>Finally, combine mash output and, for each gene, note the number of
+pairwise condition comparisons in which effects are shared (ie,
+significant in at least one condition and effects within 2.5-fold
+difference) and which genes have effects shared across all
+conditions.</p>
+<pre class="r"><code>mash_by_celltype_all_EE &lt;- function(celltype, mag, sharing_degree, lfsr_thresh) {
+  m2 &lt;- readRDS(file = paste0(&quot;/project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/output/combined_fine_quality_filter20_032024/mash/MatrixEQTLSumStats_&quot;, celltype, &quot;only_udr_yunqi_vhatem_EE.rds&quot;))
+  lfsr.condition &lt;- m2$result$lfsr
+
+  pm.mash.beta_condition &lt;- m2$result$PosteriorMean #no need to adjust, in EE model we&#39;re directly outputting beta
+  
+  colnames(lfsr.condition) &lt;- paste0(map_chr(strsplit(colnames(lfsr.condition), split=&quot;_&quot;), 2), &quot;_lfsr&quot;)
+  colnames(pm.mash.beta_condition) &lt;- paste0(map_chr(strsplit(colnames(pm.mash.beta_condition), split=&quot;_&quot;), 2), &quot;_beta&quot;)
+  pm.mash.beta_condition &lt;- lfsr.condition  %&gt;% 
+    cbind(pm.mash.beta_condition) %&gt;% 
+    as.data.frame() %&gt;% 
+    mutate(gene=as.character(lapply(strsplit(rownames(.), &#39;[_]&#39;), `[[`, 1)), 
+           gene_snp=rownames(.)) %&gt;% 
+    rowwise() %&gt;% 
+    mutate(sharing=ifelse((stim1pct_lfsr &lt; lfsr_thresh | control10_lfsr &lt; lfsr_thresh | stim21pct_lfsr &lt; lfsr_thresh) &amp; #significant effect somewhere
+                            stim1pct_lfsr&lt;1 &amp; # can set arbitrary significance threshold for all other conditions
+                            control10_lfsr&lt;1 &amp;
+                            stim21pct_lfsr &lt; 1 &amp;
+                            # pairwise magnitude comparisons must be within chosen factor for at least one pair of conditions
+                            sum((stim1pct_beta/stim21pct_beta &lt; mag) &amp;
+                            (stim1pct_beta/stim21pct_beta &gt; (1/mag) ),
+                            (control10_beta/stim1pct_beta &lt; mag) &amp;
+                            (control10_beta/stim1pct_beta &gt; (1/mag)),
+                            (control10_beta/stim21pct_beta &lt; mag) &amp;
+                            (control10_beta/stim21pct_beta &gt; (1/mag))
+                            ) &gt; sharing_degree,
+                          T, F),
+             allsharing =
+             (stim1pct_beta/stim21pct_beta &lt; mag) &amp;
+             (stim1pct_beta/stim21pct_beta &gt; (1/mag)) &amp;
+             (control10_beta/stim1pct_beta &lt; mag) &amp;
+             (control10_beta/stim1pct_beta &gt; (1/mag)) &amp;
+             (control10_beta/stim21pct_beta &lt; mag) &amp;
+             (control10_beta/stim21pct_beta &gt; (1/mag)), 
+           sharing_contexts=sum(((stim1pct_beta/stim21pct_beta &lt; mag) &amp;
+                            (stim1pct_beta/stim21pct_beta &gt; (1/mag) )),
+                           ( (control10_beta/stim1pct_beta &lt; mag) &amp;
+                            (control10_beta/stim1pct_beta &gt; (1/mag))),
+                            ((control10_beta/stim21pct_beta &lt; mag) &amp;
+                            (control10_beta/stim21pct_beta &gt; (1/mag)))
+                            ) ,
+           sigsharing=sum(
+                            stim1pct_lfsr &lt; lfsr_thresh &amp; stim21pct_lfsr &lt; lfsr_thresh &amp;
+                            ((stim1pct_beta/stim21pct_beta &lt; mag) &amp;
+                            (stim1pct_beta/stim21pct_beta &gt; (1/mag) )),
+                            # pairwise magnitude comparisons must be within chosen factor for at least one pair of conditions
+                            
+                            control10_lfsr &lt; lfsr_thresh &amp; stim1pct_lfsr &lt; lfsr_thresh &amp;
+                            ((control10_beta/stim1pct_beta &lt; mag) &amp;
+                            (control10_beta/stim1pct_beta &gt; (1/mag))),
+                            
+                            control10_lfsr &lt; lfsr_thresh &amp; stim21pct_lfsr &lt; lfsr_thresh &amp;
+                            ((control10_beta/stim21pct_beta &lt; mag) &amp;
+                            (control10_beta/stim21pct_beta &gt; (1/mag)))
+                            ),
+           sigdifferent=sum(
+                            stim1pct_lfsr &lt; lfsr_thresh &amp; stim21pct_lfsr &lt; lfsr_thresh &amp;
+                            ((stim1pct_beta/stim21pct_beta &gt; mag) |
+                            (stim1pct_beta/stim21pct_beta &lt; (1/mag) )),
+                            # pairwise magnitude comparisons must be within chosen factor for at least one pair of conditions
+                            
+                            control10_lfsr &lt; lfsr_thresh &amp; stim1pct_lfsr &lt; lfsr_thresh &amp;
+                            ((control10_beta/stim1pct_beta &gt; mag) |
+                            (control10_beta/stim1pct_beta &lt; (1/mag))),
+                            
+                            control10_lfsr &lt; lfsr_thresh &amp; stim21pct_lfsr &lt; lfsr_thresh &amp;
+                            ((control10_beta/stim21pct_beta &gt; mag) |
+                            (control10_beta/stim21pct_beta &lt; (1/mag)))
+                            ),
+           hypoxia_normoxia_shared= (control10_beta/stim1pct_beta &lt; mag) &amp;
+                            (control10_beta/stim1pct_beta &gt; (1/mag)),
+            hyperoxia_normoxia_shared = (control10_beta/stim21pct_beta &lt; mag) &amp;
+                            (control10_beta/stim21pct_beta &gt; (1/mag)),
+           hypoxia_hyperoxia_shared = (stim1pct_beta/stim21pct_beta &lt; mag) &amp;
+                            (stim1pct_beta/stim21pct_beta &gt; (1/mag) ),
+           
+           sig_anywhere=(stim1pct_lfsr &lt; lfsr_thresh | control10_lfsr &lt; lfsr_thresh | stim21pct_lfsr &lt; lfsr_thresh)
+           ) %&gt;% 
+    ungroup() %&gt;% 
+    dplyr::select(gene, gene_snp, control10_lfsr, stim1pct_lfsr, stim21pct_lfsr, control10_beta, stim1pct_beta, stim21pct_beta, sharing, sig_anywhere, sigsharing, sigdifferent, sharing_contexts, allsharing, hypoxia_normoxia_shared, hyperoxia_normoxia_shared, hypoxia_hyperoxia_shared)
+  pm.mash.beta_condition
+}
+mash_by_condition &lt;- lapply(c(&quot;Choroid&quot;, &quot;CorticalHem&quot;, &quot;GliaProg&quot;, &quot;Glut&quot;, &quot;GlutNTS&quot;, &quot;Immature&quot;, &quot;Inh&quot;, &quot;InhGNRH&quot;, &quot;InhThalamic&quot;, &quot;IP&quot;, &quot;IPcycling&quot;, &quot;NeuronOther&quot;, &quot;RG&quot;, &quot;RGcycling&quot;), mash_by_celltype_all_EE, mag=2.5, sharing_degree=0, lfsr_thresh=0.05)
+
+mash_by_condition_output_EE &lt;- gdata::combine(mash_by_condition[[1]], mash_by_condition[[2]], mash_by_condition[[3]], mash_by_condition[[4]], mash_by_condition[[5]], mash_by_condition[[6]], mash_by_condition[[7]], mash_by_condition[[8]], mash_by_condition[[9]], mash_by_condition[[10]], mash_by_condition[[11]], mash_by_condition[[12]], mash_by_condition[[13]], mash_by_condition[[14]], names = c(&quot;Choroid&quot;, &quot;CorticalHem&quot;, &quot;GliaProg&quot;, &quot;Glut&quot;, &quot;GlutNTS&quot;, &quot;Immature&quot;, &quot;Inh&quot;, &quot;InhGNRH&quot;, &quot;InhThalamic&quot;, &quot;IP&quot;, &quot;IPcycling&quot;, &quot;NeuronOther&quot;, &quot;RG&quot;, &quot;RGcycling&quot;)) 
+
+saveRDS(mash_by_condition_output_EE, file = &quot;output/combined_mash-by-condition_EE_fine_reharmonized_032024.rds&quot;)</code></pre>
+<p>And do the same for the coarse-classified cells:</p>
+<pre class="r"><code>mash_by_celltype_all_EE &lt;- function(celltype, mag, sharing_degree, lfsr_thresh) {
+  m2 &lt;- readRDS(file = paste0(&quot;/project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/output/combined_coarse_quality_filter20_032024/mash/MatrixEQTLSumStats_&quot;, celltype, &quot;only_udr_yunqi_vhatem_EE.rds&quot;))
+  lfsr.condition &lt;- m2$result$lfsr
+
+  pm.mash.beta_condition &lt;- m2$result$PosteriorMean #no need to adjust, in EE model we&#39;re directly outputting beta
+  
+  colnames(lfsr.condition) &lt;- paste0(map_chr(strsplit(colnames(lfsr.condition), split=&quot;_&quot;), 2), &quot;_lfsr&quot;)
+  colnames(pm.mash.beta_condition) &lt;- paste0(map_chr(strsplit(colnames(pm.mash.beta_condition), split=&quot;_&quot;), 2), &quot;_beta&quot;)
+  pm.mash.beta_condition &lt;- lfsr.condition  %&gt;% 
+    cbind(pm.mash.beta_condition) %&gt;% 
+    as.data.frame() %&gt;% 
+    mutate(gene=as.character(lapply(strsplit(rownames(.), &#39;[_]&#39;), `[[`, 1)), 
+           gene_snp=rownames(.)) %&gt;% 
+    rowwise() %&gt;% 
+    mutate(sharing=ifelse((stim1pct_lfsr &lt; lfsr_thresh | control10_lfsr &lt; lfsr_thresh | stim21pct_lfsr &lt; lfsr_thresh) &amp; #significant effect somewhere
+                            stim1pct_lfsr&lt;1 &amp; # can set arbitrary significance threshold for all other conditions
+                            control10_lfsr&lt;1 &amp;
+                            stim21pct_lfsr &lt; 1 &amp;
+                            # pairwise magnitude comparisons must be within chosen factor for at least one pair of conditions
+                            sum((stim1pct_beta/stim21pct_beta &lt; mag) &amp;
+                            (stim1pct_beta/stim21pct_beta &gt; (1/mag) ),
+                            (control10_beta/stim1pct_beta &lt; mag) &amp;
+                            (control10_beta/stim1pct_beta &gt; (1/mag)),
+                            (control10_beta/stim21pct_beta &lt; mag) &amp;
+                            (control10_beta/stim21pct_beta &gt; (1/mag))
+                            ) &gt; sharing_degree,
+                          T, F),
+             allsharing =
+             (stim1pct_beta/stim21pct_beta &lt; mag) &amp;
+             (stim1pct_beta/stim21pct_beta &gt; (1/mag)) &amp;
+             (control10_beta/stim1pct_beta &lt; mag) &amp;
+             (control10_beta/stim1pct_beta &gt; (1/mag)) &amp;
+             (control10_beta/stim21pct_beta &lt; mag) &amp;
+             (control10_beta/stim21pct_beta &gt; (1/mag)), 
+           sharing_contexts=sum(((stim1pct_beta/stim21pct_beta &lt; mag) &amp;
+                            (stim1pct_beta/stim21pct_beta &gt; (1/mag) )),
+                           ( (control10_beta/stim1pct_beta &lt; mag) &amp;
+                            (control10_beta/stim1pct_beta &gt; (1/mag))),
+                            ((control10_beta/stim21pct_beta &lt; mag) &amp;
+                            (control10_beta/stim21pct_beta &gt; (1/mag)))
+                            ) ,
+           sigsharing=sum(
+                            stim1pct_lfsr &lt; lfsr_thresh &amp; stim21pct_lfsr &lt; lfsr_thresh &amp;
+                            ((stim1pct_beta/stim21pct_beta &lt; mag) &amp;
+                            (stim1pct_beta/stim21pct_beta &gt; (1/mag) )),
+                            # pairwise magnitude comparisons must be within chosen factor for at least one pair of conditions
+                            
+                            control10_lfsr &lt; lfsr_thresh &amp; stim1pct_lfsr &lt; lfsr_thresh &amp;
+                            ((control10_beta/stim1pct_beta &lt; mag) &amp;
+                            (control10_beta/stim1pct_beta &gt; (1/mag))),
+                            
+                            control10_lfsr &lt; lfsr_thresh &amp; stim21pct_lfsr &lt; lfsr_thresh &amp;
+                            ((control10_beta/stim21pct_beta &lt; mag) &amp;
+                            (control10_beta/stim21pct_beta &gt; (1/mag)))
+                            ),
+           sigdifferent=sum(
+                            stim1pct_lfsr &lt; lfsr_thresh &amp; stim21pct_lfsr &lt; lfsr_thresh &amp;
+                            ((stim1pct_beta/stim21pct_beta &gt; mag) |
+                            (stim1pct_beta/stim21pct_beta &lt; (1/mag) )),
+                            # pairwise magnitude comparisons must be within chosen factor for at least one pair of conditions
+                            
+                            control10_lfsr &lt; lfsr_thresh &amp; stim1pct_lfsr &lt; lfsr_thresh &amp;
+                            ((control10_beta/stim1pct_beta &gt; mag) |
+                            (control10_beta/stim1pct_beta &lt; (1/mag))),
+                            
+                            control10_lfsr &lt; lfsr_thresh &amp; stim21pct_lfsr &lt; lfsr_thresh &amp;
+                            ((control10_beta/stim21pct_beta &gt; mag) |
+                            (control10_beta/stim21pct_beta &lt; (1/mag)))
+                            ),
+           hypoxia_normoxia_shared= (control10_beta/stim1pct_beta &lt; mag) &amp;
+                            (control10_beta/stim1pct_beta &gt; (1/mag)),
+            hyperoxia_normoxia_shared = (control10_beta/stim21pct_beta &lt; mag) &amp;
+                            (control10_beta/stim21pct_beta &gt; (1/mag)),
+           hypoxia_hyperoxia_shared = (stim1pct_beta/stim21pct_beta &lt; mag) &amp;
+                            (stim1pct_beta/stim21pct_beta &gt; (1/mag) ),
+           
+           sig_anywhere=(stim1pct_lfsr &lt; lfsr_thresh | control10_lfsr &lt; lfsr_thresh | stim21pct_lfsr &lt; lfsr_thresh)
+           ) %&gt;% 
+    ungroup() %&gt;% 
+    dplyr::select(gene, gene_snp, control10_lfsr, stim1pct_lfsr, stim21pct_lfsr, control10_beta, stim1pct_beta, stim21pct_beta, sharing, sig_anywhere, sigsharing, sigdifferent, sharing_contexts, allsharing, hypoxia_normoxia_shared, hyperoxia_normoxia_shared, hypoxia_hyperoxia_shared)
+  pm.mash.beta_condition
+}
+mash_by_condition &lt;- lapply(c(&quot;Choroid&quot;, &quot;Glia&quot;, &quot;Glut&quot;, &quot;Immature&quot;, &quot;Inh&quot;, &quot;IP&quot;, &quot;NeuronOther&quot;, &quot;RG&quot;), mash_by_celltype_all_EE, mag=2.5, sharing_degree=0, lfsr_thresh=0.05)
+
+mash_by_condition_output_EE &lt;- gdata::combine(mash_by_condition[[1]], mash_by_condition[[2]], mash_by_condition[[3]], mash_by_condition[[4]], mash_by_condition[[5]], mash_by_condition[[6]], mash_by_condition[[7]], mash_by_condition[[8]], names = c(&quot;Choroid&quot;, &quot;Glia&quot;, &quot;Glut&quot;, &quot;Immature&quot;, &quot;Inh&quot;, &quot;IP&quot;, &quot;NeuronOther&quot;, &quot;RG&quot;)) 
+
+saveRDS(mash_by_condition_output_EE, file = &quot;output/combined_mash-by-condition_EE_coarse_reharmonized_032024.rds&quot;)</code></pre>
+</div>
+<div id="compare-egenes-to-gtex" class="section level2">
+<h2>Compare eGenes to GTEx</h2>
+<p>GTEx has assessed eQTLs in 13 CNS tissue sites, collectively finding
+21,085 significant eGenes. Of course, just about any gene will be an
+eGene when compared against this reference set. Instead, we compare here
+to the two cerebral cortex datasets, the most analogous tissues to our
+dorsal brain organoids, which come from two different tissue
+sources.</p>
+<pre class="r"><code>gtex_cortex_signif &lt;- read.table(file = &quot;/project/gilad/umans/references/gtex/GTEx_Analysis_v8_eQTL/Brain_Cortex.v8.egenes.txt.gz&quot;, header = TRUE, sep = &quot;\t&quot;, stringsAsFactors = FALSE) %&gt;% filter(qval&lt;0.05) %&gt;% pull(gene_name)
+gtex_frontalcortex_signif &lt;- read.table(file = &quot;/project/gilad/umans/references/gtex/GTEx_Analysis_v8_eQTL/Brain_Frontal_Cortex_BA9.v8.egenes.txt.gz&quot;, header = TRUE, sep = &quot;\t&quot;, stringsAsFactors = FALSE) %&gt;% filter(qval&lt;0.05) %&gt;% pull(gene_name)
+gtex_cortex_signif &lt;- unique(c(gtex_cortex_signif, gtex_frontalcortex_signif))</code></pre>
+<p>Now, classify eGenes from the organoid dataset by whether they were
+significant under normoxia and whether they are responsive to
+manipulating oxygen. These two binary classifications result in 4
+groups: (1) shared effects in all conditions, detectable under normoxia;
+(2) dynamic and detectable under normoxia; (3) dynamic and <em>not</em>
+detectable under normoxia; and (4) shared effects under all conditions
+but not detectable under normoxia. Implicitly, group 4 effects needed
+additional treatment conditions to detect them not because they’re
+responsive to treatment but because of the additional power we get.</p>
+<pre class="r"><code>mash_by_condition_output &lt;- readRDS(file = &quot;output/combined_mash-by-condition_EE_fine_reharmonized_032024.rds&quot;) %&gt;% ungroup()
+
+mash_by_condition_output %&gt;% 
+  filter(sig_anywhere) %&gt;% 
+ mutate(class=case_when(control10_lfsr &lt; 0.05 &amp; allsharing ~ &quot;class1&quot;,
+                         control10_lfsr &lt; 0.05 &amp;  !allsharing ~ &quot;class2&quot;,
+                         sig_anywhere &amp; control10_lfsr &gt; 0.05 &amp; !allsharing ~ &quot;class3&quot;,
+                         allsharing &amp; control10_lfsr &gt; 0.05 &amp; (stim1pct_lfsr &lt; 0.05 | stim21pct_lfsr &lt; 0.05) ~ &quot;class4&quot;)) %&gt;%  group_by(source, class) %&gt;% summarize(egenes=n()) %&gt;% 
+  ggplot(aes(x=factor(source, rev(fine.order)), y=egenes, fill=factor(class, levels = c(&quot;class3&quot;, &quot;class2&quot;, &quot;class4&quot;, &quot;class1&quot;), ordered = TRUE))) + geom_bar(stat=&quot;identity&quot;) + 
+  coord_flip() + theme_light() + theme(legend.title = element_blank()) + scale_fill_manual(values=class_colors) </code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<p><img src="figure/figure3.Rmd/unnamed-chunk-21-1.png" width="672" style="display: block; margin: auto;" />
+Our hypothesis is that the the dynamic effects that emerge under
+treatment should be less represented in GTEx, compared to effects that
+are evident at baseline, as GTEx does not (explicitly) assess gene
+expression under different environmental perturbations (although
+post-mortem brain tissue may experience some amount of hypoxia and/or
+hyperoxia during sample collection). While not testing for sharing of
+regulatory sites or effects here, we can ask whether these dynamic
+eGenes are less likely to be present in GTEx compared to the dynamic
+eGenes present at baseline.</p>
+<pre class="r"><code>mash_by_condition_output %&gt;% 
+  filter(sig_anywhere) %&gt;% 
+  mutate(class=case_when(control10_lfsr &lt; 0.05 &amp; allsharing ~ &quot;class1&quot;,
+                         control10_lfsr &lt; 0.05 &amp;  !allsharing ~ &quot;class2&quot;,
+                         sig_anywhere &amp; control10_lfsr &gt; 0.05 &amp; !allsharing ~ &quot;class3&quot;,
+                         sig_anywhere &amp; allsharing ~ &quot;class4&quot;)) %&gt;%  #because of the order of assignment, this does not include &quot;class1&quot; egenes, ie those that are detectable under normoxia.  equivalent to `allsharing &amp; control10_lfsr &gt; 0.05 &amp; (stim1pct_lfsr &lt; 0.05 | stim21pct_lfsr &lt; 0.05) ~ &quot;class4&quot;`
+   group_by(source, class) %&gt;% 
+  summarise(egene_gtex = sum(gene %in% gtex_cortex_signif),
+            egene_in_gtex_fraction = round((sum(gene %in% gtex_cortex_signif))/n(), 4)) %&gt;% 
+  ggplot(aes(x=factor(class, levels = c(&quot;class1&quot;, &quot;class4&quot;, &quot;class2&quot;, &quot;class3&quot;)), y=egene_in_gtex_fraction)) + 
+  geom_boxplot(outlier.shape = NA, aes(color=class)) + 
+  geom_point(aes(group=source, color=source), position = position_jitter(width = 0.2, height = 0)) + 
+  xlab(&quot;eGene class (see note)&quot;) + 
+  ylab(&quot;Fraction of eGenes in GTEx&quot;) + 
+  theme_light() +  
+  scale_color_manual(values=c(manual_palette_fine, class_colors)) + theme(legend.position=&quot;none&quot;) </code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<p><img src="figure/figure3.Rmd/unnamed-chunk-22-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>To test the “class 3” (dynamic, not detected under normoxia) eGenes
+against the non-dynamic eGenes:</p>
+<pre class="r"><code>wilcox.test(mash_by_condition_output %&gt;% 
+  filter(sig_anywhere) %&gt;% 
+  mutate(class=case_when(control10_lfsr &lt; 0.05 &amp; allsharing ~ &quot;groupB&quot;,
+                         control10_lfsr &lt; 0.05 &amp;  !allsharing ~ &quot;groupB&quot;,
+                         sig_anywhere &amp; control10_lfsr &gt; 0.05 &amp; !allsharing ~ &quot;groupA&quot;,
+                         sig_anywhere &amp; allsharing ~ &quot;groupC&quot;)) %&gt;% 
+   group_by(source, class) %&gt;% 
+  summarise(egene_gtex = sum(gene %in% (unlist(gtex_cortex_signif) %&gt;% unique())),
+            egene_in_gtex_fraction = (sum(gene %in% (unlist(gtex_cortex_signif) %&gt;% unique())))/n()) %&gt;% filter(class==&quot;groupA&quot;) %&gt;% pull(egene_in_gtex_fraction), 
+  mash_by_condition_output %&gt;% 
+  filter(sig_anywhere) %&gt;% 
+  mutate(class=case_when(control10_lfsr &lt; 0.05 &amp; allsharing ~ &quot;groupB&quot;,
+                         control10_lfsr &lt; 0.05 &amp;  !allsharing ~ &quot;groupB&quot;,
+                         sig_anywhere &amp; control10_lfsr &gt; 0.05 &amp; !allsharing ~ &quot;groupA&quot;,
+                         sig_anywhere &amp; allsharing ~ &quot;groupC&quot;)) %&gt;% 
+   group_by(source, class) %&gt;% 
+  summarise(egene_gtex = sum(gene %in% (unlist(gtex_cortex_signif) %&gt;% unique())),
+            egene_in_gtex_fraction = (sum(gene %in% (unlist(gtex_cortex_signif) %&gt;% unique())))/n()) %&gt;% filter(class %in% c(&quot;groupB&quot;)) %&gt;% pull(egene_in_gtex_fraction), paired = TRUE,  alternative = &quot;less&quot;)</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.
+`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<pre><code>
+    Wilcoxon signed rank exact test
+
+data:  mash_by_condition_output %&gt;% filter(sig_anywhere) %&gt;% mutate(class = case_when(control10_lfsr &lt; 0.05 &amp; allsharing ~ &quot;groupB&quot;, control10_lfsr &lt; 0.05 &amp; !allsharing ~ &quot;groupB&quot;, sig_anywhere &amp; control10_lfsr &gt; 0.05 &amp; !allsharing ~ &quot;groupA&quot;, sig_anywhere &amp; allsharing ~ &quot;groupC&quot;)) %&gt;% group_by(source, class) %&gt;% summarise(egene_gtex = sum(gene %in% (unlist(gtex_cortex_signif) %&gt;% unique())), egene_in_gtex_fraction = (sum(gene %in% (unlist(gtex_cortex_signif) %&gt;% unique())))/n()) %&gt;% filter(class == &quot;groupA&quot;) %&gt;%      pull(egene_in_gtex_fraction) and mash_by_condition_output %&gt;% filter(sig_anywhere) %&gt;% mutate(class = case_when(control10_lfsr &lt; 0.05 &amp; allsharing ~ &quot;groupB&quot;, control10_lfsr &lt; 0.05 &amp; !allsharing ~ &quot;groupB&quot;, sig_anywhere &amp; control10_lfsr &gt; 0.05 &amp; !allsharing ~ &quot;groupA&quot;, sig_anywhere &amp; allsharing ~ &quot;groupC&quot;)) %&gt;% group_by(source, class) %&gt;% summarise(egene_gtex = sum(gene %in% (unlist(gtex_cortex_signif) %&gt;% unique())), egene_in_gtex_fraction = (sum(gene %in% (unlist(gtex_cortex_signif) %&gt;% unique())))/n()) %&gt;% filter(class %in% c(&quot;groupB&quot;)) %&gt;%      pull(egene_in_gtex_fraction)
+V = 14, p-value = 0.006714
+alternative hypothesis: true location shift is less than 0</code></pre>
+<p>The fraction of eGenes across cell types that would not be detected
+without treatment conditions is:</p>
+<pre class="r"><code>mash_by_condition_output %&gt;% 
+  filter(sig_anywhere) %&gt;% 
+ mutate(class=case_when(control10_lfsr &lt; 0.05 &amp; allsharing ~ &quot;class1&quot;,
+                         control10_lfsr &lt; 0.05 &amp;  !allsharing ~ &quot;class2&quot;,
+                         sig_anywhere &amp; control10_lfsr &gt; 0.05 &amp; !allsharing ~ &quot;class3&quot;,
+                         allsharing &amp; control10_lfsr &gt; 0.05 &amp; (stim1pct_lfsr &lt; 0.05 | stim21pct_lfsr &lt; 0.05) ~ &quot;class4&quot;)) %&gt;%  
+  mutate(control_undetected=class %in% c(&quot;class3&quot;, &quot;class4&quot;)) %&gt;% 
+  group_by(source) %&gt;% 
+  summarize(undetected_rate=sum(control_undetected)/n()) %&gt;% 
+  summarize(median(undetected_rate))</code></pre>
+<pre><code># A tibble: 1 × 1
+  `median(undetected_rate)`
+                      &lt;dbl&gt;
+1                     0.563</code></pre>
+<p>The total number of eGenes detected here, in any condition or cell
+type, is:</p>
+<pre class="r"><code>mash_by_condition_output %&gt;% 
+  filter(sig_anywhere) %&gt;% 
+  pull(gene) %&gt;% 
+  unique() %&gt;% 
+  length()</code></pre>
+<pre><code>[1] 8320</code></pre>
+<p>Many eGenes will have treatment-responsive effects in one cell type
+and treatment-shared effects in another cell type. The number of eGenes
+that have treatment-insensitive effects in at least one cell type
+is:</p>
+<pre class="r"><code>mash_by_condition_output %&gt;% 
+  filter(sig_anywhere) %&gt;% 
+  filter(allsharing) %&gt;% 
+  pull(gene) %&gt;% 
+  unique() %&gt;% 
+  length()</code></pre>
+<pre><code>[1] 5952</code></pre>
+<p>The number of eGenes that have treatment-sensitive effects in at
+least one cell type is:</p>
+<pre class="r"><code>mash_by_condition_output %&gt;% 
+  filter(sig_anywhere) %&gt;% 
+  filter(!allsharing) %&gt;% 
+  pull(gene) %&gt;% 
+  unique() %&gt;% 
+  length()</code></pre>
+<pre><code>[1] 7338</code></pre>
+<p>Calculate the number of “dynamic” vs “standard” eQTLs per cell type,
+here defined by shared effect sizes. Note that because mash chooses a
+single eQTL/eGene in each cell type, within a cell type counting number
+of eGenes and eQTLs is equivalent.</p>
+<pre class="r"><code>mash_by_condition_output %&gt;% 
+  filter(sig_anywhere) %&gt;% 
+    group_by(source) %&gt;% 
+ mutate(class=case_when(allsharing ~ &quot;allsharing&quot;,
+                        hypoxia_normoxia_shared &amp; sharing_contexts==1 ~ &quot;hyperoxia_specific&quot;,
+                        hyperoxia_normoxia_shared &amp; sharing_contexts==1 ~ &quot;hypoxia_specific&quot;,
+                        hypoxia_hyperoxia_shared &amp; sharing_contexts==1 ~ &quot;normoxia_specific&quot;,
+                        sharing_contexts==2 ~ &quot;partial_shared&quot;, 
+                        sharing_contexts==0 ~ &quot;alldiff&quot;
+                        ),
+        total=n(),
+        standard=sum(allsharing)) %&gt;%  
+  mutate(dynamic=total-standard) %&gt;% 
+    ungroup() %&gt;% 
+    group_by(source, class) %&gt;% 
+    summarise(egene = n(), total=median(total), standard=median(standard), dynamic=median(dynamic)) %&gt;% 
+    mutate(fraction_total=egene/total, fraction_dynamic=egene/dynamic) %&gt;% 
+  ungroup() %&gt;% 
+    group_by(class) %&gt;% 
+  summarise(median(egene), median(total), median(dynamic), median(fraction_total), median(fraction_dynamic)) </code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<pre><code># A tibble: 6 × 6
+  class `median(egene)` `median(total)` `median(dynamic)` median(fraction_tota…¹
+  &lt;chr&gt;           &lt;dbl&gt;           &lt;dbl&gt;             &lt;dbl&gt;                  &lt;dbl&gt;
+1 alld…            560             2487             1390.                 0.235 
+2 alls…           1062.            2487             1390.                 0.399 
+3 hype…            216             2487             1390.                 0.0873
+4 hypo…            237             2487             1390.                 0.0910
+5 norm…            192.            2487             1390.                 0.0738
+6 part…            214.            2487             1390.                 0.0793
+# ℹ abbreviated name: ¹​`median(fraction_total)`
+# ℹ 1 more variable: `median(fraction_dynamic)` &lt;dbl&gt;</code></pre>
+<p>Here, anything that does not have a similar (ie, within 2.5-fold)
+effect size in all three oxygen conditions is called “dynamic”. Within
+this dynamic category we can define the following cases: *
+“treatment-shared” means different between normoxia and both hyperoxia
+and hypoxia, or, if you prefer, a normoxia-specific effect *
+“hypox_normox” means different in the hyperoxia condition from the other
+two * “hyperox_normox” means different in the hypoxia condition from the
+other two * “alldiff” means each oxygen condition has a different effect
+size from the other * “associatively_shared”, somewhat confusingly,
+means different between one pair of oxygen conditions but otherwise all
+shared. How can this happen? Consider a case where beta_normoxia=1,
+beta_hypoxia=0.5, and beta_hyperoxia=2. Here, both hypoxia and hyperoxia
+effects are shared with the normoxia condition (namely, differ by less
+than 2.5-fold), but differ from each other.</p>
+<p>To plot these numbers:</p>
+<pre class="r"><code>class_colors3 &lt;- c(&quot;allsharing&quot;=&quot;blue&quot;, &quot;partial_shared&quot;=&quot;red&quot;, &quot;normoxia_specific&quot;=&quot;red&quot;, &quot;hypoxia_specific&quot;=&quot;red&quot;, &quot;hyperoxia_specific&quot;=&quot;red&quot;, &quot;alldiff&quot;=&quot;red&quot;)
+mash_by_condition_output %&gt;% 
+  filter(sig_anywhere) %&gt;% 
+ mutate(class=case_when(allsharing ~ &quot;allsharing&quot;,
+                        hypoxia_normoxia_shared &amp; sharing_contexts==1 ~ &quot;hyperoxia_specific&quot;,
+                        hyperoxia_normoxia_shared &amp; sharing_contexts==1 ~ &quot;hypoxia_specific&quot;,
+                        hypoxia_hyperoxia_shared &amp; sharing_contexts==1 ~ &quot;normoxia_specific&quot;,
+                        sharing_contexts==2 ~ &quot;partial_shared&quot;, 
+                        sharing_contexts==0 ~ &quot;alldiff&quot;
+                        )) %&gt;%   #because of the order of assignment, this does not include &quot;class1&quot; egenes, ie those that are detectable under normoxia.  equivalent to `allsharing &amp; control10_lfsr &gt; 0.05 &amp; (stim1pct_lfsr &lt; 0.05 | stim21pct_lfsr &lt; 0.05) ~ &quot;class4&quot;`
+   group_by(source, class) %&gt;% 
+  summarise(egene = n()) %&gt;% 
+  ggplot(aes(x=factor(class, levels=c(&quot;allsharing&quot;, &quot;alldiff&quot;, &quot;normoxia_specific&quot;, &quot;hypoxia_specific&quot;, &quot;hyperoxia_specific&quot;,  &quot;partial_shared&quot;), ordered = TRUE), y=egene)) + 
+  geom_boxplot(outlier.shape = NA, aes(color=class)) + 
+  geom_point(aes(group=source, color=source), position = position_jitter(width = 0.2, height = 0)) + 
+  xlab(&quot;eGene class (see note)&quot;) + 
+  ylab(&quot;Number of eGenes&quot;) + 
+  theme_light() +  
+  scale_color_manual(values=c(manual_palette_fine, class_colors3)) + theme(legend.position=&quot;none&quot;) </code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<p><img src="figure/figure3.Rmd/unnamed-chunk-29-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>What fraction of each of these categories are in GTEx?</p>
+<pre class="r"><code>mash_by_condition_output %&gt;% 
+  filter(sig_anywhere) %&gt;% 
+ mutate(class=case_when(allsharing ~ &quot;allsharing&quot;,
+                        hypoxia_normoxia_shared &amp; sharing_contexts==1 ~ &quot;hyperoxia_specific&quot;,
+                        hyperoxia_normoxia_shared &amp; sharing_contexts==1 ~ &quot;hypoxia_specific&quot;,
+                        hypoxia_hyperoxia_shared &amp; sharing_contexts==1 ~ &quot;normoxia_specific&quot;,
+                        sharing_contexts==2 ~ &quot;partial_shared&quot;, 
+                        sharing_contexts==0 ~ &quot;alldiff&quot;
+                        )) %&gt;%   #because of the order of assignment, this does not include &quot;class1&quot; egenes, ie those that are detectable under normoxia.  equivalent to `allsharing &amp; control10_lfsr &gt; 0.05 &amp; (stim1pct_lfsr &lt; 0.05 | stim21pct_lfsr &lt; 0.05) ~ &quot;class4&quot;`
+   group_by(source, class) %&gt;% 
+  summarise(egene_gtex = sum(gene %in% gtex_cortex_signif),
+            egene_in_gtex_fraction = round((sum(gene %in% gtex_cortex_signif))/n(), 4)) %&gt;% 
+  ggplot(aes(x=factor(class, levels=c(&quot;allsharing&quot;, &quot;partial_shared&quot;, &quot;normoxia_specific&quot;, &quot;hypoxia_specific&quot;, &quot;hyperoxia_specific&quot;, &quot;alldiff&quot;), ordered = TRUE), y=egene_in_gtex_fraction)) + 
+  geom_boxplot(outlier.shape = NA, aes(color=class)) + 
+  geom_point(aes(group=source, color=source), position = position_jitter(width = 0.2, height = 0)) + 
+  xlab(&quot;eGene class (see note)&quot;) + 
+  ylab(&quot;Fraction of eGenes in GTEx&quot;) + 
+  theme_light() +  
+  scale_color_manual(values=c(manual_palette_fine, class_colors)) + theme(legend.position=&quot;none&quot;) </code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<p><img src="figure/figure3.Rmd/unnamed-chunk-30-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>We expect that the dynamic eGenes will be less represented in GTEx.
+To test this, I first designate the classes above as “standard” (all
+effects shared, or the strange case of all effects shared except for one
+comparison), or “dynamic”.</p>
+<pre class="r"><code>wilcox.test(mash_by_condition_output %&gt;% 
+  filter(sig_anywhere) %&gt;% 
+ mutate(class=case_when(allsharing ~ &quot;standard&quot;,
+                        hypoxia_normoxia_shared &amp; sharing_contexts==1 ~ &quot;dynamic&quot;,
+                        hyperoxia_normoxia_shared &amp; sharing_contexts==1 ~ &quot;dynamic&quot;,
+                        hypoxia_hyperoxia_shared &amp; sharing_contexts==1 ~ &quot;dynamic&quot;,
+                        sharing_contexts==2 ~ &quot;standard&quot;, 
+                        sharing_contexts==0 ~ &quot;dynamic&quot;
+                        )) %&gt;% 
+   group_by(source, class) %&gt;% 
+  summarise(egene_gtex = sum(gene %in% (unlist(gtex_cortex_signif) %&gt;% unique())),
+            egene_in_gtex_fraction = (sum(gene %in% (unlist(gtex_cortex_signif) %&gt;% unique())))/n()) %&gt;%
+   filter(class %in% c(&quot;dynamic&quot;)) %&gt;% pull(egene_in_gtex_fraction), 
+  mash_by_condition_output %&gt;% 
+  filter(sig_anywhere) %&gt;% 
+  mutate(class=case_when(allsharing ~ &quot;standard&quot;,
+                        hypoxia_normoxia_shared &amp; sharing_contexts==1 ~ &quot;dynamic&quot;,
+                        hyperoxia_normoxia_shared &amp; sharing_contexts==1 ~ &quot;dynamic&quot;,
+                        hypoxia_hyperoxia_shared &amp; sharing_contexts==1 ~ &quot;dynamic&quot;,
+                        sharing_contexts==2 ~ &quot;standard&quot;, 
+                        sharing_contexts==0 ~ &quot;dynamic&quot;
+                        )) %&gt;% 
+   group_by(source, class) %&gt;% 
+  summarise(egene_gtex = sum(gene %in% (unlist(gtex_cortex_signif) %&gt;% unique())),
+            egene_in_gtex_fraction = (sum(gene %in% (unlist(gtex_cortex_signif) %&gt;% unique())))/n()) %&gt;%
+   filter(class %in% c(&quot;standard&quot;)) %&gt;% pull(egene_in_gtex_fraction), paired=TRUE, alternative = &quot;less&quot;)</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.
+`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<pre><code>
+    Wilcoxon signed rank exact test
+
+data:  mash_by_condition_output %&gt;% filter(sig_anywhere) %&gt;% mutate(class = case_when(allsharing ~ &quot;standard&quot;, hypoxia_normoxia_shared &amp; sharing_contexts == 1 ~ &quot;dynamic&quot;, hyperoxia_normoxia_shared &amp; sharing_contexts == 1 ~ &quot;dynamic&quot;, hypoxia_hyperoxia_shared &amp; sharing_contexts == 1 ~ &quot;dynamic&quot;, sharing_contexts == 2 ~ &quot;standard&quot;, sharing_contexts == 0 ~ &quot;dynamic&quot;)) %&gt;% group_by(source, class) %&gt;% summarise(egene_gtex = sum(gene %in% (unlist(gtex_cortex_signif) %&gt;% unique())), egene_in_gtex_fraction = (sum(gene %in%      (unlist(gtex_cortex_signif) %&gt;% unique())))/n()) %&gt;% filter(class %in% c(&quot;dynamic&quot;)) %&gt;% pull(egene_in_gtex_fraction) and mash_by_condition_output %&gt;% filter(sig_anywhere) %&gt;% mutate(class = case_when(allsharing ~ &quot;standard&quot;, hypoxia_normoxia_shared &amp; sharing_contexts == 1 ~ &quot;dynamic&quot;, hyperoxia_normoxia_shared &amp; sharing_contexts == 1 ~ &quot;dynamic&quot;, hypoxia_hyperoxia_shared &amp; sharing_contexts == 1 ~ &quot;dynamic&quot;, sharing_contexts == 2 ~ &quot;standard&quot;, sharing_contexts == 0 ~ &quot;dynamic&quot;)) %&gt;% group_by(source, class) %&gt;% summarise(egene_gtex = sum(gene %in% (unlist(gtex_cortex_signif) %&gt;% unique())), egene_in_gtex_fraction = (sum(gene %in%      (unlist(gtex_cortex_signif) %&gt;% unique())))/n()) %&gt;% filter(class %in% c(&quot;standard&quot;)) %&gt;% pull(egene_in_gtex_fraction)
+V = 15, p-value = 0.008301
+alternative hypothesis: true location shift is less than 0</code></pre>
+<p>Instead of counting per cell type, we can count total eQTLs:</p>
+<pre class="r"><code>mash_by_condition_output %&gt;% 
+  filter(sig_anywhere) %&gt;% 
+ mutate(class=case_when(allsharing ~ &quot;allsharing&quot;,
+                        hypoxia_normoxia_shared &amp; sharing_contexts==1 ~ &quot;hyperoxia_specific&quot;,
+                        hyperoxia_normoxia_shared &amp; sharing_contexts==1 ~ &quot;hypoxia_specific&quot;,
+                        hypoxia_hyperoxia_shared &amp; sharing_contexts==1 ~ &quot;normoxia_specific&quot;,
+                        sharing_contexts==2 ~ &quot;partial_shared&quot;, 
+                        sharing_contexts==0 ~ &quot;alldiff&quot;
+                        ),
+        total=n(),
+        standard=sum(allsharing)) %&gt;%  
+  mutate(dynamic=total-standard) %&gt;% 
+    group_by(class) %&gt;% 
+    summarise(egene = n(), total=median(total), standard=median(standard), dynamic=median(dynamic)) %&gt;% 
+    mutate(fraction_total=egene/total, fraction_dynamic=egene/dynamic) </code></pre>
+<pre><code># A tibble: 6 × 7
+  class             egene total standard dynamic fraction_total fraction_dynamic
+  &lt;chr&gt;             &lt;int&gt; &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;          &lt;dbl&gt;            &lt;dbl&gt;
+1 alldiff            8962 36778    14358   22420         0.244             0.400
+2 allsharing        14358 36778    14358   22420         0.390             0.640
+3 hyperoxia_specif…  3603 36778    14358   22420         0.0980            0.161
+4 hypoxia_specific   3687 36778    14358   22420         0.100             0.164
+5 normoxia_specific  2935 36778    14358   22420         0.0798            0.131
+6 partial_shared     3233 36778    14358   22420         0.0879            0.144</code></pre>
+<pre class="r"><code>mash_by_condition_output %&gt;% 
+    filter(sig_anywhere) %&gt;% group_by(gene) %&gt;% summarise(eqtls=n()) %&gt;%  summarise(median(eqtls))</code></pre>
+<pre><code># A tibble: 1 × 1
+  `median(eqtls)`
+            &lt;dbl&gt;
+1               4</code></pre>
+<p>The number of eQTLs not detected in the control condition is:</p>
+<pre class="r"><code>mash_by_condition_output %&gt;%
+  filter(sig_anywhere) %&gt;%
+  filter(control10_lfsr&gt;0.05) %&gt;% dim()</code></pre>
+<pre><code>[1] 20185    18</code></pre>
+<div id="compare-to-coarse-clustered-results" class="section level3">
+<h3>Compare to coarse-clustered results</h3>
+<pre class="r"><code>mash_by_condition_output_coarse &lt;- readRDS(file = &quot;output/combined_mash-by-condition_EE_coarse_reharmonized_032024.rds&quot;) %&gt;% ungroup()
+
+mash_by_condition_output_coarse %&gt;% 
+  filter(sig_anywhere) %&gt;% 
+ mutate(class=case_when(control10_lfsr &lt; 0.05 &amp; allsharing ~ &quot;class1&quot;,
+                         control10_lfsr &lt; 0.05 &amp;  !allsharing ~ &quot;class2&quot;,
+                         sig_anywhere &amp; control10_lfsr &gt; 0.05 &amp; !allsharing ~ &quot;class3&quot;,
+                         allsharing &amp; control10_lfsr &gt; 0.05 &amp; (stim1pct_lfsr &lt; 0.05 | stim21pct_lfsr &lt; 0.05) ~ &quot;class4&quot;)) %&gt;%  group_by(source, class) %&gt;% summarize(egenes=n()) %&gt;% 
+  ggplot(aes(x=factor(source, rev(coarse.order)), y=egenes, fill=factor(class, levels = c(&quot;class3&quot;, &quot;class2&quot;, &quot;class4&quot;, &quot;class1&quot;), ordered = TRUE))) + geom_bar(stat=&quot;identity&quot;) + 
+  coord_flip() + theme_light() + theme(legend.title = element_blank()) + scale_fill_manual(values=class_colors) </code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<p><img src="figure/figure3.Rmd/unnamed-chunk-34-1.png" width="672" style="display: block; margin: auto;" />
+Our hypothesis is that the the dynamic effects that emerge under
+treatment should be less represented in GTEx, compared to effects that
+are evident at baseline, as GTEx does not (explicitly) assess gene
+expression under different environmental perturbations (although
+post-mortem brain tissue may experience some amount of hypoxia and/or
+hyperoxia during sample collection). While not testing for sharing of
+regulatory sites or effects here, we can ask whether these dynamic
+eGenes are less likely to be present in GTEx compared to the dynamic
+eGenes present at baseline.</p>
+<pre class="r"><code>mash_by_condition_output_coarse %&gt;% 
+  filter(sig_anywhere) %&gt;% 
+  mutate(class=case_when(control10_lfsr &lt; 0.05 &amp; allsharing ~ &quot;class1&quot;,
+                         control10_lfsr &lt; 0.05 &amp;  !allsharing ~ &quot;class2&quot;,
+                         sig_anywhere &amp; control10_lfsr &gt; 0.05 &amp; !allsharing ~ &quot;class3&quot;,
+                         sig_anywhere &amp; allsharing ~ &quot;class4&quot;)) %&gt;%  #because of the order of assignment, this does not include &quot;class1&quot; egenes, ie those that are detectable under normoxia.  equivalent to `allsharing &amp; control10_lfsr &gt; 0.05 &amp; (stim1pct_lfsr &lt; 0.05 | stim21pct_lfsr &lt; 0.05) ~ &quot;class4&quot;`
+  group_by(source, class) %&gt;% 
+  summarise(egene_gtex = sum(gene %in% gtex_cortex_signif),
+            egene_in_gtex_fraction = round((sum(gene %in% gtex_cortex_signif))/n(), 4)) %&gt;% 
+  ggplot(aes(x=factor(class, levels = c(&quot;class1&quot;, &quot;class4&quot;, &quot;class2&quot;, &quot;class3&quot;)), y=egene_in_gtex_fraction)) + 
+  geom_boxplot(outlier.shape = NA, aes(color=class)) + 
+  geom_point(aes(group=source, color=source), position = position_jitter(width = 0.2, height = 0)) + 
+  xlab(&quot;eGene class (see note)&quot;) + 
+  ylab(&quot;Fraction of eGenes in GTEx&quot;) + 
+  theme_light() +  
+  scale_color_manual(values=c(manual_palette_coarse, class_colors)) + theme(legend.position=&quot;none&quot;) </code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<p><img src="figure/figure3.Rmd/unnamed-chunk-35-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>wilcox.test(mash_by_condition_output_coarse %&gt;% 
+  filter(sig_anywhere) %&gt;% 
+  mutate(class=case_when(control10_lfsr &lt; 0.05 &amp; allsharing ~ &quot;groupB&quot;,
+                         control10_lfsr &lt; 0.05 &amp;  !allsharing ~ &quot;groupB&quot;,
+                         sig_anywhere &amp; control10_lfsr &gt; 0.05 &amp; !allsharing ~ &quot;groupA&quot;,
+                         sig_anywhere &amp; allsharing ~ &quot;groupC&quot;)) %&gt;% 
+   group_by(source, class) %&gt;% 
+  summarise(egene_gtex = sum(gene %in% (unlist(gtex_cortex_signif) %&gt;% unique())),
+            egene_in_gtex_fraction = (sum(gene %in% (unlist(gtex_cortex_signif) %&gt;% unique())))/n()) %&gt;% filter(class==&quot;groupA&quot;) %&gt;% pull(egene_in_gtex_fraction), 
+  mash_by_condition_output_coarse %&gt;% 
+  filter(sig_anywhere) %&gt;% 
+  mutate(class=case_when(control10_lfsr &lt; 0.05 &amp; allsharing ~ &quot;groupB&quot;,
+                         control10_lfsr &lt; 0.05 &amp;  !allsharing ~ &quot;groupB&quot;,
+                         sig_anywhere &amp; control10_lfsr &gt; 0.05 &amp; !allsharing ~ &quot;groupA&quot;,
+                         sig_anywhere &amp; allsharing ~ &quot;groupC&quot;)) %&gt;% 
+   group_by(source, class) %&gt;% 
+  summarise(egene_gtex = sum(gene %in% (unlist(gtex_cortex_signif) %&gt;% unique())),
+            egene_in_gtex_fraction = (sum(gene %in% (unlist(gtex_cortex_signif) %&gt;% unique())))/n()) %&gt;% filter(class %in% c(&quot;groupB&quot;)) %&gt;% pull(egene_in_gtex_fraction), paired = TRUE,  alternative = &quot;less&quot;)</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.
+`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<pre><code>
+    Wilcoxon signed rank exact test
+
+data:  mash_by_condition_output_coarse %&gt;% filter(sig_anywhere) %&gt;% mutate(class = case_when(control10_lfsr &lt; 0.05 &amp; allsharing ~ &quot;groupB&quot;, control10_lfsr &lt; 0.05 &amp; !allsharing ~ &quot;groupB&quot;, sig_anywhere &amp; control10_lfsr &gt; 0.05 &amp; !allsharing ~ &quot;groupA&quot;, sig_anywhere &amp; allsharing ~ &quot;groupC&quot;)) %&gt;% group_by(source, class) %&gt;% summarise(egene_gtex = sum(gene %in% (unlist(gtex_cortex_signif) %&gt;% unique())), egene_in_gtex_fraction = (sum(gene %in% (unlist(gtex_cortex_signif) %&gt;% unique())))/n()) %&gt;% filter(class ==      &quot;groupA&quot;) %&gt;% pull(egene_in_gtex_fraction) and mash_by_condition_output_coarse %&gt;% filter(sig_anywhere) %&gt;% mutate(class = case_when(control10_lfsr &lt; 0.05 &amp; allsharing ~ &quot;groupB&quot;, control10_lfsr &lt; 0.05 &amp; !allsharing ~ &quot;groupB&quot;, sig_anywhere &amp; control10_lfsr &gt; 0.05 &amp; !allsharing ~ &quot;groupA&quot;, sig_anywhere &amp; allsharing ~ &quot;groupC&quot;)) %&gt;% group_by(source, class) %&gt;% summarise(egene_gtex = sum(gene %in% (unlist(gtex_cortex_signif) %&gt;% unique())), egene_in_gtex_fraction = (sum(gene %in% (unlist(gtex_cortex_signif) %&gt;% unique())))/n()) %&gt;% filter(class %in%      c(&quot;groupB&quot;)) %&gt;% pull(egene_in_gtex_fraction)
+V = 6, p-value = 0.05469
+alternative hypothesis: true location shift is less than 0</code></pre>
+<p>The fraction of eGenes across cell types that would not be detected
+without treatment conditions is:</p>
+<pre class="r"><code>mash_by_condition_output_coarse %&gt;% 
+  filter(sig_anywhere) %&gt;% 
+  mutate(class=case_when(control10_lfsr &lt; 0.05 &amp; allsharing ~ &quot;class1&quot;,
+                         control10_lfsr &lt; 0.05 &amp;  !allsharing ~ &quot;class2&quot;,
+                         sig_anywhere &amp; control10_lfsr &gt; 0.05 &amp; !allsharing ~ &quot;class3&quot;,
+                         allsharing &amp; control10_lfsr &gt; 0.05 &amp; (stim1pct_lfsr &lt; 0.05 | stim21pct_lfsr &lt; 0.05) ~ &quot;class4&quot;)) %&gt;%  
+  mutate(control_undetected=class %in% c(&quot;class3&quot;, &quot;class4&quot;)) %&gt;% 
+  group_by(source) %&gt;% 
+  summarize(undetected_rate=sum(control_undetected)/n()) %&gt;% 
+  summarize(median(undetected_rate))</code></pre>
+<pre><code># A tibble: 1 × 1
+  `median(undetected_rate)`
+                      &lt;dbl&gt;
+1                     0.563</code></pre>
+<p>The total number of eGenes detected here, in any condition or cell
+type, is:</p>
+<pre class="r"><code>mash_by_condition_output_coarse %&gt;% 
+  filter(sig_anywhere) %&gt;% 
+  pull(gene) %&gt;% 
+  unique() %&gt;% 
+  length()</code></pre>
+<pre><code>[1] 8267</code></pre>
+<p>Many eGenes will have treatment-responsive effects in one cell type
+and treatment-shared effects in another cell type. The number of eGenes
+that have treatment-insensitive effects in at least one cell type
+is:</p>
+<pre class="r"><code>mash_by_condition_output_coarse %&gt;% 
+  filter(sig_anywhere) %&gt;% 
+  filter(allsharing) %&gt;% 
+  pull(gene) %&gt;% 
+  unique() %&gt;% 
+  length()</code></pre>
+<pre><code>[1] 5631</code></pre>
+<p>The number of eGenes that have treatment-sensitive effects in at
+least one cell type is:</p>
+<pre class="r"><code>mash_by_condition_output_coarse %&gt;% 
+  filter(sig_anywhere) %&gt;% 
+  filter(!allsharing) %&gt;% 
+  pull(gene) %&gt;% 
+  unique() %&gt;% 
+  length()</code></pre>
+<pre><code>[1] 6493</code></pre>
+<p>Calculate the number of “dynamic” vs “standard” eQTLs, here decoarsed
+by shared effect sizes.</p>
+<pre class="r"><code>mash_by_condition_output_coarse %&gt;% 
+  filter(sig_anywhere) %&gt;% 
+  group_by(source) %&gt;% 
+  summarize(allsharing=sum(allsharing), 
+            total=n(), 
+            hypox_normox=sum(hypoxia_normoxia_shared &amp; sharing_contexts==1), 
+            hyperox_normox=sum(hyperoxia_normoxia_shared &amp; sharing_contexts==1), 
+            treatment_shared=sum(hypoxia_hyperoxia_shared &amp; sharing_contexts==1), 
+            alldiff=sum(sharing_contexts==0), 
+            associatively_shared=sum(sharing_contexts==2)) %&gt;% 
+  mutate(dynamic=total-allsharing) %&gt;% 
+  ungroup() %&gt;% 
+  summarise(across(allsharing:dynamic, median))</code></pre>
+<pre><code># A tibble: 1 × 8
+  allsharing total hypox_normox hyperox_normox treatment_shared alldiff
+       &lt;dbl&gt; &lt;dbl&gt;        &lt;dbl&gt;          &lt;dbl&gt;            &lt;dbl&gt;   &lt;dbl&gt;
+1       1341 2676.         184.            184              128     563
+# ℹ 2 more variables: associatively_shared &lt;dbl&gt;, dynamic &lt;dbl&gt;</code></pre>
+<p>Here, anything that does not have a similar (ie, within 2.5-fold)
+effect size in all three oxygen conditions is called “dynamic”. Within
+this dynamic category we can decoarse the following cases: *
+“treatment-shared” means different between normoxia and both hyperoxia
+and hypoxia, or, if you prefer, a normoxia-specific effect *
+“hypox_normox” means different in the hyperoxia condition from the other
+two * “hyperox_normox” means different in the hypoxia condition from the
+other two * “alldiff” means each oxygen condition has a different effect
+size from the other * “associatively_shared”, somewhat confusingly,
+means different between one pair of oxygen conditions but otherwise all
+shared. How can this happen? Consider a case where beta_normoxia=1,
+beta_hypoxia=0.5, and beta_hyperoxia=2. Here, both hypoxia and hyperoxia
+effects are shared with the normoxia condition (namely, differ by less
+than 2.5-fold), but differ from each other.</p>
+<p>To plot these numbers:</p>
+<pre class="r"><code>class_colors3 &lt;- c(&quot;allsharing&quot;=&quot;blue&quot;, &quot;partial_shared&quot;=&quot;red&quot;, &quot;normoxia_specific&quot;=&quot;red&quot;, &quot;hypoxia_specific&quot;=&quot;red&quot;, &quot;hyperoxia_specific&quot;=&quot;red&quot;, &quot;alldiff&quot;=&quot;red&quot;)
+mash_by_condition_output_coarse %&gt;% 
+  filter(sig_anywhere) %&gt;% 
+  mutate(class=case_when(allsharing ~ &quot;allsharing&quot;,
+                         hypoxia_normoxia_shared &amp; sharing_contexts==1 ~ &quot;hyperoxia_specific&quot;,
+                         hyperoxia_normoxia_shared &amp; sharing_contexts==1 ~ &quot;hypoxia_specific&quot;,
+                         hypoxia_hyperoxia_shared &amp; sharing_contexts==1 ~ &quot;normoxia_specific&quot;,
+                         sharing_contexts==2 ~ &quot;partial_shared&quot;, 
+                         sharing_contexts==0 ~ &quot;alldiff&quot;
+  )) %&gt;%   #because of the order of assignment, this does not include &quot;class1&quot; egenes, ie those that are detectable under normoxia.  equivalent to `allsharing &amp; control10_lfsr &gt; 0.05 &amp; (stim1pct_lfsr &lt; 0.05 | stim21pct_lfsr &lt; 0.05) ~ &quot;class4&quot;`
+  group_by(source, class) %&gt;% 
+  summarise(egene = n()) %&gt;% 
+  ggplot(aes(x=factor(class, levels=c(&quot;allsharing&quot;, &quot;alldiff&quot;, &quot;normoxia_specific&quot;, &quot;hypoxia_specific&quot;, &quot;hyperoxia_specific&quot;,  &quot;partial_shared&quot;), ordered = TRUE), y=egene)) + 
+  geom_boxplot(outlier.shape = NA, aes(color=class)) + 
+  geom_point(aes(group=source, color=source), position = position_jitter(width = 0.2, height = 0)) + 
+  xlab(&quot;eGene class (see note)&quot;) + 
+  ylab(&quot;Number of eGenes&quot;) + 
+  theme_light() +  
+  scale_color_manual(values=c(manual_palette_coarse, class_colors3)) + theme(legend.position=&quot;none&quot;) </code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<p><img src="figure/figure3.Rmd/unnamed-chunk-42-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>What fraction of each of these categories are in GTEx?</p>
+<pre class="r"><code>mash_by_condition_output_coarse %&gt;% 
+  filter(sig_anywhere) %&gt;% 
+  mutate(class=case_when(allsharing ~ &quot;allsharing&quot;,
+                         hypoxia_normoxia_shared &amp; sharing_contexts==1 ~ &quot;hyperoxia_specific&quot;,
+                         hyperoxia_normoxia_shared &amp; sharing_contexts==1 ~ &quot;hypoxia_specific&quot;,
+                         hypoxia_hyperoxia_shared &amp; sharing_contexts==1 ~ &quot;normoxia_specific&quot;,
+                         sharing_contexts==2 ~ &quot;partial_shared&quot;, 
+                         sharing_contexts==0 ~ &quot;alldiff&quot;
+  )) %&gt;%   #because of the order of assignment, this does not include &quot;class1&quot; egenes, ie those that are detectable under normoxia.  equivalent to `allsharing &amp; control10_lfsr &gt; 0.05 &amp; (stim1pct_lfsr &lt; 0.05 | stim21pct_lfsr &lt; 0.05) ~ &quot;class4&quot;`
+  group_by(source, class) %&gt;% 
+  summarise(egene_gtex = sum(gene %in% gtex_cortex_signif),
+            egene_in_gtex_fraction = round((sum(gene %in% gtex_cortex_signif))/n(), 4)) %&gt;% 
+  ggplot(aes(x=factor(class, levels=c(&quot;allsharing&quot;, &quot;partial_shared&quot;, &quot;normoxia_specific&quot;, &quot;hypoxia_specific&quot;, &quot;hyperoxia_specific&quot;, &quot;alldiff&quot;), ordered = TRUE), y=egene_in_gtex_fraction)) + 
+  geom_boxplot(outlier.shape = NA, aes(color=class)) + 
+  geom_point(aes(group=source, color=source), position = position_jitter(width = 0.2, height = 0)) + 
+  xlab(&quot;eGene class (see note)&quot;) + 
+  ylab(&quot;Fraction of eGenes in GTEx&quot;) + 
+  theme_light() +  
+  scale_color_manual(values=c(manual_palette_coarse, class_colors)) + theme(legend.position=&quot;none&quot;) </code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<p><img src="figure/figure3.Rmd/unnamed-chunk-43-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>We expect that the dynamic eGenes will be less represented in GTEx.
+To test this, I first designate the classes above as “standard” (all
+effects shared, or the strange case of all effects shared except for one
+comparison), or “dynamic”.</p>
+<pre class="r"><code>wilcox.test(mash_by_condition_output_coarse %&gt;% 
+              filter(sig_anywhere) %&gt;% 
+              mutate(class=case_when(allsharing ~ &quot;standard&quot;,
+                                     hypoxia_normoxia_shared &amp; sharing_contexts==1 ~ &quot;dynamic&quot;,
+                                     hyperoxia_normoxia_shared &amp; sharing_contexts==1 ~ &quot;dynamic&quot;,
+                                     hypoxia_hyperoxia_shared &amp; sharing_contexts==1 ~ &quot;dynamic&quot;,
+                                     sharing_contexts==2 ~ &quot;standard&quot;, 
+                                     sharing_contexts==0 ~ &quot;dynamic&quot;
+              )) %&gt;% 
+              group_by(source, class) %&gt;% 
+              summarise(egene_gtex = sum(gene %in% (unlist(gtex_cortex_signif) %&gt;% unique())),
+                        egene_in_gtex_fraction = (sum(gene %in% (unlist(gtex_cortex_signif) %&gt;% unique())))/n()) %&gt;% filter(class %in% c(&quot;dynamic&quot;)) %&gt;% pull(egene_in_gtex_fraction), 
+            mash_by_condition_output_coarse %&gt;% 
+              filter(sig_anywhere) %&gt;% 
+              mutate(class=case_when(allsharing ~ &quot;standard&quot;,
+                                     hypoxia_normoxia_shared &amp; sharing_contexts==1 ~ &quot;dynamic&quot;,
+                                     hyperoxia_normoxia_shared &amp; sharing_contexts==1 ~ &quot;dynamic&quot;,
+                                     hypoxia_hyperoxia_shared &amp; sharing_contexts==1 ~ &quot;dynamic&quot;,
+                                     sharing_contexts==2 ~ &quot;standard&quot;, 
+                                     sharing_contexts==0 ~ &quot;dynamic&quot;
+              )) %&gt;% 
+              group_by(source, class) %&gt;% 
+              summarise(egene_gtex = sum(gene %in% (unlist(gtex_cortex_signif) %&gt;% unique())),
+                        egene_in_gtex_fraction = (sum(gene %in% (unlist(gtex_cortex_signif) %&gt;% unique())))/n()) %&gt;% filter(class %in% c(&quot;standard&quot;)) %&gt;% pull(egene_in_gtex_fraction), paired=TRUE, alternative = &quot;less&quot;)</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.
+`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<pre><code>
+    Wilcoxon signed rank exact test
+
+data:  mash_by_condition_output_coarse %&gt;% filter(sig_anywhere) %&gt;% mutate(class = case_when(allsharing ~ &quot;standard&quot;, hypoxia_normoxia_shared &amp; sharing_contexts == 1 ~ &quot;dynamic&quot;, hyperoxia_normoxia_shared &amp; sharing_contexts == 1 ~ &quot;dynamic&quot;, hypoxia_hyperoxia_shared &amp; sharing_contexts == 1 ~ &quot;dynamic&quot;, sharing_contexts == 2 ~ &quot;standard&quot;, sharing_contexts == 0 ~ &quot;dynamic&quot;)) %&gt;% group_by(source, class) %&gt;% summarise(egene_gtex = sum(gene %in% (unlist(gtex_cortex_signif) %&gt;% unique())), egene_in_gtex_fraction = (sum(gene %in%      (unlist(gtex_cortex_signif) %&gt;% unique())))/n()) %&gt;% filter(class %in% c(&quot;dynamic&quot;)) %&gt;% pull(egene_in_gtex_fraction) and mash_by_condition_output_coarse %&gt;% filter(sig_anywhere) %&gt;% mutate(class = case_when(allsharing ~ &quot;standard&quot;, hypoxia_normoxia_shared &amp; sharing_contexts == 1 ~ &quot;dynamic&quot;, hyperoxia_normoxia_shared &amp; sharing_contexts == 1 ~ &quot;dynamic&quot;, hypoxia_hyperoxia_shared &amp; sharing_contexts == 1 ~ &quot;dynamic&quot;, sharing_contexts == 2 ~ &quot;standard&quot;, sharing_contexts == 0 ~ &quot;dynamic&quot;)) %&gt;% group_by(source, class) %&gt;% summarise(egene_gtex = sum(gene %in% (unlist(gtex_cortex_signif) %&gt;% unique())), egene_in_gtex_fraction = (sum(gene %in%      (unlist(gtex_cortex_signif) %&gt;% unique())))/n()) %&gt;% filter(class %in% c(&quot;standard&quot;)) %&gt;% pull(egene_in_gtex_fraction)
+V = 0, p-value = 0.003906
+alternative hypothesis: true location shift is less than 0</code></pre>
+</div>
+</div>
+<div id="topic-analysis" class="section level2">
+<h2>Topic analysis</h2>
+<p>Here, I outline the steps used to fit a 15-topic model to our data
+and then estimate topic-interacting QTLs using CellRegMap.</p>
+<p>First, cluster at high resolution to obtain pseudocells, which are
+defined by individual and treatment.</p>
+<pre class="r"><code>harmony.batchandindividual.sct &lt;- readRDS(file = &quot;output/harmony_organoid_dataset.rds&quot;)
+subset_seurat &lt;- subset(harmony.batchandindividual.sct, subset = vireo.prob.singlet &gt; 0.95 &amp; nCount_RNA&lt;20000 &amp; nCount_RNA&gt;2500 &amp; treatment != &quot;control21&quot;)
+
+subset_seurat$splitkey &lt;- paste0(subset_seurat$treatment, &quot;_&quot;, subset_seurat$vireo.individual)
+subset_seurat &lt;- FindNeighbors(object = subset_seurat, reduction = &quot;harmony&quot;, dims = 1:100, verbose = TRUE)</code></pre>
+<pre><code>Computing nearest neighbor graph</code></pre>
+<pre><code>Computing SNN</code></pre>
+<pre class="r"><code>subset_seurat &lt;- FindClusters(object = subset_seurat, dims = 1:100, resolution = 20)</code></pre>
+<pre><code>Warning: The following arguments are not used: dims
+
+Warning: The following arguments are not used: dims</code></pre>
+<pre><code>Modularity Optimizer version 1.3.0 by Ludo Waltman and Nees Jan van Eck
+
+Number of nodes: 170841
+Number of edges: 6947030
+
+Running Louvain algorithm...
+Maximum modularity in 10 random starts: 0.6973
+Number of communities: 258
+Elapsed time: 90 seconds</code></pre>
+<pre><code>2 singletons identified. 256 final clusters.</code></pre>
+<pre class="r"><code>subset_seurat$pseudocell &lt;- paste0(subset_seurat$splitkey, &quot;_&quot;, subset_seurat$seurat_clusters)</code></pre>
+<p>Then, obtain pseudobulk data from the pseudocells.</p>
+<pre class="r"><code>pseudocell_pseudobulk &lt;- generate.pseudobulk(subset_seurat, labels = &quot;pseudocell&quot;)
+saveRDS(pseudocell_pseudobulk, file = &quot;output/pseudocell_pseudobulk_nocontrol21_032024.RDS&quot;)</code></pre>
+<p>Next, compile the metadata for the pseudocells, which CellRegMap will
+need:</p>
+<pre class="r"><code>a &lt;- subset_seurat@meta.data %&gt;% 
+  select(pseudocell, donor_id=vireo.individual, sex, treatment) %&gt;%
+  distinct() %&gt;% 
+  remove_rownames() %&gt;% 
+  column_to_rownames(var = &quot;pseudocell&quot;)
+
+treatment &lt;- model.matrix(~ -1 +  treatment, data=a)
+sex &lt;- model.matrix(~-1 +  sex, data=a)
+
+metadata_output &lt;- bind_cols(a, treatment, sex) %&gt;% 
+  rownames_to_column(var = &quot;pseudocell&quot;) %&gt;% 
+  select(pseudocell, donor_id, treatmentcontrol10, treatmentstim1pct, treatmentstim21pct, sexfemale) %&gt;% 
+  arrange(pseudocell)
+
+write_tsv(metadata_output, file = &quot;topicqtl/pseudocell_metadata_r20_harmonized.tsv&quot;)</code></pre>
+<p>For CellRegMap, we need normalized counts. Per guidance from the
+Battle Lab (JHU), we use the PFlog1pPF method from <a
+href="https://www.biorxiv.org/content/10.1101/2022.05.06.490859v1.full">this
+paper</a>, but instead of using means for the PF we use the median. It
+works by multiplying the read counts in each pseudocell by the ratio of
+median(read depth over all pseudocells)/that cell’s read depth. So, we
+do that on the pseudobulk counts, then take log1p of those, then do it
+again.</p>
+<pre class="r"><code>counts &lt;- t(pseudocell_pseudobulk$counts)
+
+first_median &lt;- median(rowSums(counts))
+first_pf &lt;- t(apply(X = counts, MARGIN = 1, FUN = function(x) x*(first_median/sum(x))))
+first_pf_log1p &lt;- log1p(first_pf)
+
+second_median &lt;- median(rowSums(first_pf_log1p))
+second_pf &lt;- t(apply(X = first_pf_log1p, MARGIN = 1, FUN = function(x) x*(second_median/sum(x))))
+
+for_crm &lt;- as.data.frame(second_pf) %&gt;% 
+  rownames_to_column(&quot;names&quot;) %&gt;% 
+  arrange(names) %&gt;% 
+  column_to_rownames(&quot;names&quot;)
+
+write.table(for_crm, file = &quot;/project2/gilad/umans/oxygen_eqtl/output/topics_pseudocell_counts_nocontrol21_normalized.tsv&quot;, quote = FALSE, sep = &quot;\t&quot;, row.names = TRUE, col.names = TRUE)</code></pre>
+<div id="fit-topic-model" class="section level3">
+<h3>Fit topic model</h3>
+<p>Next, we fit a 15-topic model using fastTopics.</p>
+<pre class="r"><code>library(fastTopics)</code></pre>
+<p>Remove genes with very low expression:</p>
+<pre class="r"><code>j &lt;- which(colSums(counts)&gt;40)
+counts &lt;- counts[,j]
+
+fit &lt;- fit_poisson_nmf(counts, k = 15, init.method = &quot;random&quot;, 
+                       method = &quot;em&quot;, numiter = 400, control = list(nc = 10, numiter = 4), 
+                       verbose = c(&quot;detailed&quot;))
+
+fit &lt;- fit_poisson_nmf(counts, fit0 = fit, method = &quot;scd&quot;, numiter = 200,
+                       control = list(numiter = 4, nc = 10, extrapolate = TRUE),
+                       verbose = c(&quot;detailed&quot;))
+
+fit &lt;- poisson2multinom(fit)
+
+as_tibble(fit$L, rownames=&quot;pseudocell&quot;) %&gt;%
+  arrange(pseudocell) %&gt;% 
+  write_tsv(file = &quot;topicqtl/pseudocell_loadings_k15.tsv&quot;)</code></pre>
+<p>Plot the topic loadings by cell type and treatment condition:</p>
+<pre class="r"><code>annotations &lt;- subset_seurat@meta.data %&gt;% group_by(pseudocell) %&gt;%
+  summarise(individual=names(which.max(table(vireo.individual))),
+            treatment=names(which.max(table(treatment))),
+            coarse=names(which.max(table(combined.annotation.coarse.harmony))),
+            fine=names(which.max(table(combined.annotation.fine.harmony)))) 
+
+coarse_labels &lt;- enframe(annotations %&gt;% pull(coarse, name=pseudocell), name = &quot;pseudocell&quot;, value = &quot;coarse&quot;)
+fine_labels &lt;- enframe(annotations %&gt;% pull(fine, name=pseudocell), name = &quot;pseudocell&quot;, value = &quot;fine&quot;)
+treatment_labels &lt;- enframe(annotations %&gt;% pull(treatment, name=pseudocell), name = &quot;pseudocell&quot;, value = &quot;treatment&quot;)
+individual_labels &lt;- enframe(annotations %&gt;% pull(individual, name=pseudocell), name = &quot;pseudocell&quot;, value = &quot;individual&quot;)</code></pre>
+<pre class="r"><code>fit &lt;- readRDS(file = &quot;output/topics_pseudocells_15_nocontrol21_20240124.RDS&quot;)
+
+plot.data &lt;- as.data.frame(fit$L) %&gt;% 
+  rownames_to_column(var = &quot;pseudocell&quot;) %&gt;% 
+  pivot_longer(cols = !pseudocell, names_to = &quot;topic&quot;, values_to = &quot;loading&quot;) %&gt;% 
+  left_join(y= coarse_labels) %&gt;% 
+  left_join(y= fine_labels) %&gt;% 
+  left_join(y= treatment_labels) %&gt;% 
+  left_join(y= individual_labels) %&gt;% 
+  group_by(fine, treatment, topic) %&gt;% 
+  summarise(plot_value=mean(loading)) %&gt;% 
+  pivot_wider(values_from = plot_value, names_from = topic) %&gt;% 
+  unite(col = &quot;rowname&quot;, fine:treatment, sep = &quot;_&quot;) %&gt;% 
+  column_to_rownames(var = &quot;rowname&quot;) %&gt;% 
+  as.matrix()</code></pre>
+<pre><code>Joining with `by = join_by(pseudocell)`
+Joining with `by = join_by(pseudocell)`
+Joining with `by = join_by(pseudocell)`
+Joining with `by = join_by(pseudocell)`
+`summarise()` has grouped output by &#39;fine&#39;, &#39;treatment&#39;. You can override using
+the `.groups` argument.</code></pre>
+<pre class="r"><code>labels &lt;- data.frame(fine=str_extract(rownames(plot.data), pattern = &quot;[^_]+&quot;),
+                     treatment=str_extract(rownames(plot.data), pattern = &quot;[^_]+$&quot;)
+                     )
+rownames(labels) &lt;- rownames(plot.data)
+
+celltypeCol &lt;- manual_palette_fine
+
+treatmentCol &lt;- c(&quot;control10&quot; = &quot;gray&quot;, &quot;stim1pct&quot; = &quot;blue&quot;, &quot;stim21pct&quot;=&quot;red&quot;)
+annoCol &lt;- list(fine = celltypeCol,
+                treatment = treatmentCol)
+
+# now use pheatmap to annotate
+labels$fine &lt;- factor(labels$fine, levels = c(&quot;RGcycling&quot; , &quot;RG&quot;,  &quot;CorticalHem&quot;,  &quot;IPcycling&quot;, &quot;IP&quot;, &quot;GliaProg&quot;, &quot;Oligo&quot;, &quot;Immature&quot;, &quot;Glut&quot;, &quot;GlutNTS&quot;, &quot;NeuronOther&quot;,  &quot;MidbrainDA&quot;, &quot;Cajal&quot;, &quot;Inh&quot;,  &quot;InhThalamic&quot;, &quot;InhGNRH&quot;,  &quot;InhSST&quot;, &quot;InhMidbrain&quot;,  &quot;Choroid&quot;, &quot;VLMC&quot;))
+
+sub_samp_ordered &lt;- plot.data[rownames(arrange(labels, fine)), c(&quot;k7&quot;, &quot;k1&quot;, &quot;k2&quot;,  &quot;k3&quot;,  &quot;k4&quot;, &quot;k5&quot;, &quot;k6&quot;,  &quot;k8&quot;, &quot;k9&quot;, &quot;k10&quot;, &quot;k11&quot;, &quot;k12&quot;, &quot;k13&quot;, &quot;k14&quot;, &quot;k15&quot;)  ]
+# sub_samp_ordered &lt;- plot.data[rownames(arrange(labels, treatment, fine)), ]
+
+pheatmap(sub_samp_ordered, col = colorRampPalette(rev(brewer.pal(11, &quot;Spectral&quot;)))(25),
+         border_color = NA,
+         show_colnames = TRUE,
+         treeheight_row = 0, treeheight_col = 0,
+         annotation_row = labels, 
+         annotation_colors = annoCol,
+         cluster_rows = FALSE, cluster_cols = FALSE
+         )</code></pre>
+<p><img src="figure/figure3.Rmd/unnamed-chunk-52-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="topic-model-de" class="section level3">
+<h3>Topic model DE</h3>
+<p>Next, I used the grade of membership differential expression routine
+in fastTopics to compare marker genes for hypoxia-associated topoic 7
+with the hypoxia genes we used for responsive cell identification.</p>
+<pre class="r"><code>de_output &lt;- de_analysis(fit, counts, pseudocount = 0.1,
+                  control = list(ns = 1e4, nc = 10), shrink.method=&quot;ash&quot;, verbose=TRUE)</code></pre>
+<pre class="r"><code>de_15 &lt;- readRDS(file = &quot;/project2/gilad/umans/oxygen_eqtl/output/topics_pseudocells_15_de_output_20240124.RDS&quot;)</code></pre>
+<pre class="r"><code>mash.hypoxia &lt;- c(&quot;BNIP3&quot;, &quot;IGFBP2&quot;, &quot;PGAM1&quot;, &quot;BNIP3L&quot;, 
+  &quot;FAM162A&quot;, &quot;TPI1&quot;, &quot;PGK1&quot;, &quot;P4HA1&quot;, 
+  &quot;ENO1&quot;,  &quot;LDHA&quot;, &quot;MIR210HG&quot;, &quot;ALDOA&quot;, 
+  &quot;AC097534.2&quot;, &quot;MTFP1&quot;, &quot;AK4&quot;, &quot;SLC2A1&quot;,
+  &quot;VEGFA&quot;, &quot;PDK1&quot;, &quot;RCOR2&quot;, &quot;ANKRD37&quot;,
+  &quot;PLOD2&quot;, &quot;HK2&quot;, &quot;TNIP1&quot;, &quot;DDIT4&quot;, &quot;AC107021.1&quot;,
+  &quot;INSIG2&quot;, &quot;WSB1&quot;, &quot;NRN1&quot;, &quot;PPFIA4&quot;, &quot;EGLN1&quot;, 
+  &quot;RAPGEF4&quot;, &quot;FAM210A&quot;, &quot;P4HA2&quot;, &quot;CXCR4&quot;, 
+  &quot;GOLGA8A&quot;, &quot;ENO2&quot;, &quot;SNHG19&quot;, &quot;GPI&quot;, &quot;HLA-B&quot;,
+  &quot;MT3&quot;, &quot;ADAMTS20&quot;, &quot;PFKP&quot;, &quot;PFKFB3&quot;, &quot;HILPDA&quot;, 
+  &quot;KDM3A&quot;, &quot;RLF&quot;, &quot;KDM7A&quot;, &quot;AC087280.2&quot;, &quot;HK1&quot;, 
+  &quot;HIF1A-AS3&quot;, &quot;PDK3&quot;, &quot;LINC02649&quot;, &quot;FUT11&quot;, 
+  &quot;NIM1K&quot;, &quot;COL11A1&quot;, &quot;AL357153.2&quot;, &quot;KDM4C&quot;, 
+  &quot;UACA&quot;, &quot;SLC16A1&quot;, &quot;USP28&quot;, &quot;SLC8A3&quot;, 
+  &quot;RASGRF1&quot;, &quot;NRIP3&quot;, &quot;PRMT8&quot;, &quot;NDRG1&quot;, &quot;PCAT6&quot;, &quot;RAPGEF4-AS1&quot;)
+
+plot_data &lt;- data.frame(logfc=de_15$postmean[,&quot;k7&quot;], z=abs(de_15$z[,&quot;k7&quot;]), lfsr=de_15$lfsr[,&quot;k7&quot;])
+plot_data$mark &lt;- &quot;black&quot;
+plot_data[which(plot_data$lfsr &gt; 0.05 ), &quot;mark&quot;] &lt;- &quot;lightgray&quot;
+plot_data[which(rownames(plot_data) %in% mash.hypoxia), &quot;mark&quot;] &lt;- &quot;red&quot;
+
+hypoxia_points &lt;- plot_data[which(plot_data$mark %in% c(&quot;black&quot;, &quot;lightgray&quot;)),]
+highlight_points &lt;- plot_data[which(plot_data$mark %in% c(&quot;red&quot;)),]
+
+ggplot(data=hypoxia_points, aes(x=logfc, y=z, color=mark,  label=rownames(hypoxia_points)) ) + 
+  geom_point( alpha=0.5)  +
+  scale_color_identity() + 
+  scale_y_continuous(trans = &quot;sqrt&quot;) + theme_light() +
+  geom_point(data=highlight_points, aes(x=logfc, y=z, color=mark, label=rownames(highlight_points))) + 
+  geom_text_repel(data = highlight_points, aes(x=logfc, y=z, color=mark, label=rownames(highlight_points)), color=&quot;black&quot;) + 
+  ggtitle(&quot;topic 7&quot;)</code></pre>
+<pre><code>Warning in geom_point(data = highlight_points, aes(x = logfc, y = z, color =
+mark, : Ignoring unknown aesthetics: label</code></pre>
+<pre><code>Warning: Removed 208 rows containing missing values (`geom_point()`).</code></pre>
+<pre><code>Warning: ggrepel: 48 unlabeled data points (too many overlaps). Consider
+increasing max.overlaps</code></pre>
+<p><img src="figure/figure3.Rmd/unnamed-chunk-55-1.png" width="672" style="display: block; margin: auto;" />
+I do the same for topic 4, which marks dividing cells, using markers of
+dividing cells that we see in the pseudobulk data</p>
+<pre class="r"><code>plot_data &lt;- data.frame(logfc=de_15$postmean[,&quot;k4&quot;], z=abs(de_15$z[,&quot;k4&quot;]), lfsr=de_15$lfsr[,&quot;k4&quot;])
+plot_data$mark &lt;- &quot;black&quot;
+plot_data[which(plot_data$lfsr &gt; 0.05 ), &quot;mark&quot;] &lt;- &quot;lightgray&quot;
+plot_data[which(rownames(plot_data) %in% c(&quot;MKI67&quot;, &quot;TOP2A&quot;, &quot;CDCA8&quot;, &quot;CDCA3&quot;, &quot;CENPE&quot;, &quot;CDC20&quot;, &quot;CDCA2&quot;, &quot;CDC25C&quot;, &quot;CCNA2&quot;, &quot;CEP55&quot;, &quot;CENPF&quot;)), &quot;mark&quot;] &lt;- &quot;red&quot;
+
+plot_points &lt;- plot_data[which(plot_data$mark %in% c(&quot;black&quot;, &quot;lightgray&quot;)),]
+highlight_points &lt;- plot_data[which(plot_data$mark %in% c(&quot;red&quot;)),]
+
+ggplot(data=plot_points %&gt;% filter(z&lt;300), aes(x=logfc, y=z, color=mark,  label=rownames(plot_points %&gt;% filter(z&lt;300))) ) + 
+  geom_point( alpha=0.5)  + 
+  scale_color_identity()  + 
+  theme_light() + 
+  geom_point(data=highlight_points, aes(x=logfc, y=z, color=mark, label=rownames(highlight_points))) + geom_text_repel(data = highlight_points, aes(x=logfc, y=z, color=mark, label=rownames(highlight_points)), color=&quot;black&quot;)   + 
+  scale_y_continuous(trans = &quot;sqrt&quot;) +
+  ggtitle(&quot;topic 4&quot;)</code></pre>
+<pre><code>Warning in geom_point(data = highlight_points, aes(x = logfc, y = z, color =
+mark, : Ignoring unknown aesthetics: label</code></pre>
+<p><img src="figure/figure3.Rmd/unnamed-chunk-56-1.png" width="672" style="display: block; margin: auto;" />
+And the same for cortical hem-associated topic 3</p>
+<pre class="r"><code>plot_data_hem &lt;- data.frame(logfc=de_15$postmean[,&quot;k3&quot;], z=abs(de_15$z[,&quot;k3&quot;]), lfsr=de_15$lfsr[,&quot;k3&quot;])
+plot_data_hem$mark &lt;- &quot;black&quot;
+plot_data_hem[which(plot_data_hem$lfsr &gt; 0.05 ), &quot;mark&quot;] &lt;- &quot;lightgray&quot;
+plot_data_hem[which(rownames(plot_data_hem) %in% c(&quot;WLS&quot;, &quot;WNT2B&quot;, &quot;WNT5A&quot;,  &quot;WNT8B&quot;, &quot;RSPO1&quot;, &quot;RSPO2&quot;,   &quot;TTR&quot; , &quot;CLIC6&quot;, &quot;FOLR1&quot;)), &quot;mark&quot;] &lt;- &quot;red&quot;
+
+hem_points &lt;- plot_data_hem[which(plot_data_hem$mark %in% c(&quot;black&quot;, &quot;lightgray&quot;)),]
+highlight_points &lt;- plot_data_hem[which(plot_data_hem$mark %in% c(&quot;red&quot;)),]
+
+ggplot(data=hem_points, aes(x=logfc, y=z, color=mark,  label=rownames(hem_points)) ) + 
+  geom_point( alpha=0.5)  + 
+  scale_color_identity() + 
+  scale_y_continuous(trans = &quot;sqrt&quot;) + 
+  theme_light() +  
+  geom_point(data=highlight_points, aes(x=logfc, y=z, color=mark, label=rownames(highlight_points))) + 
+  geom_text_repel(data = highlight_points, aes(x=logfc, y=z, color=mark, label=rownames(highlight_points)), color=&quot;black&quot;) + 
+  ggtitle(&quot;topic 3&quot;)</code></pre>
+<pre><code>Warning in geom_point(data = highlight_points, aes(x = logfc, y = z, color =
+mark, : Ignoring unknown aesthetics: label</code></pre>
+<pre><code>Warning: Removed 343 rows containing missing values (`geom_point()`).</code></pre>
+<p><img src="figure/figure3.Rmd/unnamed-chunk-57-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="prepare-cellregmap-input" class="section level3">
+<h3>Prepare CellRegMap input</h3>
+<p>Interaction testing with CellRegMap works on a subset of SNP-gene
+pairs, as it is computationally costly to do a true genome-wide scan.
+However, there is no guarantee that the lead SNP chosen by mash’s
+fastqtl2mash procedure is the uniquely best SNP to test in all
+pseudocells. I therefore go back to the MatrixEQTL output and, for each
+eGene/cell type/condition, retain all eQTL SNPs with equivalent or
+better evidence of association as the mash SNP.</p>
+<pre class="r"><code>controlset &lt;- mash_by_condition_output %&gt;% 
+  filter(control10_lfsr&lt;0.05) %&gt;% 
+  separate(gene_snp, into = c(&quot;genename&quot;, &quot;snp&quot;), sep = &quot;_&quot;) %&gt;% 
+  # mutate(snp = str_sub(snp, end = -5)) %&gt;% 
+  select(snp, gene, source, control10_lfsr)
+  
+control_all_snps &lt;- lapply(as.character(unique(controlset$source)), function(x) 
+  controlset %&gt;% filter(source==x) %&gt;% #go cell type by cell type
+    full_join(y=read.table(paste0(&quot;/project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/output/combined_fine_quality_filter20_032024/results_combined_control10_&quot;, x,&quot;_nominal.txt&quot;), head=TRUE, stringsAsFactors=FALSE), by=join_by(gene, snp==snps)) %&gt;% #join with original snp-gene pairs form which mash drew
+    dplyr::filter(gene %in% (controlset %&gt;% filter(source==x) %&gt;% pull(gene))) %&gt;% #filter to only those genes for which mash found a significant eqtl
+    mutate(control10_lfsr=replace_na(control10_lfsr, replace = 0)) %&gt;% #there will be a lfsr for only the mash lead variant.  set all others to 0
+    group_by(gene) %&gt;% 
+    arrange(pvalue, control10_lfsr, .by_group = TRUE) %&gt;% #first sort by ascending pvalue, then ascending lfsr. because we set the others to 0, this ensures we sort such that the mash lead variant comes last
+    dplyr::slice(1:match(TRUE, !is.na(source))) %&gt;% #take all of the snp-gene pairs up to the mash-chosen one
+    select(snp, gene) %&gt;% 
+    mutate(source=x)
+  ) %&gt;% bind_rows() %&gt;% distinct()
+
+hypoxiaset &lt;- mash_by_condition_output %&gt;% 
+  filter(stim1pct_lfsr &lt; 0.05) %&gt;% 
+  separate(gene_snp, into = c(&quot;genename&quot;, &quot;snp&quot;), sep = &quot;_&quot;) %&gt;% 
+  # mutate(snp = str_sub(snp, end = -5)) %&gt;% 
+  select(snp, gene, source, stim1pct_lfsr)
+
+hypoxia_all_snps &lt;- lapply(as.character(unique(hypoxiaset$source)), function(x) 
+  hypoxiaset %&gt;% filter(source==x) %&gt;% full_join(y=read.table(paste0(&quot;/project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/output/combined_fine_quality_filter20_032024/results_combined_stim1pct_&quot;, x,&quot;_nominal.txt&quot;), head=TRUE, stringsAsFactors=FALSE), by=join_by(gene, snp==snps)) %&gt;% 
+    dplyr::filter(gene %in% (hypoxiaset %&gt;% filter(source==x) %&gt;% pull(gene))) %&gt;% 
+    mutate(stim1pct_lfsr=replace_na(stim1pct_lfsr, replace = 0)) %&gt;% 
+    group_by(gene) %&gt;% 
+    arrange(pvalue, stim1pct_lfsr, .by_group = TRUE) %&gt;% 
+    dplyr::slice(1:match(TRUE, !is.na(source))) %&gt;% 
+    select(snp, gene) %&gt;% 
+    mutate(source=x)
+  ) %&gt;% bind_rows() %&gt;% distinct()
+
+hyperoxiaset &lt;- mash_by_condition_output %&gt;% 
+  filter(stim21pct_lfsr &lt; 0.05) %&gt;% 
+  separate(gene_snp, into = c(&quot;genename&quot;, &quot;snp&quot;), sep = &quot;_&quot;) %&gt;% 
+  # mutate(snp = str_sub(snp, end = -5)) %&gt;% 
+  select(snp, gene, source, stim21pct_lfsr)
+
+hyperoxia_all_snps &lt;- lapply(as.character(unique(hyperoxiaset$source)), function(x) 
+  hyperoxiaset %&gt;% filter(source==x) %&gt;% full_join(y=read.table(paste0(&quot;/project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/output/combined_fine_quality_filter20_032024/results_combined_stim21pct_&quot;, x,&quot;_nominal.txt&quot;), head=TRUE, stringsAsFactors=FALSE), by=join_by(gene, snp==snps)) %&gt;% 
+    dplyr::filter(gene %in% (hyperoxiaset %&gt;% filter(source==x) %&gt;% pull(gene))) %&gt;% 
+    mutate(stim21pct_lfsr=replace_na(stim21pct_lfsr, replace = 0)) %&gt;% 
+    group_by(gene) %&gt;% 
+    arrange(pvalue, stim21pct_lfsr, .by_group = TRUE) %&gt;% 
+    dplyr::slice(1:match(TRUE, !is.na(source))) %&gt;% 
+    select(snp, gene) %&gt;% 
+    mutate(source=x)
+  ) %&gt;% bind_rows() %&gt;% distinct()
+
+bind_rows(control_all_snps, hypoxia_all_snps, hyperoxia_all_snps) %&gt;% ungroup() %&gt;% 
+  distinct() %&gt;%
+  write_tsv(file = &quot;/project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/output/combined_fine_quality_filter20_032024/mash/post-mash_significant_and_equivalent_snp-gene_pairs_EE.txt&quot;, col_names = FALSE)</code></pre>
+<p>Then use these SNP-gene pairs, with some minor reformatting for
+CellRegMap:</p>
+<pre class="r"><code>snpgenes &lt;- read_tsv(file = &quot;/project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/output/combined_fine_quality_filter20_032024/mash/post-mash_significant_and_equivalent_snp-gene_pairs_EE.txt&quot;, col_names = c(&quot;snp&quot;, &quot;gene&quot;, &quot;source&quot;))
+
+snpgenes %&gt;% mutate(mutated=str_extract(snp, pattern = &quot;[:digit:]+:[:digit:]+&quot;)) %&gt;% 
+  separate_wider_delim(mutated, delim = &quot;:&quot;, names = c(&quot;chrom&quot;, &quot;END&quot;)) %&gt;% 
+  mutate(END=as.integer(END)) %&gt;% 
+  mutate(`#CHR`=paste0(&quot;chr&quot;, chrom)) %&gt;% 
+  mutate(START= END - 1) %&gt;% 
+  select(`#CHR`, START, END, GENE_ENSG=gene, GENE_HGNC=gene, VARIANT_ID=snp, CELLTYPE=source) %&gt;% 
+  write_tsv(file = &quot;/project2/gilad/umans/oxygen_eqtl/topicqtl/mash_and_equivalent_fine_reharmonized.bed&quot;)</code></pre>
+<p>Metadata for CellRegMap was extracted from the pseudocell data as
+follows:</p>
+<pre class="r"><code>a &lt;- subset_seurat@meta.data %&gt;% select(pseudocell, donor_id=vireo.individual, sex, treatment) %&gt;% distinct() %&gt;% remove_rownames() %&gt;%  column_to_rownames(var = &quot;pseudocell&quot;)
+
+treatment &lt;- model.matrix(~-1 +  treatment, data=a)
+sex &lt;- model.matrix(~-1 +  sex, data=a)
+
+metadata_output &lt;- bind_cols(a, treatment, sex) %&gt;% 
+  rownames_to_column(var = &quot;pseudocell&quot;) %&gt;% 
+  select(pseudocell, donor_id, treatmentcontrol10, treatmentstim1pct, treatmentstim21pct, sexfemale) %&gt;% 
+  arrange(pseudocell)
+
+write_tsv(metadata_output, file = &quot;topicqtl/pseudocell_metadata_r20_harmonized.tsv&quot;)</code></pre>
+</div>
+</div>
+<div id="run-cellregmap" class="section level2">
+<h2>Run CellRegMap</h2>
+<p>CellRegMap was run using the Snakemake rule
+<code>cellregmap_eqtl_calling.py</code> with accompanying code in
+<code>code/cellregmap_eqtl_calling/</code>.</p>
+</div>
+<div id="process-cellregmap-output" class="section level2">
+<h2>Process CellRegMap output</h2>
+<p>After Bonferroni correction and determination of a q-value threshold,
+we obtain the significant CellRegMap output. To identify QTL effects
+correlated with particular topics, I first calculate the correlation
+between the estimated effect sizes for each pseudocell and the topic
+loadings for that pseudocell.</p>
+<pre class="r"><code>crm_signif &lt;- vroom(&quot;/project2/gilad/umans/oxygen_eqtl/topicqtl/outputs/topics15/all_genes_merged_fine_fasttopics_15_topics.cellregmap.sighits.tsv&quot;)</code></pre>
+<pre><code>Rows: 289 Columns: 5
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: &quot;\t&quot;
+chr (2): GENE_HGNC, VARIANT_ID
+dbl (3): P_CELLREGMAP, P_BONF, q
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>crm_iegenes &lt;- crm_signif$GENE_HGNC
+
+crm_betas &lt;- vroom(paste0(&quot;/project2/gilad/umans/oxygen_eqtl/topicqtl/outputs/topics15/fasttopics_fine_15_topics.&quot;, crm_iegenes, &quot;.cellregmap.betas.tsv&quot;))</code></pre>
+<pre><code>Rows: 3094323 Columns: 5
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: &quot;\t&quot;
+chr (3): PSEUDOCELL, GENE_HGNC, VARIANT_ID
+dbl (2): BETA_GXC, BETA_G
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>crm_betas_wide &lt;- dplyr::select(crm_betas, c(PSEUDOCELL, BETA_GXC, GENE_HGNC, VARIANT_ID)) %&gt;%
+  unite(TOPIC_QTL, GENE_HGNC, VARIANT_ID, sep=&quot;_&quot;) %&gt;%
+  pivot_wider(id_cols=PSEUDOCELL, names_from=TOPIC_QTL, values_from=BETA_GXC)
+
+topic_loadings &lt;- vroom(&quot;/project2/gilad/umans/oxygen_eqtl/topicqtl/pseudocell_loadings_k15.tsv&quot;)</code></pre>
+<pre><code>Rows: 10707 Columns: 16
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: &quot;\t&quot;
+chr  (1): pseudocell
+dbl (15): k1, k2, k3, k4, k5, k6, k7, k8, k9, k10, k11, k12, k13, k14, k15
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>crm_betas_loadings &lt;- left_join(crm_betas_wide, topic_loadings, by=c(&quot;PSEUDOCELL&quot;=&quot;pseudocell&quot;))
+
+beta_topic_corrs_matrix &lt;- cor(dplyr::select(crm_betas_loadings, -c(PSEUDOCELL, paste0(&quot;k&quot;, seq(15)))),
+                        dplyr::select(crm_betas_loadings, paste0(&quot;k&quot;, seq(15))))</code></pre>
+<p>How many of these topic 7-interacting QTLs are not detected as
+dynamic in the static analysis?</p>
+<pre class="r"><code>mash_by_condition_output &lt;- readRDS(file = &quot;output/combined_mash-by-condition_EE_fine_reharmonized_032024.rds&quot;) %&gt;% 
+  ungroup() 
+
+hypoxia_egenes &lt;- mash_by_condition_output %&gt;% 
+  filter(sig_anywhere) %&gt;% 
+  filter(stim1pct_lfsr &lt; 0.05 &amp; !allsharing ) %&gt;% 
+  pull(gene) %&gt;% unique()
+
+ a &lt;- mash_by_condition_output %&gt;% 
+  filter(sig_anywhere) %&gt;% 
+  filter(stim1pct_lfsr &lt; 0.05 &amp; stim21pct_lfsr &gt; 0.05 &amp; control10_lfsr &gt; 0.05) %&gt;% 
+   filter(!allsharing) %&gt;% 
+  pull(gene) %&gt;% unique() 
+ 
+ b &lt;- mash_by_condition_output %&gt;% 
+  filter(sig_anywhere) %&gt;% 
+  filter(stim1pct_lfsr &gt; 0.05 &amp; stim21pct_lfsr &lt; 0.05 &amp; control10_lfsr &lt; 0.05) %&gt;% 
+   filter(!allsharing) %&gt;% 
+  pull(gene) %&gt;% unique()
+
+d &lt;-  unique(c(a,b))
+ 
+beta_topic_corrs_p &lt;- apply(dplyr::select(crm_betas_loadings, -c(PSEUDOCELL, paste0(&quot;k&quot;, seq(15)))) %&gt;% as.matrix(), MARGIN = 2, FUN = function(x) cor.test(x, crm_betas_loadings$k7)$p.value )
+
+k7_egenes &lt;- beta_topic_corrs_matrix %&gt;% as.data.frame() %&gt;% 
+  dplyr::select(k7) %&gt;% 
+  bind_cols(beta_topic_corrs_p) %&gt;% 
+  rownames_to_column(var = &quot;gene_snp&quot;) %&gt;%  
+   separate(gene_snp, into = c(&quot;genename&quot;, &quot;snp&quot;), sep = &quot;_&quot;) %&gt;% 
+    mutate(snp_short = str_sub(snp, end = -5)) %&gt;% 
+  filter(`...2` &lt; (0.05/289)) %&gt;% pull(genename)</code></pre>
+<pre><code>New names:
+• `` -&gt; `...2`</code></pre>
+<pre class="r"><code># As a side note, many of these have small correlations with k7, which are nonetheless statistically significant.  How many if we threshold to correlation coefficient &gt; 0.2?
+beta_topic_corrs_matrix %&gt;% as.data.frame() %&gt;% 
+  dplyr::select(k7) %&gt;% 
+  bind_cols(beta_topic_corrs_p) %&gt;% 
+  rownames_to_column(var = &quot;gene_snp&quot;) %&gt;%  
+   separate(gene_snp, into = c(&quot;genename&quot;, &quot;snp&quot;), sep = &quot;_&quot;) %&gt;% 
+    mutate(snp_short = str_sub(snp, end = -5)) %&gt;% 
+  filter(`...2` &lt; (0.05/289)) %&gt;% filter(k7&gt;0.2) %&gt;% dim()</code></pre>
+<pre><code>New names:
+• `` -&gt; `...2`</code></pre>
+<pre><code>[1] 20  5</code></pre>
+<pre class="r"><code># this yields 20 genes
+
+length(setdiff(k7_egenes, d))</code></pre>
+<pre><code>[1] 117</code></pre>
+<pre class="r"><code># setdiff(k7_egenes, d)</code></pre>
+<pre class="r"><code>pseudocell_exp_loc &lt;- &quot;/project2/gilad/umans/oxygen_eqtl/output/topics_pseudocell_counts_nocontrol21_normalized.tsv&quot;
+plink_prefix &lt;- &quot;/project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/snps/YRI_genotypes_maf10hwee-6_full/yri_maf0.1_all.hg38&quot;
+g &lt;- &quot;WDR45B&quot;
+v &lt;- &quot;17:82613559:C:G&quot;
+
+pseudocell_exp &lt;- read.table(file = &quot;/project2/gilad/umans/oxygen_eqtl/output/topics_pseudocell_counts_nocontrol21_normalized.tsv&quot;) %&gt;% rownames_to_column(&quot;pseudocell&quot;)
+genotypes_plink &lt;- read.plink(bed=paste0(plink_prefix, &quot;.bed&quot;),
+                        bim=paste0(plink_prefix, &quot;.bim&quot;),
+                        fam=paste0(plink_prefix, &quot;.fam&quot;),
+                        select.snps = v)
+crm_genotypes_df &lt;- tibble(&quot;donor&quot;=rownames(genotypes_plink$genotypes), &quot;genotype&quot;=as.numeric(genotypes_plink$genotypes))
+
+pseudocell_df &lt;- crm_betas_loadings %&gt;%
+  select(all_of(c(&quot;PSEUDOCELL&quot;, paste0(g, &quot;_&quot;, v)))) %&gt;% 
+  dplyr::rename(beta_gxc = paste0(g, &quot;_&quot;, v)) %&gt;%
+  left_join(select(pseudocell_exp, c(pseudocell, eval(g))), by=c(&quot;PSEUDOCELL&quot;=&quot;pseudocell&quot;)) %&gt;%
+  mutate(donor=str_extract(PSEUDOCELL, &quot;NA[:digit:]+&quot;)) %&gt;% 
+  left_join(crm_genotypes_df, by=c(&quot;donor&quot;)) %&gt;%
+  left_join(topic_loadings, by = join_by(PSEUDOCELL==pseudocell)) %&gt;% 
+  mutate(genotype=factor(genotype))
+
+ggplot(pseudocell_df, aes(x=k7, y=WDR45B, color=genotype)) +
+  geom_point(size=0.25, alpha = 0.5) * (blend(&quot;lighten&quot;, alpha = 0.5) + blend(&quot;multiply&quot;, alpha = 0.1)) +
+  geom_smooth(method = &quot;lm&quot;) +
+  theme_light() +
+  scale_color_manual(labels=c(&quot;CC&quot;, &quot;CG&quot;), values=brewer.pal(3, &quot;Dark2&quot;)) +
+  theme(axis.ticks.y=element_blank(), axis.text.y=element_blank(), axis.ticks.x=element_blank(), axis.text.x=element_blank()) +
+  xlab(&quot;k7 (hypoxia) topic loading&quot;) +
+  ylab(&quot;WDR45B Expression&quot;) +
+  labs(color=v) </code></pre>
+<pre><code>`geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
+<p><img src="figure/figure3.Rmd/unnamed-chunk-63-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Topic 15. How many of the top correlated eGenes are eGenes in the
+individual cell types?</p>
+<pre class="r"><code>beta_topic_corrs_matrix %&gt;% as.data.frame() %&gt;% arrange(desc(abs(k15))) %&gt;% head(n=20) %&gt;% filter(k15&gt;0.6)</code></pre>
+<pre><code>                                   k1           k2          k3          k4
+RASSF9_12:85870921:G:A    -0.25259654  0.009039522 -0.01394079 -0.08458043
+RSPO1_1:37660086:T:C      -0.13148899 -0.051215163  0.09763033 -0.05717446
+FOXJ1_17:76100850:G:A     -0.16801281 -0.152483333  0.35623378 -0.22396380
+CFAP126_1:161383895:G:C   -0.34071436  0.010831460  0.44134290 -0.28680403
+FYB2_1:56825847:A:G       -0.11085152 -0.052060642  0.48209518  0.06543081
+SPRY1_4:123365323:C:A     -0.09408339  0.073108477  0.06058185  0.10058601
+ABCA1_9:104975539:T:C      0.02363156  0.017305183 -0.03631995  0.04465866
+CD44_11:35097776:C:A      -0.03095601 -0.106330539  0.18139729  0.07420194
+TMEM132C_12:128218476:C:T -0.13686814 -0.020044243  0.19836120  0.03585012
+DYNLRB2_16:80520188:T:C   -0.11683793 -0.078421486  0.30016602 -0.10625551
+FN1_2:215434058:T:C       -0.15524752 -0.096517033  0.19126488 -0.03772478
+CD151_11:801644:A:T       -0.15803517  0.167638462  0.13729444  0.10256691
+                                   k5          k6         k7         k8
+RASSF9_12:85870921:G:A     0.11091358  0.02292881 0.08717203 -0.2641889
+RSPO1_1:37660086:T:C      -0.09771054 -0.14053840 0.23323145 -0.1434424
+FOXJ1_17:76100850:G:A      0.27437715 -0.12591368 0.10315606 -0.1566369
+CFAP126_1:161383895:G:C    0.10141447 -0.16103396 0.15964532 -0.2286409
+FYB2_1:56825847:A:G        0.12372952  0.25495287 0.22259419 -0.3855926
+SPRY1_4:123365323:C:A      0.13458682  0.30278357 0.07450560 -0.4879467
+ABCA1_9:104975539:T:C     -0.02363953  0.25729112 0.39194896 -0.4257625
+CD44_11:35097776:C:A      -0.11183809  0.37974606 0.52717565 -0.2634827
+TMEM132C_12:128218476:C:T -0.25775211 -0.04944711 0.18962611 -0.3037736
+DYNLRB2_16:80520188:T:C    0.14606639 -0.18617422 0.02624672 -0.5243134
+FN1_2:215434058:T:C       -0.01499032  0.03851312 0.01853084 -0.6084821
+CD151_11:801644:A:T        0.03622809  0.26347577 0.21709421 -0.4931014
+                                   k9         k10        k11          k12
+RASSF9_12:85870921:G:A    -0.28580691 -0.14094440 0.12511856 -0.002659871
+RSPO1_1:37660086:T:C      -0.14631804 -0.20890315 0.30815772 -0.099634190
+FOXJ1_17:76100850:G:A     -0.11159929 -0.13319220 0.15242846 -0.118279921
+CFAP126_1:161383895:G:C   -0.07329987 -0.04050429 0.10409030 -0.056850182
+FYB2_1:56825847:A:G       -0.46137549 -0.15089608 0.08068722 -0.197478044
+SPRY1_4:123365323:C:A     -0.43538242 -0.07725107 0.22204321  0.043074791
+ABCA1_9:104975539:T:C     -0.47641154 -0.19130900 0.18072025 -0.028150674
+CD44_11:35097776:C:A      -0.33120002 -0.29568399 0.02221147 -0.409626094
+TMEM132C_12:128218476:C:T -0.36162800 -0.23866413 0.47591717  0.080548982
+DYNLRB2_16:80520188:T:C   -0.35178526 -0.03300476 0.06580855  0.339363731
+FN1_2:215434058:T:C       -0.34705412  0.25951942 0.10343289  0.424049088
+CD151_11:801644:A:T       -0.38140939 -0.32031629 0.48018740 -0.097889100
+                                  k13         k14       k15
+RASSF9_12:85870921:G:A    -0.09255342 -0.15619848 0.9540904
+RSPO1_1:37660086:T:C      -0.25444975 -0.15405399 0.9117023
+FOXJ1_17:76100850:G:A     -0.11081476 -0.19863064 0.8837666
+CFAP126_1:161383895:G:C   -0.18715516 -0.05524329 0.8391898
+FYB2_1:56825847:A:G        0.19793486 -0.37950404 0.8066111
+SPRY1_4:123365323:C:A     -0.04956571 -0.50351579 0.7971525
+ABCA1_9:104975539:T:C      0.09773105 -0.52962342 0.7705794
+CD44_11:35097776:C:A       0.38746240 -0.31516744 0.7224227
+TMEM132C_12:128218476:C:T -0.01424732 -0.44897227 0.7121441
+DYNLRB2_16:80520188:T:C   -0.02755045 -0.35354317 0.7112260
+FN1_2:215434058:T:C       -0.24449512 -0.33566665 0.6603629
+CD151_11:801644:A:T        0.17928299 -0.53252796 0.6266806</code></pre>
+<p>All of these are specific to the cell types associated with topic 15
+except ABCA1, CD151, which are also significant in radial glia and
+intermediate progenitors (ABCA1) and choroid plexus and neurons
+(CD151).</p>
+<pre class="r"><code>g &lt;- &quot;ABCA1&quot;
+v &lt;- &quot;9:104975539:T:C&quot;
+
+# pseudocell_exp &lt;- vroom(pseudocell_exp_loc)
+genotypes_plink &lt;- read.plink(bed=paste0(plink_prefix, &quot;.bed&quot;),
+                        bim=paste0(plink_prefix, &quot;.bim&quot;),
+                        fam=paste0(plink_prefix, &quot;.fam&quot;),
+                        select.snps = v)
+crm_genotypes_df &lt;- tibble(&quot;donor&quot;=rownames(genotypes_plink$genotypes), &quot;genotype&quot;=as.numeric(genotypes_plink$genotypes))
+
+
+pseudocell_df2 &lt;- crm_betas_loadings %&gt;%
+  select(all_of(c(&quot;PSEUDOCELL&quot;, paste0(g, &quot;_&quot;, v)))) %&gt;% 
+  dplyr::rename(beta_gxc = paste0(g, &quot;_&quot;, v)) %&gt;%
+  left_join(select(pseudocell_exp, c(pseudocell, eval(g))), by=c(&quot;PSEUDOCELL&quot;=&quot;pseudocell&quot;)) %&gt;%
+  mutate(donor=str_extract(PSEUDOCELL, &quot;NA[:digit:]+&quot;)) %&gt;% 
+  left_join(crm_genotypes_df, by=c(&quot;donor&quot;)) %&gt;%
+  left_join(topic_loadings, by = join_by(PSEUDOCELL==pseudocell)) %&gt;% 
+  mutate(genotype=factor(genotype))
+
+ggplot(pseudocell_df2, aes(x=k15, y=ABCA1, color=genotype)) +
+  geom_point(size=0.25, alpha = 0.5) * (blend(&quot;lighten&quot;, alpha = 0.5) + blend(&quot;multiply&quot;, alpha = 0.1)) +
+  geom_smooth(method = &quot;lm&quot;) +
+  theme_light() +
+  scale_color_manual(labels=c(&quot;TT&quot;, &quot;TC&quot;, &quot;CC&quot;), values=brewer.pal(3, &quot;Dark2&quot;)) +
+  theme(axis.ticks.y=element_blank(), axis.text.y=element_blank(), axis.ticks.x=element_blank(), axis.text.x=element_blank()) +
+  xlab(&quot;k15 topic loading&quot;) +
+  ylab(&quot;ABCA1 Expression&quot;) +
+  labs(color=v) </code></pre>
+<pre><code>`geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
+<p><img src="figure/figure3.Rmd/unnamed-chunk-65-1.png" width="672" style="display: block; margin: auto;" /></p>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.2.0 (2022-04-22)
+Platform: x86_64-pc-linux-gnu (64-bit)
+Running under: CentOS Linux 7 (Core)
+
+Matrix products: default
+BLAS/LAPACK: /software/openblas-0.3.13-el7-x86_64/lib/libopenblas_haswellp-r0.3.13.so
+
+locale:
+ [1] LC_CTYPE=en_US.UTF-8 LC_NUMERIC=C         LC_TIME=C           
+ [4] LC_COLLATE=C         LC_MONETARY=C        LC_MESSAGES=C       
+ [7] LC_PAPER=C           LC_NAME=C            LC_ADDRESS=C        
+[10] LC_TELEPHONE=C       LC_MEASUREMENT=C     LC_IDENTIFICATION=C 
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] fastTopics_0.6-142 ggblend_0.1.0      vroom_1.6.4        gdata_2.19.0      
+ [5] snpStats_1.46.0    Matrix_1.6-3       survival_3.3-1     qvalue_2.28.0     
+ [9] MatrixEQTL_2.3     pheatmap_1.0.12    ggrepel_0.9.4      udr_0.3-153       
+[13] mashr_0.2.79       ashr_2.2-63        magrittr_2.0.3     RColorBrewer_1.1-3
+[17] pals_1.8           forcats_0.5.1      stringr_1.5.0      dplyr_1.1.4       
+[21] purrr_1.0.2        readr_2.1.4        tidyr_1.3.0        tibble_3.2.1      
+[25] ggplot2_3.4.4      tidyverse_1.3.1    SeuratObject_4.1.4 Seurat_4.4.0      
+[29] workflowr_1.7.0   
+
+loaded via a namespace (and not attached):
+  [1] utf8_1.2.4             spatstat.explore_3.0-6 reticulate_1.34.0     
+  [4] tidyselect_1.2.0       htmlwidgets_1.6.2      grid_4.2.0            
+  [7] Rtsne_0.16             munsell_0.5.0          codetools_0.2-18      
+ [10] ica_1.0-3              future_1.33.1          miniUI_0.1.1.1        
+ [13] withr_2.5.2            spatstat.random_3.1-3  colorspace_2.1-0      
+ [16] progressr_0.14.0       highr_0.9              knitr_1.45            
+ [19] rstudioapi_0.13        ROCR_1.0-11            tensor_1.5            
+ [22] listenv_0.9.1          labeling_0.4.3         git2r_0.30.1          
+ [25] mixsqp_0.3-48          polyclip_1.10-0        MCMCpack_1.6-3        
+ [28] farver_2.1.1           bit64_4.0.5            rprojroot_2.0.3       
+ [31] coda_0.19-4            parallelly_1.37.0      vctrs_0.6.4           
+ [34] generics_0.1.3         xfun_0.41              timechange_0.2.0      
+ [37] R6_2.5.1               invgamma_1.1           spatstat.utils_3.0-4  
+ [40] cachem_1.0.8           assertthat_0.2.1       promises_1.2.0.1      
+ [43] scales_1.2.1           gtable_0.3.4           globals_0.16.2        
+ [46] processx_3.8.2         goftest_1.2-3          mcmc_0.9-7            
+ [49] MatrixModels_0.5-0     rlang_1.1.3            splines_4.2.0         
+ [52] lazyeval_0.2.2         dichromat_2.0-0.1      spatstat.geom_3.2-7   
+ [55] broom_1.0.5            yaml_2.3.5             reshape2_1.4.4        
+ [58] abind_1.4-5            modelr_0.1.8           backports_1.4.1       
+ [61] httpuv_1.6.5           tools_4.2.0            ellipsis_0.3.2        
+ [64] jquerylib_0.1.4        BiocGenerics_0.44.0    ggridges_0.5.3        
+ [67] Rcpp_1.0.12            plyr_1.8.9             progress_1.2.2        
+ [70] zlibbioc_1.44.0        prettyunits_1.1.1      ps_1.7.5              
+ [73] deldir_1.0-6           pbapply_1.5-0          cowplot_1.1.1         
+ [76] zoo_1.8-12             haven_2.5.0            cluster_2.1.3         
+ [79] fs_1.6.3               data.table_1.14.8      scattermore_1.2       
+ [82] SparseM_1.81           lmtest_0.9-40          reprex_2.0.1          
+ [85] RANN_2.6.1             truncnorm_1.0-9        mvtnorm_1.2-3         
+ [88] SQUAREM_2021.1         whisker_0.4.1          fitdistrplus_1.1-8    
+ [91] matrixStats_1.1.0      hms_1.1.3              patchwork_1.1.3       
+ [94] mime_0.12              evaluate_0.23          xtable_1.8-4          
+ [97] readxl_1.4.0           gridExtra_2.3          compiler_4.2.0        
+[100] maps_3.4.0             KernSmooth_2.23-20     crayon_1.5.2          
+[103] htmltools_0.5.7        mgcv_1.8-40            later_1.3.0           
+[106] tzdb_0.4.0             RcppParallel_5.1.5     lubridate_1.9.3       
+[109] DBI_1.1.3              dbplyr_2.4.0           MASS_7.3-56           
+[112] rmeta_3.0              cli_3.6.1              quadprog_1.5-8        
+[115] parallel_4.2.0         igraph_1.5.1           pkgconfig_2.0.3       
+[118] getPass_0.2-2          sp_2.1-3               plotly_4.10.0         
+[121] spatstat.sparse_3.0-3  xml2_1.3.3             bslib_0.5.1           
+[124] rvest_1.0.2            callr_3.7.3            digest_0.6.34         
+[127] sctransform_0.4.1      RcppAnnoy_0.0.19       spatstat.data_3.0-3   
+[130] rmarkdown_2.26         cellranger_1.1.0       leiden_0.4.2          
+[133] uwot_0.1.16            quantreg_5.97          shiny_1.7.5.1         
+[136] gtools_3.9.4           lifecycle_1.0.4        nlme_3.1-157          
+[139] jsonlite_1.8.7         mapproj_1.2.11         viridisLite_0.4.2     
+[142] fansi_1.0.5            pillar_1.9.0           lattice_0.20-45       
+[145] fastmap_1.1.1          httr_1.4.7             glue_1.6.2            
+[148] png_0.1-8              bit_4.0.5              stringi_1.8.1         
+[151] sass_0.4.7             irlba_2.3.5.1          future.apply_1.11.1   </code></pre>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+https://docs.mathjax.org/en/latest/web/configuration.html. This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

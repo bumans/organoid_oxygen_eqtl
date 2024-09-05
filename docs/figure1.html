@@ -1,0 +1,2083 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Ben Umans" />
+
+<meta name="date" content="2024-07-26" />
+
+<title>figure1</title>
+
+<script src="site_libs/header-attrs-2.26/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">oxygen_eqtl</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">figure1</h1>
+<h4 class="author">Ben Umans</h4>
+<h4 class="date">2024-07-26</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span
+class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2024-08-29
+</p>
+<p>
+<strong>Checks:</strong> <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> 1
+</p>
+<p>
+<strong>Knit directory:</strong> <code>oxygen_eqtl/</code> <span
+class="glyphicon glyphicon-question-sign" aria-hidden="true"
+title="This is the local directory in which the code in this file was executed.">
+</span>
+</p>
+<p>
+This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a>
+analysis was created with <a
+  href="https://github.com/workflowr/workflowr">workflowr</a> (version
+1.7.0). The <em>Checks</em> tab describes the reproducibility checks
+that were applied when the results were created. The <em>Past
+versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges">
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted
+changes </a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguncommittedchanges"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The R Markdown is untracked by Git. To know which version of the R
+Markdown file created these results, you’ll want to first commit it to
+the Git repo. If you’re still working on the analysis, you can ignore
+this warning. When you’re finished, you can run
+<code>wflow_publish</code> to commit the R Markdown file and build the
+HTML.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the
+global environment can affect the analysis in your R Markdown file in
+unknown ways. For reproduciblity it’s best to always run the code in an
+empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20220621code">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Seed:</strong>
+<code>set.seed(20220621)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20220621code"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20220621)</code> was run prior to running
+the code in the R Markdown file. Setting a seed ensures that any results
+that rely on randomness, e.g. subsampling or permutations, are
+reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Session information:</strong>
+recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package
+versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be
+confident that you successfully produced the results during this
+run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr
+project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongNocommitsyet">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Repository version:</strong> No
+commits yet </a>
+</p>
+</div>
+<div id="strongRepositoryversionstrongNocommitsyet"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development
+and connecting the code version to the results is critical for
+reproducibility.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for
+the analysis have been committed to Git prior to generating the results
+(you can use <code>wflow_publish</code> or
+<code>wflow_git_commit</code>). workflowr only checks the R Markdown
+file, but you know if there are other scripts or data files that it
+depends on. Below is the status of the Git repository when the results
+were generated:
+</p>
+<pre><code>
+Untracked files:
+    Untracked:  .DS_Store
+    Untracked:  18519_calling.Rmd
+    Untracked:  TOM/
+    Untracked:  _site.yml
+    Untracked:  about.Rmd
+    Untracked:  batch_variability.Rmd
+    Untracked:  batch_variability.knit.md
+    Untracked:  batch_variability.nb.html
+    Untracked:  cache/
+    Untracked:  cellregmap.Rmd
+    Untracked:  celltype.Rmd
+    Untracked:  celltype2.Rmd
+    Untracked:  celltype2.nb.html
+    Untracked:  construct_seurat.Rmd
+    Untracked:  construct_seurat2.Rmd
+    Untracked:  cormotif_eqtl.Rmd
+    Untracked:  de.Rmd
+    Untracked:  de2.Rmd
+    Untracked:  de2.nb.html
+    Untracked:  de_finalized.Rmd
+    Untracked:  de_finalized_reharmonized.Rmd
+    Untracked:  disease_gene_overlap.Rmd
+    Untracked:  disease_gene_overlap_EE.Rmd
+    Untracked:  disease_gene_overlap_EE_reharmonized.Rmd
+    Untracked:  disease_gene_overlap_EE_reharmonized_fine.Rmd
+    Untracked:  disease_gene_overlap_EE_reharmonized_fine_filter10.Rmd
+    Untracked:  docs/
+    Untracked:  figure1.Rmd
+    Untracked:  figure2.Rmd
+    Untracked:  figure3.Rmd
+    Untracked:  figure4.Rmd
+    Untracked:  figures_for_poster.R
+    Untracked:  for_yunqi_mash.rmd
+    Untracked:  gsea.Rmd
+    Untracked:  gsea.nb.html
+    Untracked:  gsea_reharmonized.Rmd
+    Untracked:  hgwgcna.Rmd
+    Untracked:  hgwgcna.nb.html
+    Untracked:  hippo_eqtl.Rmd
+    Untracked:  index.Rmd
+    Untracked:  index_old.Rmd
+    Untracked:  license.Rmd
+    Untracked:  mash_EE.R
+    Untracked:  mash_de.Rmd
+    Untracked:  mash_for_peter.r
+    Untracked:  matrixEQTL.Rmd
+    Untracked:  matrixEQTL.nb.html
+    Untracked:  matrixEQTL_reharmonized.Rmd
+    Untracked:  ncell_permtesting.R
+    Untracked:  plot_eqtl.Rmd
+    Untracked:  prep_apex.Rmd
+    Untracked:  qtltools.Rmd
+    Untracked:  seurat.export.library1.h5Seurat
+    Untracked:  shared_functions_style_items.R
+    Untracked:  test.rmd
+    Untracked:  topics.R
+    Untracked:  topics.Rmd
+    Untracked:  topics_all.R
+    Untracked:  topics_pseudocell.R
+    Untracked:  topicsde.R
+    Untracked:  voxhunt.Rmd
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not
+included in this status report because it is ok for generated content to
+have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+<p>
+There are no past versions. Publish this analysis with
+<code>wflow_publish()</code> to start tracking its development.
+</p>
+<hr>
+</div>
+</div>
+</div>
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p>This page describes steps used to process cellranger output, cluster
+and annotate cells, and generate results shown in Figure 1, Figure S1,
+and Figure S2.</p>
+<pre class="r"><code>library(tidyverse)</code></pre>
+<pre><code>── Attaching packages ─────────────────────────────────────── tidyverse 1.3.1 ──</code></pre>
+<pre><code>✔ ggplot2 3.4.4     ✔ purrr   1.0.2
+✔ tibble  3.2.1     ✔ dplyr   1.1.4
+✔ tidyr   1.3.0     ✔ stringr 1.5.0
+✔ readr   2.1.4     ✔ forcats 0.5.1</code></pre>
+<pre><code>── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()</code></pre>
+<pre class="r"><code>library(Seurat)</code></pre>
+<pre><code>Attaching SeuratObject</code></pre>
+<pre class="r"><code>library(ggrepel)
+library(sctransform)
+library(glmGamPoi)
+library(harmony)</code></pre>
+<pre><code>Loading required package: Rcpp</code></pre>
+<pre class="r"><code>library(GenomicRanges)</code></pre>
+<pre><code>Loading required package: stats4</code></pre>
+<pre><code>Loading required package: BiocGenerics</code></pre>
+<pre><code>
+Attaching package: &#39;BiocGenerics&#39;</code></pre>
+<pre><code>The following objects are masked from &#39;package:dplyr&#39;:
+
+    combine, intersect, setdiff, union</code></pre>
+<pre><code>The following objects are masked from &#39;package:stats&#39;:
+
+    IQR, mad, sd, var, xtabs</code></pre>
+<pre><code>The following objects are masked from &#39;package:base&#39;:
+
+    Filter, Find, Map, Position, Reduce, anyDuplicated, aperm, append,
+    as.data.frame, basename, cbind, colnames, dirname, do.call,
+    duplicated, eval, evalq, get, grep, grepl, intersect, is.unsorted,
+    lapply, mapply, match, mget, order, paste, pmax, pmax.int, pmin,
+    pmin.int, rank, rbind, rownames, sapply, setdiff, sort, table,
+    tapply, union, unique, unsplit, which.max, which.min</code></pre>
+<pre><code>Loading required package: S4Vectors</code></pre>
+<pre><code>
+Attaching package: &#39;S4Vectors&#39;</code></pre>
+<pre><code>The following objects are masked from &#39;package:dplyr&#39;:
+
+    first, rename</code></pre>
+<pre><code>The following object is masked from &#39;package:tidyr&#39;:
+
+    expand</code></pre>
+<pre><code>The following objects are masked from &#39;package:base&#39;:
+
+    I, expand.grid, unname</code></pre>
+<pre><code>Loading required package: IRanges</code></pre>
+<pre><code>
+Attaching package: &#39;IRanges&#39;</code></pre>
+<pre><code>The following objects are masked from &#39;package:dplyr&#39;:
+
+    collapse, desc, slice</code></pre>
+<pre><code>The following object is masked from &#39;package:purrr&#39;:
+
+    reduce</code></pre>
+<pre><code>Loading required package: GenomeInfoDb</code></pre>
+<pre class="r"><code>library(speckle)
+library(limma)</code></pre>
+<pre><code>
+Attaching package: &#39;limma&#39;</code></pre>
+<pre><code>The following object is masked from &#39;package:BiocGenerics&#39;:
+
+    plotMA</code></pre>
+<pre class="r"><code>library(ggalluvial)
+source(&quot;analysis/shared_functions_style_items.R&quot;)</code></pre>
+</div>
+<div id="create-seurat-object-from-cellranger-output"
+class="section level2">
+<h2>Create Seurat object from cellranger output</h2>
+<p>Data were collected in two batches, with libraries composed of a mix
+of individuals from a single treatment condition. Before clustering and
+cell type annotation, I first merge conditions for the same batch, and
+integrate across batch and individual using Harmony.</p>
+<pre class="r"><code>b1c &lt;- CreateSeuratObject(Read10X(data.dir=&quot;/project/gilad/umans/oxygen_eqtl/data/YG-BU-01_human/outs/filtered_feature_bc_matrix/&quot;))
+
+b1c &lt;- add_vireo(b1c, &quot;/project/gilad/umans/oxygen_eqtl/data/YG-BU-01_human/&quot;)
+
+b1c[[&quot;percent.mt&quot;]] &lt;- PercentageFeatureSet(b1c, pattern = &quot;^MT-&quot;)
+
+b1c$cDNA &lt;- 744.4
+b1c$cycles &lt;- 12</code></pre>
+<pre class="r"><code>b11pct &lt;- CreateSeuratObject(Read10X(data.dir=&quot;/project/gilad/umans/oxygen_eqtl/data/YG-BU-03_human/outs/filtered_feature_bc_matrix/&quot;))
+
+
+b11pct &lt;- add_vireo(b11pct, &quot;data/YG-BU-03_human/&quot;)
+
+b11pct[[&quot;percent.mt&quot;]] &lt;- PercentageFeatureSet(b11pct, pattern = &quot;^MT-&quot;)
+
+b11pct$cDNA &lt;- 578
+b11pct$cycles &lt;- 12</code></pre>
+<pre class="r"><code>b121pct &lt;- CreateSeuratObject(Read10X(data.dir=&quot;data/YG-BU-06_human/outs/filtered_feature_bc_matrix/&quot;))
+
+b121pct &lt;- add_vireo(b121pct, &quot;data/YG-BU-06_human/&quot;)
+
+b121pct[[&quot;percent.mt&quot;]] &lt;- PercentageFeatureSet(b121pct, pattern = &quot;^MT-&quot;)
+
+b121pct$cDNA &lt;- 360.4
+b121pct$cycles &lt;- 12</code></pre>
+<pre class="r"><code>b1c &lt;- AddMetaData(b1c, &quot;BU1&quot;, col.name = &quot;library&quot;)
+b11pct &lt;- AddMetaData(b11pct, &quot;BU3&quot;, col.name = &quot;library&quot;)
+b121pct &lt;- AddMetaData(b121pct, &quot;BU6&quot;, col.name = &quot;library&quot;)
+
+b1c &lt;- AddMetaData(b1c, &quot;batch1&quot;, col.name = &quot;batch&quot;)
+b11pct &lt;- AddMetaData(b11pct, &quot;batch1&quot;, col.name = &quot;batch&quot;)
+b121pct &lt;- AddMetaData(b121pct, &quot;batch1&quot;, col.name = &quot;batch&quot;)</code></pre>
+<p>Filter droplets based on doublet/unidentified assignments from vireo,
+mitochondrial read content, and read depth.</p>
+<pre class="r"><code>b1c &lt;- subset(b1c, subset = vireo.individual != &quot;doublet&quot; &amp; vireo.individual != &quot;unassigned&quot;)
+b11pct &lt;- subset(b11pct, subset = vireo.individual != &quot;doublet&quot; &amp; vireo.individual != &quot;unassigned&quot;)
+b121pct &lt;- subset(b121pct, subset = vireo.individual != &quot;doublet&quot; &amp; vireo.individual != &quot;unassigned&quot;)
+
+b1c &lt;- subset(b1c, subset = percent.mt &lt; 10)
+b11pct &lt;- subset(b11pct, subset = percent.mt &lt; 10)
+b121pct &lt;- subset(b121pct, subset = percent.mt &lt; 10)
+
+b1c &lt;- subset(b1c, subset = nFeature_RNA &gt; 1200 &amp; nCount_RNA &gt;2000 &amp; nCount_RNA &lt; 20000)
+b11pct &lt;- subset(b11pct, subset = nFeature_RNA &gt; 1200 &amp; nCount_RNA &gt;2000 &amp; nCount_RNA &lt; 20000)
+b121pct &lt;- subset(b121pct, subset = nFeature_RNA &gt; 1200 &amp; nCount_RNA &gt;2000 &amp; nCount_RNA &lt; 20000)</code></pre>
+<pre class="r"><code>b2c &lt;- CreateSeuratObject(Read10X(data.dir=&quot;/project/gilad/umans/oxygen_eqtl/data/YG-BU-07_human/outs/filtered_feature_bc_matrix/&quot;))
+b21pct &lt;- CreateSeuratObject(Read10X(data.dir=&quot;/project/gilad/umans/oxygen_eqtl/data/YG-BU-08_human/outs/filtered_feature_bc_matrix/&quot;))
+b221pct &lt;- CreateSeuratObject(Read10X(data.dir=&quot;/project/gilad/umans/oxygen_eqtl/data/YG-BU-09_human/outs/filtered_feature_bc_matrix/&quot;))
+b221control &lt;- CreateSeuratObject(Read10X(data.dir=&quot;/project/gilad/umans/oxygen_eqtl/data/YG-BU-10_human/outs/filtered_feature_bc_matrix/&quot;))
+
+b2c &lt;- add_vireo(b2c, &quot;/project/gilad/umans/oxygen_eqtl/data/YG-BU-07_human/&quot;)
+b21pct &lt;- add_vireo(b21pct, &quot;/project/gilad/umans/oxygen_eqtl/data/YG-BU-08_human/&quot;)
+b221pct &lt;- add_vireo(b221pct, &quot;/project/gilad/umans/oxygen_eqtl/data/YG-BU-09_human/&quot;)
+b221control &lt;- add_vireo(b221control, &quot;/project/gilad/umans/oxygen_eqtl/data/YG-BU-10_human/&quot;)
+
+b2c &lt;- AddMetaData(b2c, &quot;BU7&quot;, col.name = &quot;library&quot;)
+b21pct &lt;- AddMetaData(b21pct, &quot;BU8&quot;, col.name = &quot;library&quot;)
+b221pct &lt;- AddMetaData(b221pct, &quot;BU9&quot;, col.name = &quot;library&quot;)
+b221control &lt;- AddMetaData(b221control, &quot;BU10&quot;, col.name = &quot;library&quot;)
+
+b2c &lt;- AddMetaData(b2c, &quot;batch2&quot;, col.name = &quot;batch&quot;)
+b21pct &lt;- AddMetaData(b21pct, &quot;batch2&quot;, col.name = &quot;batch&quot;)
+b221pct &lt;- AddMetaData(b221pct, &quot;batch2&quot;, col.name = &quot;batch&quot;)
+b221control &lt;- AddMetaData(b221control, &quot;batch2&quot;, col.name = &quot;batch&quot;)
+
+
+b2c[[&quot;percent.mt&quot;]] &lt;- PercentageFeatureSet(b2c, pattern = &quot;^MT-&quot;)
+b21pct[[&quot;percent.mt&quot;]] &lt;- PercentageFeatureSet(b21pct, pattern = &quot;^MT-&quot;)
+b221pct[[&quot;percent.mt&quot;]] &lt;- PercentageFeatureSet(b221pct, pattern = &quot;^MT-&quot;)
+b221control[[&quot;percent.mt&quot;]] &lt;- PercentageFeatureSet(b221control, pattern = &quot;^MT-&quot;)
+
+b2c$cDNA &lt;- 210
+b21pct$cDNA &lt;- 359.4
+b221pct$cDNA &lt;- 479
+b221control$cDNA &lt;- 520
+b2c$cycles &lt;- 13
+b21pct$cycles &lt;- 12
+b221pct$cycles &lt;- 12
+b221control$cycles &lt;- 12</code></pre>
+<pre class="r"><code>b2c &lt;- subset(b2c, subset = percent.mt &lt; 10)
+b2c &lt;- subset(b2c, subset = vireo.individual != &quot;doublet&quot; &amp; vireo.individual != &quot;unassigned&quot;)
+
+b21pct &lt;- subset(b21pct, subset = percent.mt &lt; 10)
+b21pct &lt;- subset(b21pct, subset = vireo.individual != &quot;doublet&quot; &amp; vireo.individual != &quot;unassigned&quot;)
+
+b221pct &lt;- subset(b221pct, subset = percent.mt &lt; 10)
+b221pct &lt;- subset(b221pct, subset = vireo.individual != &quot;doublet&quot; &amp; vireo.individual != &quot;unassigned&quot;)
+
+b221control &lt;- subset(b221control, subset = percent.mt &lt; 10)
+b221control &lt;- subset(b221control, subset = vireo.individual != &quot;doublet&quot; &amp; vireo.individual != &quot;unassigned&quot;)
+
+b2c &lt;- subset(b2c, subset = nFeature_RNA &gt; 1200)
+b21pct &lt;- subset(b21pct, subset = nFeature_RNA &gt; 1200)
+b221pct &lt;- subset(b221pct, subset = nFeature_RNA &gt; 1200)
+b221control &lt;- subset(b221control, subset = nFeature_RNA &gt; 1200)
+
+b2c &lt;- subset(b2c, subset = nCount_RNA &gt;2000 &amp; nCount_RNA &lt; 20000)
+b21pct &lt;- subset(b21pct, subset = nCount_RNA &gt;2000 &amp; nCount_RNA &lt; 20000)
+b221pct &lt;- subset(b221pct, subset = nCount_RNA &gt;2000 &amp; nCount_RNA &lt; 20000)
+b221control &lt;- subset(b221control, subset = nCount_RNA &gt;2000 &amp; nCount_RNA &lt; 20000)</code></pre>
+<pre class="r"><code>batch1 &lt;- SCTransform(batch1, variable.features.n = 6000, method = &quot;glmGamPoi&quot;, verbose = TRUE)
+batch2 &lt;- SCTransform(batch2, variable.features.n = 6000, method = &quot;glmGamPoi&quot;, verbose = TRUE)
+
+batch1 &lt;- RunPCA(batch1, verbose = TRUE, npcs = 100)
+batch1 &lt;- RunUMAP(batch1, dims = 1:100, verbose = TRUE)
+
+batch2 &lt;- RunPCA(batch2, verbose = TRUE, npcs = 100)
+batch2 &lt;- RunUMAP(batch2, dims = 1:100, verbose = TRUE)</code></pre>
+<pre class="r"><code>batches.list &lt;- list(batch1, batch2)
+var.features &lt;- SelectIntegrationFeatures(object.list = batches.list, nfeatures = 3000)
+rm(batches.list)
+var.features &lt;- setdiff(var.features, c(cc.genes$s.genes, cc.genes$g2m.genes))
+
+harmony.input &lt;- merge(batch1, batch2)
+VariableFeatures(harmony.input) &lt;- var.features
+
+harmony.input &lt;- RunPCA(harmony.input, verbose = FALSE, npcs = 100)
+harmony.batchandindividual.sct &lt;-RunHarmony(harmony.input, group.by.vars = c(&quot;batch&quot;, &quot;vireo.individual&quot;),  
+                          plot_convergence = TRUE,
+                          max_iter = 30)
+
+harmony.batchandindividual.sct &lt;- RunUMAP(harmony.batchandindividual.sct, reduction = &quot;harmony&quot;, dims = 1:100)
+harmony.batchandindividual.sct &lt;- FindNeighbors(harmony.batchandindividual.sct, dims=1:100, reduction = &quot;harmony&quot;)
+
+harmony.batchandindividual.sct &lt;- PrepSCTFindMarkers(harmony.batchandindividual.sct)</code></pre>
+<pre class="r"><code>harmony.batchandindividual.sct$Fpassage &lt;- NA
+harmony.batchandindividual.sct$FFpassage &lt;- NA
+
+harmony.batchandindividual.sct$Fpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = batch==&quot;batch1&quot; &amp;
+                                                     vireo.individual==&quot;NA19190&quot;)] &lt;- 13
+harmony.batchandindividual.sct$FFpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                    expression = batch==&quot;batch1&quot; &amp;
+                                                      vireo.individual==&quot;NA19190&quot;)] &lt;- 30
+
+harmony.batchandindividual.sct$Fpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = batch==&quot;batch1&quot; &amp;
+                                                     vireo.individual==&quot;NA19207&quot;)] &lt;- 11
+harmony.batchandindividual.sct$FFpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                    expression = batch==&quot;batch1&quot; &amp;
+                                                      vireo.individual==&quot;NA19207&quot;)] &lt;- 14
+
+
+harmony.batchandindividual.sct$Fpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = batch==&quot;batch1&quot; &amp;
+                                                     vireo.individual==&quot;NA18508&quot;)] &lt;- 13
+harmony.batchandindividual.sct$FFpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                    expression = batch==&quot;batch1&quot; &amp;
+                                                      vireo.individual==&quot;NA18508&quot;)] &lt;- 27
+
+harmony.batchandindividual.sct$Fpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = batch==&quot;batch1&quot; &amp;
+                                                     vireo.individual==&quot;NA19098&quot;)] &lt;- 12
+harmony.batchandindividual.sct$FFpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                    expression = batch==&quot;batch1&quot; &amp;
+                                                      vireo.individual==&quot;NA19098&quot;)] &lt;- 37
+
+harmony.batchandindividual.sct$Fpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = batch==&quot;batch1&quot; &amp;
+                                                     vireo.individual==&quot;NA18519&quot;)] &lt;- 14
+harmony.batchandindividual.sct$FFpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                    expression = batch==&quot;batch1&quot; &amp;
+                                                      vireo.individual==&quot;NA18519&quot;)] &lt;- 18
+
+
+harmony.batchandindividual.sct$Fpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = batch==&quot;batch1&quot; &amp;
+                                                     vireo.individual==&quot;NA18856&quot;)] &lt;- 12
+harmony.batchandindividual.sct$FFpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                    expression = batch==&quot;batch1&quot; &amp;
+                                                      vireo.individual==&quot;NA18856&quot;)] &lt;- 24
+
+harmony.batchandindividual.sct$Fpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = batch==&quot;batch1&quot; &amp;
+                                                     vireo.individual==&quot;NA18913&quot;)] &lt;- 19
+harmony.batchandindividual.sct$FFpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                    expression = batch==&quot;batch1&quot; &amp;
+                                                      vireo.individual==&quot;NA18913&quot;)] &lt;- 33
+
+harmony.batchandindividual.sct$Fpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = batch==&quot;batch1&quot; &amp;
+                                                     vireo.individual==&quot;NA19153&quot;)] &lt;- 17
+harmony.batchandindividual.sct$FFpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                    expression = batch==&quot;batch1&quot; &amp;
+                                                      vireo.individual==&quot;NA19153&quot;)] &lt;- 26
+
+harmony.batchandindividual.sct$Fpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = batch==&quot;batch1&quot; &amp;
+                                                     vireo.individual==&quot;NA19144&quot;)] &lt;- 14
+harmony.batchandindividual.sct$FFpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                    expression = batch==&quot;batch1&quot; &amp;
+                                                      vireo.individual==&quot;NA19144&quot;)] &lt;- 20
+
+harmony.batchandindividual.sct$Fpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = batch==&quot;batch1&quot; &amp;
+                                                     vireo.individual==&quot;NA19093&quot;)] &lt;- 30
+harmony.batchandindividual.sct$FFpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                    expression = batch==&quot;batch1&quot; &amp;
+                                                      vireo.individual==&quot;NA19093&quot;)] &lt;- 29
+
+harmony.batchandindividual.sct$Fpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = batch==&quot;batch1&quot; &amp;
+                                                     vireo.individual==&quot;NA19210&quot;)] &lt;- 13
+harmony.batchandindividual.sct$FFpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                    expression = batch==&quot;batch1&quot; &amp;
+                                                      vireo.individual==&quot;NA19210&quot;)] &lt;- 30
+
+harmony.batchandindividual.sct$Fpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = batch==&quot;batch1&quot; &amp;
+                                                     vireo.individual==&quot;NA18853&quot;)] &lt;- 20
+harmony.batchandindividual.sct$FFpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                    expression = batch==&quot;batch1&quot; &amp;
+                                                      vireo.individual==&quot;NA18853&quot;)] &lt;- 29
+
+harmony.batchandindividual.sct$Fpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = batch==&quot;batch1&quot; &amp;
+                                                     vireo.individual==&quot;NA18502&quot;)] &lt;- 14
+harmony.batchandindividual.sct$FFpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                    expression = batch==&quot;batch1&quot; &amp;
+                                                      vireo.individual==&quot;NA18502&quot;)] &lt;- 34
+
+harmony.batchandindividual.sct$Fpassage[WhichCells(harmony.batchandindividual.sct,
+                                                   expression = batch==&quot;batch1&quot; &amp;
+                                                     vireo.individual==&quot;NA18507&quot;)] &lt;- 10
+harmony.batchandindividual.sct$FFpassage[WhichCells(harmony.batchandindividual.sct,
+                                                    expression = batch==&quot;batch1&quot; &amp;
+                                                      vireo.individual==&quot;NA18507&quot;)] &lt;- 36
+
+harmony.batchandindividual.sct$Fpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = batch==&quot;batch1&quot; &amp;
+                                                     vireo.individual==&quot;NA18517&quot;)] &lt;- 19
+harmony.batchandindividual.sct$FFpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                    expression = batch==&quot;batch1&quot; &amp;
+                                                      vireo.individual==&quot;NA18517&quot;)] &lt;- 40
+
+harmony.batchandindividual.sct$Fpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = batch==&quot;batch1&quot; &amp;
+                                                     vireo.individual==&quot;NA19143&quot;)] &lt;- 11
+harmony.batchandindividual.sct$FFpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                    expression = batch==&quot;batch1&quot; &amp;
+                                                      vireo.individual==&quot;NA19143&quot;)] &lt;- 23
+
+
+harmony.batchandindividual.sct$Fpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = batch==&quot;batch2&quot; &amp;
+                                                     vireo.individual==&quot;NA19102&quot;)] &lt;- 11
+harmony.batchandindividual.sct$FFpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                    expression = batch==&quot;batch2&quot; &amp;
+                                                      vireo.individual==&quot;NA19102&quot;)] &lt;- 48
+
+harmony.batchandindividual.sct$Fpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = batch==&quot;batch2&quot; &amp;
+                                                     vireo.individual==&quot;NA18519&quot;)] &lt;- 14
+harmony.batchandindividual.sct$FFpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                    expression = batch==&quot;batch2&quot; &amp;
+                                                      vireo.individual==&quot;NA18519&quot;)] &lt;- 17
+
+harmony.batchandindividual.sct$Fpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = batch==&quot;batch2&quot; &amp;
+                                                     vireo.individual==&quot;NA19207&quot;)] &lt;- 11
+harmony.batchandindividual.sct$FFpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                    expression = batch==&quot;batch2&quot; &amp;
+                                                      vireo.individual==&quot;NA19207&quot;)] &lt;- 16
+
+harmony.batchandindividual.sct$Fpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = batch==&quot;batch2&quot; &amp;
+                                                     vireo.individual==&quot;NA18511&quot;)] &lt;- 19
+harmony.batchandindividual.sct$FFpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                    expression = batch==&quot;batch2&quot; &amp;
+                                                      vireo.individual==&quot;NA18511&quot;)] &lt;- 32
+
+harmony.batchandindividual.sct$Fpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = batch==&quot;batch2&quot; &amp;
+                                                     vireo.individual==&quot;NA18489&quot;)] &lt;- 16
+harmony.batchandindividual.sct$FFpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                    expression = batch==&quot;batch2&quot; &amp;
+                                                      vireo.individual==&quot;NA18489&quot;)] &lt;- 40
+
+harmony.batchandindividual.sct$Fpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = batch==&quot;batch2&quot; &amp;
+                                                     vireo.individual==&quot;NA18501&quot;)] &lt;- 14
+harmony.batchandindividual.sct$FFpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                    expression = batch==&quot;batch2&quot; &amp;
+                                                      vireo.individual==&quot;NA18501&quot;)] &lt;- 16
+
+harmony.batchandindividual.sct$Fpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = batch==&quot;batch2&quot; &amp;
+                                                     vireo.individual==&quot;NA19128&quot;)] &lt;- 22
+harmony.batchandindividual.sct$FFpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                    expression = batch==&quot;batch2&quot; &amp;
+                                                      vireo.individual==&quot;NA19128&quot;)] &lt;- 20
+
+harmony.batchandindividual.sct$Fpassage[WhichCells(harmony.batchandindividual.sct,
+                                                   expression = batch==&quot;batch2&quot; &amp;
+                                                     vireo.individual==&quot;NA19190&quot;)] &lt;- 22
+harmony.batchandindividual.sct$FFpassage[WhichCells(harmony.batchandindividual.sct,
+                                                    expression = batch==&quot;batch2&quot; &amp;
+                                                      vireo.individual==&quot;NA19190&quot;)] &lt;- 20
+
+
+harmony.batchandindividual.sct$sex &lt;- NA
+
+harmony.batchandindividual.sct$sex[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = vireo.individual==&quot;NA18489&quot;)] &lt;- &quot;female&quot;
+
+harmony.batchandindividual.sct$sex[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = vireo.individual==&quot;NA18501&quot;)] &lt;- &quot;male&quot;
+
+harmony.batchandindividual.sct$sex[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = vireo.individual==&quot;NA18502&quot;)] &lt;- &quot;female&quot;
+harmony.batchandindividual.sct$sex[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = vireo.individual==&quot;NA18507&quot;)] &lt;- &quot;male&quot;
+harmony.batchandindividual.sct$sex[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = vireo.individual==&quot;NA18508&quot;)] &lt;- &quot;female&quot;
+
+harmony.batchandindividual.sct$sex[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = vireo.individual==&quot;NA18511&quot;)] &lt;- &quot;female&quot;
+harmony.batchandindividual.sct$sex[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = vireo.individual==&quot;NA18517&quot;)] &lt;- &quot;female&quot;
+harmony.batchandindividual.sct$sex[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = vireo.individual==&quot;NA18519&quot;)] &lt;- &quot;male&quot;
+
+harmony.batchandindividual.sct$sex[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = vireo.individual==&quot;NA18853&quot;)] &lt;- &quot;male&quot;
+harmony.batchandindividual.sct$sex[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = vireo.individual==&quot;NA18856&quot;)] &lt;- &quot;male&quot;
+
+harmony.batchandindividual.sct$sex[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = vireo.individual==&quot;NA18913&quot;)] &lt;- &quot;male&quot;
+
+harmony.batchandindividual.sct$sex[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = vireo.individual==&quot;NA19093&quot;)] &lt;- &quot;female&quot;
+harmony.batchandindividual.sct$sex[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = vireo.individual==&quot;NA19098&quot;)] &lt;- &quot;male&quot;
+
+harmony.batchandindividual.sct$sex[WhichCells(harmony.batchandindividual.sct,
+                                                   expression = vireo.individual==&quot;NA19102&quot;)] &lt;- &quot;female&quot;
+
+harmony.batchandindividual.sct$sex[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = vireo.individual==&quot;NA19128&quot;)] &lt;- &quot;male&quot;
+
+harmony.batchandindividual.sct$sex[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = vireo.individual==&quot;NA19143&quot;)] &lt;- &quot;female&quot;
+
+harmony.batchandindividual.sct$sex[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = vireo.individual==&quot;NA19144&quot;)] &lt;- &quot;male&quot;
+harmony.batchandindividual.sct$sex[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = vireo.individual==&quot;NA19153&quot;)] &lt;- &quot;male&quot;
+
+harmony.batchandindividual.sct$sex[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = vireo.individual==&quot;NA19190&quot;)] &lt;- &quot;female&quot;
+
+harmony.batchandindividual.sct$sex[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = vireo.individual==&quot;NA19207&quot;)] &lt;- &quot;male&quot;
+
+harmony.batchandindividual.sct$sex[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = vireo.individual==&quot;NA19210&quot;)] &lt;- &quot;male&quot;
+
+saveRDS(harmony.batchandindividual.sct, file = &quot;output/harmony_organoid_dataset.rds&quot;)</code></pre>
+<pre class="r"><code>harmony.batchandindividual.sct &lt;- readRDS(file = &quot;output/harmony_organoid_dataset.rds&quot;)</code></pre>
+</div>
+<div id="annotate-cell-types" class="section level2">
+<h2>Annotate cell types</h2>
+<p>I first use the Seurat MapQuery() function to compare this organoid
+data against fetal single-cell data obtained from <a
+href="https://www.sciencedirect.com/science/article/pii/S0896627319305616?via%3Dihub">Polioudakis
+et al.</a> and <a
+href="https://www.sciencedirect.com/science/article/pii/S0092867421009429?via%3Dihub">Trevino
+et al.</a>.</p>
+<p>The data were first imported into Seurat and updated, with gene names
+converted from Ensembl IDs.</p>
+<pre class="r"><code>load(&quot;/project/gilad/umans/HumanChimpCellranger/HumanChimpOrganoidPilot/data/geschwind-raw_counts_mat.rdata&quot;)
+geschwind_meta &lt;- read_csv(&quot;/project/gilad/umans/HumanChimpCellranger/HumanChimpOrganoidPilot/data/geschwind-cell_metadata.csv&quot;) %&gt;% column_to_rownames(var=&quot;Cell&quot;)
+
+geschwind &lt;- CreateSeuratObject(raw_counts_mat)
+geschwind &lt;- AddMetaData(object = geschwind, metadata = geschwind_meta)
+rm(raw_counts_mat)
+
+geschwind &lt;- SCTransform(geschwind, method = &quot;glmGamPoi&quot;, verbose = TRUE)
+geschwind &lt;- RunPCA(geschwind, npcs = 100)</code></pre>
+<pre class="r"><code>pasca &lt;- readRDS(file = &quot;/project2/gilad/umans/brainchromatin/data_files/rds/scRNA_Seurat.RDS&quot;)
+pasca &lt;- UpdateSeuratObject(pasca)</code></pre>
+<pre class="r"><code>gene.gr &lt;- readRDS(&#39;/project/gilad/umans/brainchromatin/data_files/rds/AllGenes_GenomicRanges.RDS&#39;)
+
+# Mapping gene IDs and gene symbols (for easier use of gene symbols)
+# This annotation file contains metadata about each gene, including the Ensembl 
+# ID and the gene symbol
+
+name2ensembl &lt;- names(gene.gr)
+
+# Something funny about this one, unsure why yet
+name2ensembl[&#39;CDR1&#39;] &lt;- &#39;ENSG00000281508&#39;
+
+names(name2ensembl) &lt;- elementMetadata(gene.gr)[ ,&#39;gene_name&#39;]
+
+ensembl2name &lt;- elementMetadata(gene.gr)[ ,&#39;gene_name&#39;]
+names(ensembl2name) &lt;- names(gene.gr)</code></pre>
+<p>Cell clusters were then renamed according to the original
+publication.</p>
+<pre class="r"><code># pasca[[&quot;numbered.ident&quot;]] &lt;- Idents(object = pasca)
+
+# Rename classes.
+pasca &lt;- RenameIdents(object = pasca, 
+                      `c0` = &quot;GluN5&quot;, `c1` = &quot;CGE-IN&quot;, 
+                      `c2` = &quot;GluN1&quot;, `c3` = &quot;MGE-IN&quot;,
+                      `c4` = &quot;GluN4&quot;, `c5` = &quot;GluN2&quot;,
+                      `c6` = &quot;earlyRG&quot;, `c7` = &quot;GluN7&quot;,
+                      `c8` = &quot;CyclingProgenitors&quot;, `c9` = &quot;GluN3&quot;,
+                      `c10` = &quot;lateRG&quot;, `c11` = &quot;mGPC&quot;,
+                      `c12` = &quot;GluN6&quot;, `c13` = &quot;Subplate&quot;,
+                      `c14` = &quot;nIPC&quot;, `c15` = &quot;GluN8&quot;,
+                      `c16` = &quot;MG&quot;, `c17` = &quot;OPC-oligo&quot;,
+                      `c18` = &quot;tRG&quot;, `c19` = &quot;Pericyte&quot;,
+                      `c20` = &quot;EC&quot;, `c21` = &quot;RBC&quot;,
+                      `c22` = &quot;VLMC&quot;)
+
+pasca &lt;- StashIdent(object = pasca, save.name = &quot;named.cluster&quot;)</code></pre>
+<p>Cell types that are not present in the organoid data labeled as
+“unassigned” for removal from the reference:</p>
+<pre class="r"><code>geschwind$coarse &lt;- NA
+geschwind$coarse[WhichCells(geschwind, expression = Cluster==&quot;End&quot;)] &lt;- &quot;Unassigned&quot;
+geschwind$coarse[WhichCells(geschwind, expression = Cluster==&quot;Per&quot;)] &lt;- &quot;Unassigned&quot;
+geschwind$coarse[WhichCells(geschwind, expression = Cluster==&quot;Mic&quot;)] &lt;- &quot;Unassigned&quot;</code></pre>
+<pre class="r"><code>geschwind &lt;- subset(geschwind, subset = coarse != &quot;Unassigned&quot;)
+# saveRDS(geschwind, file = &quot;data/external/geschwind_process.RDS&quot;)</code></pre>
+<pre class="r"><code>pasca$coarse[WhichCells(pasca, expression = named.cluster==&quot;MG&quot;)] &lt;- &quot;Unassigned&quot;
+pasca$coarse[WhichCells(pasca, expression = named.cluster==&quot;Pericyte&quot;)] &lt;- &quot;Unassigned&quot;
+pasca$coarse[WhichCells(pasca, expression = named.cluster==&quot;RBC&quot;)] &lt;- &quot;Unassigned&quot;
+pasca$coarse[WhichCells(pasca, expression = named.cluster==&quot;EC&quot;)] &lt;- &quot;Unassigned&quot;</code></pre>
+<pre class="r"><code>counts &lt;- pasca@assays$RNA@counts
+rownames(counts) &lt;- unname(convertGeneIDs(rownames(counts), ensembl2name))
+
+renamedRNA &lt;- CreateAssayObject(counts)
+pasca[[&#39;renamedRNA&#39;]] &lt;- renamedRNA
+DefaultAssay(pasca) &lt;- &quot;renamedRNA&quot;
+rm(renamedRNA)
+rm(counts)</code></pre>
+<pre class="r"><code>pasca &lt;- subset(pasca, subset = coarse != &quot;Unassigned&quot;)</code></pre>
+<p>Use MapQuery() to transfer labels from the two references.</p>
+<pre class="r"><code>geschwind &lt;- RunPCA(geschwind, npcs = 100, assay=&quot;SCT&quot;)
+pasca &lt;- RunPCA(pasca, npcs = 100, assay = &quot;SCT&quot;)
+
+pasca.anchors.batchindividual &lt;- FindTransferAnchors(reference = pasca, 
+                                                     query = harmony.batchandindividual.sct,
+                                                     dims = 1:80, reference.reduction = &quot;pca&quot;,
+                                                      k.anchor = 30, k.score = 50, n.trees = 100)
+
+
+harmony.batchandindividual.sct &lt;- MapQuery(anchorset = pasca.anchors.batchindividual, 
+                         reference = pasca, 
+                         query = harmony.batchandindividual.sct,
+                         refdata = list(pascacelltype.fine = &quot;named.cluster&quot;), 
+                         reference.reduction = &quot;pca&quot;, 
+                         reduction.model = &quot;umap&quot;,
+                          integrateembeddings.args = list(reductions = &quot;pcaproject.l2&quot;),
+                         projectumap.args = list(reduction.name=&quot;pasca.umap&quot;,
+                                                 reduction.key=&quot;pascaUMAP_&quot;))
+
+geschwind.anchors.batchindividual &lt;- FindTransferAnchors(reference = geschwind, 
+                                                     query = harmony.batchandindividual.sct,
+                                                     dims = 1:80, reference.reduction = &quot;pca&quot;, 
+                                                     k.anchor = 30, k.score = 50, n.trees = 100)
+
+
+harmony.batchandindividual.sct &lt;- MapQuery(anchorset = geschwind.anchors.batchindividual, 
+                         reference = geschwind, 
+                         query = harmony.batchandindividual.sct,
+                         refdata = list(geschwindcelltype.fine = &quot;Cluster&quot;), 
+                         reference.reduction = &quot;pca&quot;, 
+                         reduction.model = &quot;umap&quot;,
+                         projectumap.args = list(reduction.name=&quot;geschwind.umap&quot;,
+                                                 reduction.key=&quot;geschwindUMAP_&quot;))</code></pre>
+<p>Then, perform unsupervised clustering.</p>
+<pre class="r"><code>harmony.batchandindividual.sct &lt;- FindClusters(harmony.batchandindividual.sct, resolution=0.6, verbose = TRUE)</code></pre>
+<p>Finally, assign clusters based on references and marker genes.</p>
+<pre class="r"><code>harmony.batchandindividual.sct$combined.annotation.coarse.harmony &lt;- NA
+harmony.batchandindividual.sct$combined.annotation.fine.harmony &lt;- NA
+
+# Cluster 0 is are immature neurons
+# Lower levels of SATB2, Trevino and Polioudakis both say neurons
+harmony.batchandindividual.sct$combined.annotation.coarse.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==0)] &lt;- &quot;Immature&quot;
+harmony.batchandindividual.sct$combined.annotation.fine.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==0)] &lt;- &quot;Immature&quot;
+
+# Cluster 1 excitatory neurons.  Polioudakis thinks these are enriched for Dp1 (deep layer), which has higher levels of NR4A2 and then have subsets enriched for layer markers [CRYM, TBR1, and FOXP2] or [RORB, FOXP1,  ETV1]. This cluster also shows enrichment of NR4A2, CRYM, RORB, and ETV1.  Trevino says these are nearly 100% Subplate neurons. 
+harmony.batchandindividual.sct$combined.annotation.coarse.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==1)] &lt;- &quot;Glut&quot;
+harmony.batchandindividual.sct$combined.annotation.fine.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==1)] &lt;- &quot;Glut&quot;
+
+# Cluster 2 is composed of radial glia
+harmony.batchandindividual.sct$combined.annotation.coarse.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==2)] &lt;- &quot;RG&quot;
+harmony.batchandindividual.sct$combined.annotation.fine.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==2)] &lt;- &quot;RG&quot;
+
+# Cluster 3 is a mix of CGE-IN/MGE-IN and (more) Subplate neurons according to Trevino, while Polioudakis says a similar mix but more lopsided to InMGE.  Some of these cells are also WLS+, possibly rhombic lip or roof plate.  Many also ZIC1+ (point in favor of rhombic lip), but not ATOH1+.  The neurons that Polioudakis calls InMGE and Trevino calls subplate are largely double-positive for excitatory and inhibitory markers.  They cluster with the inhibitory neuron group.  This is the cloud that includes a (smaller) subcluster of GNRH1+ neurons.  There are not other markers of similar hypothalamic neurons here that might have GNRH (e.g., KISS1, CRH, PNOC, GRP).  However, it&#39;s been hypothesized that the inputs to GNRH neurons are both GABAergic and glutamatergic.  Comparing further to data from [Uzquiano et al.](https://singlecell.broadinstitute.org/single_cell/study/SCP1756/cortical-organoids-atlas) suggests a mix of newborn projection neurons that are not yet well specified, which they explicitly called unspecified neurons.
+
+harmony.batchandindividual.sct$combined.annotation.coarse.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==3)] &lt;- &quot;NeuronOther&quot;
+harmony.batchandindividual.sct$combined.annotation.fine.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==3)] &lt;- &quot;NeuronOther&quot;
+
+# Cluster 4 is composed of dividing radial glia
+harmony.batchandindividual.sct$combined.annotation.coarse.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==4)] &lt;- &quot;RG&quot;
+harmony.batchandindividual.sct$combined.annotation.fine.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==4)] &lt;- &quot;RGcycling&quot;
+
+# Cluster 5 is is a mix of glial progenitor cells and radial glia according to the references.  A subset of them express OLIG1 and OLIG2.  They also express AQP4, PLP1, and GFAP, implying astrocytic character.  Other markers are ID3, SPARCL1, DNAH7, and WLS, though these markers are not entirely specific to this cluster and are shared by other early cells, as might be expected.  Notably, a portion of this cluster is Netrin1+, implying a nascent floorplate identity.
+
+harmony.batchandindividual.sct$combined.annotation.coarse.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==5)] &lt;- &quot;Glia&quot;
+harmony.batchandindividual.sct$combined.annotation.fine.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==5)] &lt;- &quot;GliaProg&quot;
+
+# Cluster 6 is intermediate progenitors on their way into immature neurons. 
+
+harmony.batchandindividual.sct$combined.annotation.coarse.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==6)] &lt;- &quot;IP&quot;
+harmony.batchandindividual.sct$combined.annotation.fine.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==6)] &lt;- &quot;IP&quot;
+
+
+# Cluster 7 is called cycling progenitors by both references.  They  express EOMES, and KI67 and TOP2A.  These are dividing intermediate progenitors
+
+harmony.batchandindividual.sct$combined.annotation.coarse.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==7)] &lt;- &quot;IP&quot; 
+harmony.batchandindividual.sct$combined.annotation.fine.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==7)] &lt;- &quot;IPcycling&quot; 
+
+# Cluster 8 is  mature excitatory neurons.
+harmony.batchandindividual.sct$combined.annotation.coarse.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==8)] &lt;- &quot;Glut&quot;
+harmony.batchandindividual.sct$combined.annotation.fine.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==8)] &lt;- &quot;Glut&quot;
+
+# Cluster 9 is immature inhibitory neurons.  
+harmony.batchandindividual.sct$combined.annotation.coarse.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==9)] &lt;- &quot;Inh&quot;
+harmony.batchandindividual.sct$combined.annotation.fine.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==9)] &lt;- &quot;Inh&quot;
+
+# Cluster 10 is classed by the Trevino reference as a mix of mGPC and radial glial subtypes, while Polioudakis calls it mostly vRG with some other glia and, a small number of ExN.  This cluster is not an excitatory neuron cluster.  The vRG marker CRYAB is focally expressed here, and there&#39;s some additional expression of RG markers (e.g., LIFR).  
+
+# The expression of WLS implies that these are WNT-secreting cells.  Of all members of the human WNT family, these cells selectively express WNT2B, WNT5A, and WNT8B.  WNT5A is required for (adult) hippocampal dendritic maintenance (though in mice it&#39;s expressed only postnatally), and WNT8B is expressed in the ventricle precursors that give rise to the hippocampus, along with hypothalamus and thalamus.  This makes it sound like it is cortical hem.  Indeed, [Uzquiano et al.](https://www.sciencedirect.com/science/article/pii/S0092867422011680) identified cells that express WLS, RSPO1, and RSPO2 (also in this cluster) as cortical hem, which concords with the more general radial glial identity.
+
+harmony.batchandindividual.sct$combined.annotation.coarse.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==10)] &lt;- &quot;RG&quot;
+harmony.batchandindividual.sct$combined.annotation.fine.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==10)] &lt;- &quot;CorticalHem&quot;
+
+# Cluster 11 is made of SATB2- excitatory neurons.  
+harmony.batchandindividual.sct$combined.annotation.coarse.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==11)] &lt;- &quot;Immature&quot;
+harmony.batchandindividual.sct$combined.annotation.fine.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==11)] &lt;- &quot;Immature&quot;
+
+# Cluster 12 is composed of radial glia
+harmony.batchandindividual.sct$combined.annotation.coarse.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==12)] &lt;- &quot;RG&quot;
+harmony.batchandindividual.sct$combined.annotation.fine.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==12)] &lt;- &quot;RG&quot;
+
+# Cluster 13 is made of mature neurons, expressing higher levels of SATB2.  
+harmony.batchandindividual.sct$combined.annotation.coarse.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==13)] &lt;- &quot;Glut&quot;
+harmony.batchandindividual.sct$combined.annotation.fine.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==13)] &lt;- &quot;Glut&quot;
+
+# Cluster 14 is a distinct cluster of the &quot;other neurons&quot; identified by expression of the hormone GNRH.  Ordinarily this would imply a hypothalamic identity, but they don&#39;t expression other markers consistent with that.  Trevino reference  classifies these as subplate neurons, Polioudakis reference calls them CGE inhibitory neurons.  They are GAD2+.  At a coarse level, we can call them a kind of inhibitory neuron, while at a fine level we can call them GNRH+ inhibitory neurons.
+
+harmony.batchandindividual.sct$combined.annotation.coarse.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==14)] &lt;- &quot;Inh&quot; 
+harmony.batchandindividual.sct$combined.annotation.fine.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==14)] &lt;- &quot;InhGNRH&quot; 
+
+# Cluster 15 is identified by the Trevino reference as subplate neurons and the Polioudakis reference as InMGE.  It is not particularly GABAergic and doesn&#39;t share other inhibitory neuron markers.  These are also best identified as &quot;unspecified&quot; neurons as above.
+harmony.batchandindividual.sct$combined.annotation.coarse.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==15)] &lt;- &quot;NeuronOther&quot; 
+harmony.batchandindividual.sct$combined.annotation.fine.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==15)] &lt;- &quot;NeuronOther&quot; 
+
+# Cluster 16 is made of GAD2+ neurons.  Additional markers include SIX3+, ISL1+, and ESRRG+, which point to thalamic inhibitory neurons.
+harmony.batchandindividual.sct$combined.annotation.coarse.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==16)] &lt;- &quot;Inh&quot;
+harmony.batchandindividual.sct$combined.annotation.fine.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==16)] &lt;- &quot;InhThalamic&quot;
+
+# Cluster 17 is made of GAD2+ neurons.  It&#39;s also quite TAC1+, which is consistent with PVALB interneurons (though no PVALB itself in this cluster).  
+harmony.batchandindividual.sct$combined.annotation.coarse.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==17)] &lt;- &quot;Inh&quot;
+harmony.batchandindividual.sct$combined.annotation.fine.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==17)] &lt;- &quot;Inh&quot; 
+
+# Cluster 18 is choroid plexus. It expresses TTR, CLIC6, FOLR1, which are clear markers; choroid plexus is not present in the references and they therefore provide discrepant assignments.
+harmony.batchandindividual.sct$combined.annotation.coarse.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==18)] &lt;- &quot;Choroid&quot;
+harmony.batchandindividual.sct$combined.annotation.fine.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==18)] &lt;- &quot;Choroid&quot;
+
+
+# Cluster 19  is made of GAD2+ neurons.  Both references identify this cluster as mostly inhibitory neurons, with some other subplate neurons as well.  This cluster does express TFAP2B, as well as ZIC1 and RELN, but not LMX1A or WLS.
+harmony.batchandindividual.sct$combined.annotation.coarse.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==19)] &lt;- &quot;Inh&quot; 
+harmony.batchandindividual.sct$combined.annotation.fine.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==19)] &lt;- &quot;Inh&quot;
+
+# Cluster 20 is ventricular leptomeningeal cells (VLMC).
+harmony.batchandindividual.sct$combined.annotation.coarse.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==20)] &lt;- &quot;VLMC&quot;
+harmony.batchandindividual.sct$combined.annotation.fine.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==20)] &lt;- &quot;VLMC&quot;
+
+# Cluster 21 consists of NTS+ mature projection neurons.
+harmony.batchandindividual.sct$combined.annotation.coarse.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==21)] &lt;- &quot;Glut&quot; 
+harmony.batchandindividual.sct$combined.annotation.fine.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==21)] &lt;- &quot;GlutNTS&quot; 
+
+# Cluster 22 appears to be a type of radial glia, distinguished by expression of the lncRNA PURPL, although this cluster does not appear to be correlated with treatment.
+harmony.batchandindividual.sct$combined.annotation.coarse.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==22)] &lt;- &quot;RG&quot;
+harmony.batchandindividual.sct$combined.annotation.fine.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==22)] &lt;- &quot;RG&quot;
+
+# Cluster 23 is identified as excitatory neurons by both references.  It&#39;s budding off of the main cluster 
+harmony.batchandindividual.sct$combined.annotation.coarse.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==23)] &lt;- &quot;Glut&quot;
+harmony.batchandindividual.sct$combined.annotation.fine.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==23)] &lt;- &quot;Glut&quot;
+
+# Cluster 24 is composed of Cajal-Retzius cells, with clear expression of Cajal-Retzius markers NDNF, RELN, and TP73.  
+harmony.batchandindividual.sct$combined.annotation.coarse.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==24)] &lt;- &quot;Cajal&quot; #or just call NeuronOther??
+harmony.batchandindividual.sct$combined.annotation.fine.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==24)] &lt;- &quot;Cajal&quot;
+
+# Cluster 25 is GAD1+, as well as TAC1+ and OTX2+, implying midbrain-localized inhibitory neurons.
+harmony.batchandindividual.sct$combined.annotation.coarse.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==25)] &lt;- &quot;Inh&quot; 
+harmony.batchandindividual.sct$combined.annotation.fine.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==25)] &lt;- &quot;InhMidbrain&quot;
+
+# Cluster 26 is made up of inhibitory neurons positive for markers GAD1 and SST.
+harmony.batchandindividual.sct$combined.annotation.coarse.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==26)] &lt;- &quot;Inh&quot;
+harmony.batchandindividual.sct$combined.annotation.fine.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==26)] &lt;- &quot;InhSST&quot;
+
+# Cluster 27 is a very small group of neurons identifiable as early midbrain dopaminergic neurons (FOXA2+, TH+, EN1+, NTN1+).
+harmony.batchandindividual.sct$combined.annotation.coarse.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==27)] &lt;- &quot;NeuronOther&quot; #(MidbrainDA)
+harmony.batchandindividual.sct$combined.annotation.fine.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==27)] &lt;- &quot;MidbrainDA&quot; #(MidbrainDA)
+
+# Cluster 28 consists of radial glia
+harmony.batchandindividual.sct$combined.annotation.coarse.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==28)] &lt;- &quot;RG&quot; 
+harmony.batchandindividual.sct$combined.annotation.fine.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==28)] &lt;- &quot;RG&quot; 
+
+# Cluster 29 is made of oligodendrocytes.    
+harmony.batchandindividual.sct$combined.annotation.coarse.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==29)] &lt;- &quot;Glia&quot;
+harmony.batchandindividual.sct$combined.annotation.fine.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==29)] &lt;- &quot;Oligo&quot;</code></pre>
+<pre class="r"><code>DimPlot(harmony.batchandindividual.sct, group.by = &quot;combined.annotation.coarse.harmony&quot;, label = TRUE, repel = TRUE, cols = manual_palette_coarse) + NoLegend()</code></pre>
+<pre><code>Rasterizing points since number of points exceeds 100,000.
+To disable this behavior set `raster=FALSE`</code></pre>
+<p><img src="figure/figure1.Rmd/unnamed-chunk-16-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>DimPlot(harmony.batchandindividual.sct, group.by = &quot;combined.annotation.fine.harmony&quot;, label = TRUE, repel = TRUE, cols = manual_palette_fine) + NoLegend()</code></pre>
+<pre><code>Rasterizing points since number of points exceeds 100,000.
+To disable this behavior set `raster=FALSE`</code></pre>
+<p><img src="figure/figure1.Rmd/unnamed-chunk-17-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Plot cell type markers (in the control condition) in a dotplot
+format:</p>
+<pre class="r"><code>control_subset &lt;- subset(harmony.batchandindividual.sct, subset =  vireo.prob.singlet &gt; 0.95 &amp; nCount_RNA&lt;20000 &amp; nCount_RNA&gt;2500 &amp;  treatment ==&quot;control10&quot; )  
+
+control_subset$combined.annotation.fine.harmony.ordered &lt;- factor(control_subset$combined.annotation.fine.harmony, levels=rev(c(&quot;RGcycling&quot; , &quot;RG&quot;, &quot;CorticalHem&quot;, &quot;GliaProg&quot;, &quot;IPcycling&quot;, &quot;IP&quot;, &quot;Immature&quot;, &quot;Glut&quot;, &quot;GlutNTS&quot;, &quot;NeuronOther&quot;, &quot;Cajal&quot;, &quot;MidbrainDA&quot;, &quot;Inh&quot;,  &quot;InhThalamic&quot;, &quot;InhGNRH&quot;,  &quot;InhSST&quot;, &quot;InhMidbrain&quot;, &quot;VLMC&quot;, &quot;Oligo&quot;, &quot;Choroid&quot;)))
+
+features_ordered &lt;- c(&quot;MKI67&quot;, &quot;TOP2A&quot;, &quot;BIRC5&quot;, #cycling cells
+  &quot;HOPX&quot;, &quot;LIFR&quot;, &quot;PDGFD&quot;, &quot;GLI3&quot;, #RG
+  &quot;NES&quot;, &quot;SOX2&quot;,
+  &quot;RSPO1&quot;, &quot;RSPO2&quot;, &quot;WLS&quot;, &quot;WNT2B&quot;, &quot;WNT5A&quot;, &quot;WNT8B&quot;, &quot;GJA1&quot;, #corticalhem
+  &quot;SPARC&quot;, &quot;AQP4&quot;, &quot;SPARCL1&quot;,  &quot;GFAP&quot;, #glialprog
+  &quot;EOMES&quot;, &quot;NEUROD1&quot;, #IP
+   &quot;RBFOX3&quot;, &quot;NR4A2&quot;, &quot;CRYM&quot;, &quot;BCL11B&quot;, 
+  &quot;SLA&quot;, &quot;SATB2&quot;, &quot;SLC17A7&quot;,
+  &quot;NTS&quot;,
+  &quot;LHX9&quot;, &quot;NEFM&quot;, &quot;SYP&quot;, &quot;SYN1&quot;, &quot;DLG4&quot;,#neuronother
+  &quot;RELN&quot;, &quot;NDNF&quot;, &quot;TP73&quot;, &quot;EMX2&quot;, #Cajal
+  &quot;FOXA2&quot;, &quot;TH&quot; , &quot;EN1&quot;, &quot;NTN1&quot;, &quot;LMX1A&quot;, &quot;SHH&quot;, #DA
+  &quot;GAD1&quot;, &quot;GAD2&quot;, &quot;DLX1&quot;, &quot;DLX2&quot;, &quot;DLX5&quot;, &quot;SCGN&quot;, #inh
+  &quot;SIX3&quot; , &quot;ESRRG&quot;,  &quot;ISL1&quot;,
+   &quot;GNRH1&quot;, &quot;LHX8&quot;,
+  &quot;SST&quot;,
+  &quot;OTX2&quot;,
+  &quot;MGP&quot;, &quot;POSTN&quot;, &quot;COL1A1&quot; ,&quot;PDGFRA&quot;,&quot;LUM&quot;, #VLMC
+  &quot;PLP1&quot;, &quot;S100B&quot;, &quot;MPZ&quot;,  #olig
+  &quot;TTR&quot;, &quot;CLIC6&quot;, &quot;FOLR1&quot; #Choroid
+  )
+
+DotPlot(control_subset, col.min = 0, features = features_ordered, cols = c(&quot;light gray&quot;, &quot;dark red&quot;), group.by = &quot;combined.annotation.fine.harmony.ordered&quot;) + 
+  theme_linedraw() + 
+    theme(
+      legend.direction = &quot;horizontal&quot;,
+      legend.position = &quot;bottom&quot;,
+      axis.title.y = element_blank(), 
+      axis.title.x = element_blank(), 
+      axis.text.x = element_text(angle = 60, vjust = 0, hjust=0)) +                               
+      scale_x_discrete(position = &quot;top&quot;)</code></pre>
+<p><img src="figure/figure1.Rmd/unnamed-chunk-18-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="alluvial-plot-of-cell-type-classifications"
+class="section level2">
+<h2>Alluvial plot of cell type classifications</h2>
+<pre class="r"><code>alluvial_data &lt;- harmony.batchandindividual.sct@meta.data %&gt;% 
+  group_by(combined.annotation.fine.harmony, combined.annotation.coarse.harmony) %&gt;% 
+  summarise(count=n()) %&gt;%
+  as.data.frame()</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;combined.annotation.fine.harmony&#39;. You can
+override using the `.groups` argument.</code></pre>
+<pre class="r"><code>alluvial_data$combined.annotation.fine.harmony &lt;- factor(alluvial_data$combined.annotation.fine.harmony, levels = fine.order)
+
+alluvial_data$combined.annotation.coarse.harmony &lt;- factor(alluvial_data$combined.annotation.coarse.harmony, levels = coarse.order, ordered = TRUE)
+
+alluvial_data_long &lt;- to_lodes_form(alluvial_data,
+                              key = &quot;celltype&quot;, value = &quot;type&quot;, id = &quot;classification&quot;,
+                              axes = 1:2)
+ggplot(data = alluvial_data_long,
+       aes(x = celltype, stratum = type, alluvium = classification, y = count)) +
+  geom_flow(aes(fill=type)) +
+  geom_stratum(aes( fill=type),  color=&quot;white&quot;) + #color=type,
+  # geom_text(stat = &quot;stratum&quot;, aes(label = type)) +
+  theme_minimal() +
+  scale_fill_manual(values=c(manual_palette_fine, manual_palette_coarse) )+
+  scale_color_manual(values=c(manual_palette_fine, manual_palette_coarse) )</code></pre>
+<p><img src="figure/figure1.Rmd/unnamed-chunk-20-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cell-type-abundance" class="section level2">
+<h2>Cell type abundance</h2>
+<p>Here, I plot stacked bar charts of fractional abundance of each cell
+type in each individual and condition, as well as a few direct
+comparisons of individuals collected in two batches and organoids
+collected after long-term culture in physiological vs. atmospheric
+oxygen.</p>
+<pre class="r"><code>vireo.order &lt;- c(
+  &quot;NA19102&quot;, &quot;NA18511&quot;, &quot;NA18489&quot;,
+  &quot;NA19128&quot;, &quot;NA18501&quot;,
+  &quot;NA19207&quot;, &quot;NA18519&quot;,  #double batch
+  &quot;NA18507&quot;,
+  &quot;NA19144&quot;, &quot;NA19210&quot;,&quot;NA18853&quot;,
+  &quot;NA18856&quot;,  &quot;NA19098&quot;, &quot;NA18913&quot;, &quot;NA19153&quot;, 
+  &quot;NA18517&quot;,
+  &quot;NA19093&quot;, 
+  &quot;NA18502&quot;,&quot;NA19143&quot;,
+  &quot;NA18508&quot;,  &quot;NA19190&quot;
+)</code></pre>
+<p>In the control condition:</p>
+<pre class="r"><code>control_subset@meta.data %&gt;% 
+  group_by(vireo.individual) %&gt;% 
+  mutate(cells=n()) %&gt;% 
+  ungroup() %&gt;% 
+  group_by(vireo.individual, combined.annotation.fine.harmony) %&gt;% 
+  mutate(cellnums=n()) %&gt;% 
+  ungroup() %&gt;%  
+  mutate(cellfrac=cellnums/cells) %&gt;% 
+  dplyr::select(vireo.individual, combined.annotation.fine.harmony, cells, cellnums, cellfrac) %&gt;%  
+  unique() %&gt;% 
+  ggplot(mapping = aes(x=factor(vireo.individual, vireo.order), y=cellfrac, fill=factor(combined.annotation.fine.harmony, fine.order))) + 
+  geom_col() + 
+  scale_fill_manual(values = manual_palette_fine) + 
+  ggtitle(&quot;Fine annotation, cell type fractions&quot;) + coord_flip() + theme_light()</code></pre>
+<p><img src="figure/figure1.Rmd/unnamed-chunk-22-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Across the three treatment conditions:</p>
+<pre class="r"><code>plot.data &lt;- subset(harmony.batchandindividual.sct, subset =  vireo.prob.singlet &gt; 0.95 &amp; nCount_RNA&lt;20000 &amp; nCount_RNA&gt;2500 &amp;  treatment !=&quot;control21&quot; )  
+ 
+plot.data@meta.data %&gt;% 
+  group_by(vireo.individual, treatment) %&gt;% 
+  mutate(cells=n()) %&gt;% 
+  ungroup() %&gt;% 
+  group_by(vireo.individual, combined.annotation.fine.harmony, treatment) %&gt;% 
+  mutate(cellnums=n()) %&gt;% 
+  ungroup() %&gt;%  
+  mutate(cellfrac=cellnums/cells) %&gt;% 
+  dplyr::select(vireo.individual, combined.annotation.fine.harmony, cells, cellnums, cellfrac, treatment) %&gt;%  
+  unique() %&gt;% 
+  ggplot(mapping = aes(x=factor(vireo.individual, vireo.order), y=cellfrac, fill=factor(combined.annotation.fine.harmony, fine.order))) + 
+  geom_col() + 
+  scale_fill_manual(values = manual_palette_fine) + 
+  ggtitle(&quot;Fine annotation, cell type fractions&quot;) + coord_flip() + theme_light() + facet_wrap(vars(treatment), nrow = 1)</code></pre>
+<p><img src="figure/figure1.Rmd/unnamed-chunk-23-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>rm(plot.data)</code></pre>
+<p>Across batches in the two individuals collected twice:</p>
+<pre class="r"><code>repeat.data &lt;- subset(harmony.batchandindividual.sct, subset =  vireo.prob.singlet &gt; 0.95 &amp; nCount_RNA&lt;20000 &amp; nCount_RNA&gt;2500 &amp;  treatment ==&quot;control10&quot; &amp; vireo.individual %in% c(&quot;NA18519&quot;, &quot;NA19207&quot;))  
+
+repeat.data@meta.data %&gt;% 
+  group_by(vireo.individual, batch) %&gt;% 
+  mutate(cells=n()) %&gt;% 
+  ungroup() %&gt;% 
+  group_by(vireo.individual, combined.annotation.fine.harmony, batch) %&gt;% 
+  mutate(cellnums=n()) %&gt;% 
+  ungroup() %&gt;%  
+  mutate(cellfrac=cellnums/cells) %&gt;% 
+  dplyr::select(vireo.individual, combined.annotation.fine.harmony, cells, cellnums, cellfrac, batch) %&gt;%  
+  unique() %&gt;% 
+  ggplot(mapping = aes(x=factor(vireo.individual, vireo.order), y=cellfrac, fill=factor(combined.annotation.fine.harmony, fine.order))) + 
+  geom_col() + 
+  scale_fill_manual(values = manual_palette_fine) + 
+  ggtitle(&quot;Fine annotation, cell type fractions&quot;) + coord_flip() + theme_light() + facet_wrap(vars(batch), nrow = 1) </code></pre>
+<p><img src="figure/figure1.Rmd/unnamed-chunk-24-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>rm(repeat.data)</code></pre>
+<p>Compare organoids cultured chronically at 10% oxygen and 21% oxygen
+(not acute perturbation condition).</p>
+<pre class="r"><code>plot.data.oxygen &lt;- subset(harmony.batchandindividual.sct, subset =  vireo.prob.singlet &gt; 0.95 &amp; nCount_RNA&lt;20000 &amp; nCount_RNA&gt;2500 &amp;  treatment %in% c(&quot;control10&quot;, &quot;control21&quot;)  &amp; vireo.individual %in% c( &quot;NA19207&quot;, &quot;NA18519&quot;, &quot;NA18489&quot;, &quot;NA18511&quot;, &quot;NA19102&quot;))  
+ 
+plot.data.oxygen@meta.data %&gt;% 
+  group_by(vireo.individual, treatment) %&gt;% 
+  mutate(cells=n()) %&gt;% 
+  ungroup() %&gt;% 
+  group_by(vireo.individual, combined.annotation.fine.harmony, treatment) %&gt;% 
+  mutate(cellnums=n()) %&gt;% 
+  ungroup() %&gt;%  
+  mutate(cellfrac=cellnums/cells) %&gt;% 
+  dplyr::select(vireo.individual, combined.annotation.fine.harmony, cells, cellnums, cellfrac, treatment) %&gt;%  
+  unique() %&gt;% 
+  ggplot(mapping = aes(x=factor(vireo.individual, vireo.order), y=cellfrac, fill=factor(combined.annotation.fine.harmony, fine.order))) + 
+  geom_col() + 
+  scale_fill_manual(values = manual_palette_fine) + 
+  ggtitle(&quot;Fine annotation, cell type fractions&quot;) + coord_flip() + theme_light() + facet_wrap(vars(treatment), nrow = 1)</code></pre>
+<p><img src="figure/figure1.Rmd/unnamed-chunk-25-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>rm(plot.data.oxygen)</code></pre>
+<div id="cell-types-per-individual" class="section level3">
+<h3>Cell types per individual</h3>
+<p>First, generate and filter pseudobulk data from the Seurat
+object.</p>
+<pre class="r"><code>subset_seurat &lt;- subset(harmony.batchandindividual.sct, subset = vireo.prob.singlet &gt; 0.95 &amp; nCount_RNA&lt;20000 &amp; nCount_RNA&gt;2500 &amp; treatment !=&quot;control21&quot; )</code></pre>
+<pre class="r"><code>pseudo_coarse_quality &lt;- generate.pseudobulk(subset_seurat, labels = c(&quot;combined.annotation.coarse.harmony&quot;, &quot;treatment&quot;, &quot;vireo.individual&quot;, &quot;batch&quot;))
+pseudo_fine_quality &lt;- generate.pseudobulk(subset_seurat, labels = c(&quot;combined.annotation.fine.harmony&quot;, &quot;treatment&quot;, &quot;vireo.individual&quot;, &quot;batch&quot;))</code></pre>
+<pre class="r"><code>pseudo_fine_quality &lt;- readRDS(file = &quot;output/pseudo_fine_quality_filtered_de_20240305.RDS&quot;)
+pseudo_coarse_quality &lt;- readRDS(file = &quot;output/pseudo_coarse_quality_filtered_de_20240305.RDS&quot;)</code></pre>
+<pre class="r"><code>pseudo_coarse_quality_de &lt;- filter.pseudobulk(pseudo_coarse_quality, threshold = 20)
+pseudo_fine_quality_de &lt;- filter.pseudobulk(pseudo_fine_quality, threshold = 20)</code></pre>
+<p>For the coarse cell type assignment, DE and QTL analysis therefore
+has available:</p>
+<pre class="r"><code>pseudo_coarse_quality_de$meta %&gt;%  group_by(vireo.individual, treatment) %&gt;% summarize(celltypes=length(combined.annotation.coarse.harmony)) %&gt;% ungroup() %&gt;% group_by(treatment) %&gt;% summarize(median(celltypes))</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;vireo.individual&#39;. You can override using
+the `.groups` argument.</code></pre>
+<pre><code># A tibble: 3 × 2
+  treatment `median(celltypes)`
+  &lt;chr&gt;                   &lt;int&gt;
+1 control10                   7
+2 stim1pct                    7
+3 stim21pct                   7</code></pre>
+<p>Median 7 cell types (out of a total of 10)</p>
+<p>For the fine clustering:</p>
+<pre class="r"><code>pseudo_fine_quality_de$meta %&gt;%  group_by(vireo.individual, treatment) %&gt;% summarize(celltypes=length(combined.annotation.fine.harmony)) %&gt;% ungroup() %&gt;% group_by(treatment) %&gt;% summarize(median(celltypes))</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;vireo.individual&#39;. You can override using
+the `.groups` argument.</code></pre>
+<pre><code># A tibble: 3 × 2
+  treatment `median(celltypes)`
+  &lt;chr&gt;                   &lt;int&gt;
+1 control10                  12
+2 stim1pct                   11
+3 stim21pct                  11</code></pre>
+<p>Median 11-12 cell types (out of a total of 20)</p>
+<p>Or, plotted for the control condition:</p>
+<pre class="r"><code>pseudo_coarse_quality_de$meta %&gt;% 
+  filter(treatment==&quot;control10&quot;) %&gt;%  
+  group_by(vireo.individual) %&gt;% 
+  summarize(celltypes=length(combined.annotation.coarse.harmony)) %&gt;% 
+  ggplot(aes(x=factor(vireo.individual, vireo.order), y=celltypes)) +
+  geom_segment( aes(x=factor(vireo.individual, vireo.order), xend=factor(vireo.individual, vireo.order), y=0, yend=celltypes), color=&quot;gray&quot;) + 
+  geom_point() + 
+  coord_flip() + 
+  geom_hline(yintercept = 7, linetype=2) + 
+  theme_light() + ylim(0, 13)</code></pre>
+<p><img src="figure/figure1.Rmd/unnamed-chunk-32-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>pseudo_fine_quality_de$meta %&gt;% 
+  filter(treatment==&quot;control10&quot;) %&gt;%  
+  group_by(vireo.individual) %&gt;%
+  summarize(celltypes=length(combined.annotation.fine.harmony)) %&gt;% 
+  ggplot(aes(x=factor(vireo.individual, vireo.order), y=celltypes)) +
+  geom_segment( aes(x=factor(vireo.individual, vireo.order), xend=factor(vireo.individual, vireo.order), y=0, yend=celltypes), color=&quot;gray&quot;) + 
+  geom_point() +
+  ylim(0, 20) + 
+  coord_flip() + 
+  geom_hline(yintercept = 11, linetype=2) + 
+  theme_light() </code></pre>
+<p><img src="figure/figure1.Rmd/unnamed-chunk-32-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Conversely, to ask how many individuals are there for each cell
+type:</p>
+<pre class="r"><code>pseudo_fine_quality_de$meta %&gt;% 
+  filter(treatment==&quot;control10&quot;) %&gt;%  
+  group_by(combined.annotation.fine.harmony) %&gt;%
+  summarize(individuals=length(unique(vireo.individual))) %&gt;% 
+  ggplot(aes(x=factor(combined.annotation.fine.harmony, rev(fine.order)), y=individuals)) +
+  geom_segment( aes(x=factor(combined.annotation.fine.harmony, rev(fine.order)), xend=factor(combined.annotation.fine.harmony, rev(fine.order)), y=0, yend=individuals), color=&quot;gray&quot;) + 
+  geom_point() + 
+  ylim(0, 21) +
+  coord_flip() +
+  geom_hline(yintercept = 11.5, linetype=2, color=&quot;black&quot;) + 
+  theme_light() </code></pre>
+<p><img src="figure/figure1.Rmd/unnamed-chunk-33-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>pseudo_coarse_quality_de$meta %&gt;% 
+  filter(treatment==&quot;control10&quot;) %&gt;%  
+  group_by(combined.annotation.coarse.harmony) %&gt;% 
+  summarize(individuals=length(unique(vireo.individual))) %&gt;% 
+  ggplot(aes(x=factor(combined.annotation.coarse.harmony, coarse.order), y=individuals)) +
+  geom_segment( aes(x=factor(combined.annotation.coarse.harmony, coarse.order), xend=factor(combined.annotation.coarse.harmony, coarse.order), y=0, yend=individuals), color=&quot;gray&quot;) + 
+  geom_point() + 
+  ylim(0, 21) + 
+  coord_flip() + 
+  geom_hline(yintercept = 17.5, linetype=2, color=&quot;gray&quot;) + 
+  theme_light()</code></pre>
+<p><img src="figure/figure1.Rmd/unnamed-chunk-33-2.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="test-for-cell-type-proportion-changes-with-propeller"
+class="section level2">
+<h2>Test for cell type proportion changes with propeller</h2>
+<p>Here, I use a linear mixed model to test for the effect of different
+experimental factors on cell type proportion, using the cell line
+(vireo.individual) as a blocking factor.</p>
+<p>Following the guidance of the propeller package documentation, I
+first get transformed proportions.</p>
+<pre class="r"><code>hypoxia_subset &lt;- subset(subset_seurat, treatment %in% c(&quot;control10&quot;, &quot;stim1pct&quot;))
+hyperoxia_subset &lt;- subset(subset_seurat, treatment %in% c(&quot;control10&quot;, &quot;stim21pct&quot;))
+
+hypoxia_subset$sample &lt;- paste(hypoxia_subset$vireo.individual, hypoxia_subset$batch, hypoxia_subset$treatment, sep=&quot;_&quot;)
+hyperoxia_subset$sample &lt;- paste(hyperoxia_subset$vireo.individual, hyperoxia_subset$batch, hyperoxia_subset$treatment, sep=&quot;_&quot;)
+
+props_coarse_hypoxia_logit &lt;- getTransformedProps(hypoxia_subset$combined.annotation.coarse.harmony, hypoxia_subset$sample, transform=&quot;logit&quot;)</code></pre>
+<pre><code>Performing logit transformation of proportions</code></pre>
+<pre class="r"><code>props_fine_hypoxia_logit &lt;- getTransformedProps(hypoxia_subset$combined.annotation.fine.harmony, hypoxia_subset$sample, transform=&quot;logit&quot;)</code></pre>
+<pre><code>Performing logit transformation of proportions</code></pre>
+<pre class="r"><code>props_coarse_hyperoxia_logit &lt;- getTransformedProps(hyperoxia_subset$combined.annotation.coarse.harmony, hyperoxia_subset$sample, transform=&quot;logit&quot;)</code></pre>
+<pre><code>Performing logit transformation of proportions</code></pre>
+<pre class="r"><code>props_fine_hyperoxia_logit &lt;- getTransformedProps(hyperoxia_subset$combined.annotation.fine.harmony, hyperoxia_subset$sample, transform=&quot;logit&quot;)</code></pre>
+<pre><code>Performing logit transformation of proportions</code></pre>
+<p>Now set up a linear mixed model and test for the treatment
+effect:</p>
+<pre class="r"><code>metadata &lt;- hypoxia_subset@meta.data[match(colnames(props_coarse_hypoxia_logit$TransformedProps), hypoxia_subset@meta.data$sample),] %&gt;% 
+  mutate(sex=ifelse(sex==&quot;female&quot;, 0, 1)) %&gt;% 
+  dplyr::select(vireo.individual, treatment, batch, sex, FFpassage)
+
+rownames(metadata) &lt;- colnames(props_coarse_hypoxia_logit$TransformedProps)
+metadata$treatment &lt;- factor(metadata$treatment, levels = c(&quot;control10&quot;, &quot;stim1pct&quot;))
+
+model_formula &lt;- model.matrix(~treatment + batch+ sex + FFpassage, metadata)
+# model_formula &lt;- model.matrix(~treatment, metadata)
+
+dupcor &lt;- duplicateCorrelation(props_coarse_hypoxia_logit$TransformedProps, design=model_formula, block=metadata$vireo.individual)
+
+
+fit &lt;- lmFit(props_coarse_hypoxia_logit$TransformedProps, design=model_formula, block=metadata$vireo.individual, correlation=dupcor$consensus)
+fit &lt;- eBayes(fit)
+res &lt;- topTable(fit,coef=&quot;treatmentstim1pct&quot;, number=dim(props_coarse_hypoxia_logit$TransformedProps)[1])
+
+print(res)</code></pre>
+<pre><code>                  logFC   AveExpr          t    P.Value adj.P.Val         B
+Immature     0.42349175 -2.115511  2.1925995 0.03245852 0.3245852 -3.604376
+Choroid     -0.28155017 -4.930373 -1.5132088 0.13578534 0.5008210 -4.386568
+Inh         -0.23771491 -2.955164 -1.2513502 0.21594903 0.5008210 -4.619858
+IP          -0.17799854 -2.748508 -1.1778246 0.24379031 0.5008210 -4.678016
+RG           0.16545646 -1.348556  1.1612473 0.25041050 0.5008210 -4.690674
+Cajal       -0.14862084 -5.952660 -0.7233762 0.47242480 0.7152328 -4.962781
+VLMC         0.16364397 -5.967844  0.6777910 0.50066295 0.7152328 -4.984061
+NeuronOther -0.12701169 -3.012712 -0.5620085 0.57632695 0.7204087 -5.032004
+Glia        -0.07207261 -3.128278 -0.3386078 0.73615691 0.8130144 -5.099474
+Glut        -0.04876146 -2.185267 -0.2376442 0.81301435 0.8130144 -5.119043</code></pre>
+<p>Test also for the batch effect:</p>
+<pre class="r"><code>res &lt;- topTable(fit,coef=&quot;batchbatch2&quot;, number=dim(props_coarse_hypoxia_logit$TransformedProps)[1])
+print(res)</code></pre>
+<pre><code>                 logFC   AveExpr          t     P.Value  adj.P.Val         B
+Cajal        1.0904972 -5.952660  2.8109965 0.006770663 0.06770663 -2.421572
+IP          -0.7072148 -2.748508 -2.4783738 0.016201683 0.08100842 -3.149966
+NeuronOther  0.8968632 -3.012712  2.1017287 0.040035264 0.10956696 -3.885975
+RG          -0.5546896 -1.348556 -2.0617800 0.043826785 0.10956696 -3.958127
+Inh         -0.6237865 -2.955164 -1.7390404 0.087458826 0.17491765 -4.496921
+VLMC         0.7058495 -5.967844  1.5483142 0.127114871 0.20630110 -4.776955
+Glia         0.5948204 -3.128278  1.4800073 0.144410770 0.20630110 -4.870049
+Choroid      0.4578643 -4.930373  1.3032601 0.197757476 0.24719685 -5.092867
+Immature    -0.2907003 -2.115511 -0.7970968 0.428722643 0.45181945 -5.581403
+Glut        -0.2935273 -2.185267 -0.7576178 0.451819452 0.45181945 -5.609906</code></pre>
+<p>Test also for the sex effect:</p>
+<pre class="r"><code>res &lt;- topTable(fit,coef=&quot;sex&quot;, number=dim(props_coarse_hypoxia_logit$TransformedProps)[1])
+print(res)</code></pre>
+<pre><code>                 logFC   AveExpr          t    P.Value adj.P.Val         B
+Glia        -1.8731512 -3.128278 -2.2715046 0.02693343 0.2354849 -3.426618
+Inh         -1.4937829 -2.955164 -2.0296633 0.04709698 0.2354849 -3.784421
+Glut         1.1938788 -2.185267  1.5018440 0.13869065 0.2666879 -4.445404
+NeuronOther -1.3122409 -3.012712 -1.4987420 0.13949213 0.2666879 -4.448770
+Cajal       -1.1470160 -5.952660 -1.4410136 0.15508499 0.2666879 -4.510271
+Immature     1.0653565 -2.115511  1.4237161 0.16001276 0.2666879 -4.528271
+RG           0.6404299 -1.348556  1.1601835 0.25083972 0.3583425 -4.777576
+Choroid     -0.7390161 -4.930373 -1.0252058 0.30962348 0.3870294 -4.886719
+IP           0.2825794 -2.748508  0.4826349 0.63121456 0.7013495 -5.193127
+VLMC        -0.1614681 -5.967844 -0.1726222 0.86356359 0.8635636 -5.270067</code></pre>
+<p>And the passage number: Test also for the sex effect:</p>
+<pre class="r"><code>res &lt;- topTable(fit,coef=&quot;FFpassage&quot;, number=dim(props_coarse_hypoxia_logit$TransformedProps)[1])
+print(res)</code></pre>
+<pre><code>                  logFC   AveExpr          t     P.Value  adj.P.Val         B
+Glia        -0.13358247 -3.128278 -3.1609374 0.002525078 0.02525078 -1.657870
+VLMC        -0.12048778 -5.967844 -2.5134977 0.014822423 0.07411212 -3.197392
+Cajal       -0.08076432 -5.952660 -1.9799024 0.052579408 0.17526469 -4.254219
+RG           0.04776287 -1.348556  1.6883836 0.096835181 0.24208795 -4.739888
+Immature     0.05819181 -2.115511  1.5174554 0.134712190 0.26942438 -4.992331
+Choroid     -0.04703966 -4.930373 -1.2733475 0.208094418 0.34682403 -5.309646
+Glut         0.04260157 -2.185267  1.0457208 0.300130977 0.42875854 -5.558219
+Inh         -0.02694430 -2.955164 -0.7143796 0.477925558 0.59740695 -5.835633
+IP           0.01365914 -2.748508  0.4552262 0.650686219 0.67368078 -5.980993
+NeuronOther -0.01899358 -3.012712 -0.4232975 0.673680781 0.67368078 -5.994486</code></pre>
+<p>And again with the fine classification:</p>
+<pre class="r"><code>metadata &lt;- hypoxia_subset@meta.data[match(colnames(props_fine_hypoxia_logit$TransformedProps), hypoxia_subset@meta.data$sample),] %&gt;% mutate(sex=ifelse(sex==&quot;female&quot;, 0, 1)) %&gt;% dplyr::select(vireo.individual, treatment, batch, sex, FFpassage)
+
+rownames(metadata) &lt;- colnames(props_fine_hypoxia_logit$TransformedProps)
+metadata$treatment &lt;- factor(metadata$treatment, levels = c(&quot;control10&quot;, &quot;stim1pct&quot;))
+
+model_formula &lt;- model.matrix(~treatment + batch+ sex + FFpassage, metadata)
+# model_formula &lt;- model.matrix(~treatment, metadata)
+
+dupcor &lt;- duplicateCorrelation(props_fine_hypoxia_logit$TransformedProps, design=model_formula, block=metadata$vireo.individual)
+
+
+fit &lt;- lmFit(props_fine_hypoxia_logit$TransformedProps, design=model_formula, block=metadata$vireo.individual, correlation=dupcor$consensus)
+fit &lt;- eBayes(fit)
+res &lt;- topTable(fit,coef=&quot;treatmentstim1pct&quot;, number=dim(props_fine_hypoxia_logit$TransformedProps)[1])
+print(res)</code></pre>
+<pre><code>                  logFC   AveExpr           t    P.Value adj.P.Val         B
+InhThalamic -0.53872343 -5.270054 -2.48416756 0.01601306 0.3061521 -3.115975
+Immature     0.41912028 -2.132286  2.09003739 0.04118271 0.3061521 -3.706018
+RG           0.29697731 -2.012206  2.04165702 0.04592281 0.3061521 -3.772849
+IPcycling   -0.26315678 -3.981136 -1.53032989 0.13158335 0.5379789 -4.397115
+Choroid     -0.28544026 -4.946076 -1.51865106 0.13449472 0.5379789 -4.409536
+Inh         -0.27689412 -3.650756 -1.39031191 0.16995354 0.5665118 -4.540354
+Oligo       -0.36425010 -6.876801 -1.20647241 0.23272417 0.6085463 -4.709225
+IP          -0.17708342 -3.243165 -1.17895215 0.24341851 0.6085463 -4.732588
+CorticalHem -0.15081140 -4.218096 -0.81532599 0.41835131 0.7517655 -4.992978
+RGcycling    0.14181641 -3.099198  0.81272463 0.41982902 0.7517655 -4.994511
+Cajal       -0.15252339 -5.968346 -0.73482989 0.46551934 0.7517655 -5.038215
+InhMidbrain -0.15543030 -6.370012 -0.70633803 0.48291607 0.7517655 -5.053129
+VLMC         0.15880503 -5.984015  0.65424174 0.51564282 0.7517655 -5.078907
+NeuronOther -0.13157741 -3.061484 -0.58804347 0.55887498 0.7517655 -5.108868
+GliaProg    -0.09007115 -3.319190 -0.50378367 0.61639608 0.7517655 -5.142450
+MidbrainDA   0.10873054 -6.945211  0.48178814 0.63184019 0.7517655 -5.150373
+Glut        -0.10224457 -2.434556 -0.47167047 0.63900065 0.7517655 -5.153901
+InhGNRH      0.06492643 -5.109956  0.29321454 0.77044559 0.8560507 -5.203893
+InhSST      -0.03970667 -6.121439 -0.18772252 0.85177495 0.8966052 -5.222515
+GlutNTS     -0.02379461 -5.044153 -0.08813882 0.93008181 0.9300818 -5.232607</code></pre>
+<p>And the batch effect:</p>
+<pre class="r"><code>res &lt;- topTable(fit,coef=&quot;batchbatch2&quot;, number=dim(props_fine_hypoxia_logit$TransformedProps)[1])
+print(res)</code></pre>
+<pre><code>                   logFC   AveExpr           t      P.Value   adj.P.Val
+MidbrainDA   1.686777480 -6.945211  3.98865430 0.0001953226 0.002474272
+InhMidbrain  1.614796522 -6.370012  3.91614486 0.0002474272 0.002474272
+InhThalamic  1.447490586 -5.270054  3.56200732 0.0007615838 0.005077226
+Oligo        1.841403487 -6.876801  3.25484803 0.0019300592 0.009650296
+InhSST       1.069137668 -6.121439  2.69743279 0.0092231958 0.033624961
+Cajal        1.035952913 -5.968346  2.66351047 0.0100874882 0.033624961
+CorticalHem  0.889986926 -4.218096  2.56770288 0.0129433771 0.036981077
+RG          -0.651129504 -2.012206 -2.38886130 0.0203065083 0.050766271
+Inh         -0.857372353 -3.650756 -2.29737569 0.0253699026 0.056377561
+IP          -0.586235607 -3.243165 -2.08283330 0.0418603984 0.083720797
+NeuronOther  0.809188047 -3.061484  1.92993016 0.0587033435 0.106733352
+IPcycling   -0.595008066 -3.981136 -1.84653431 0.0701189677 0.116864946
+VLMC         0.632671989 -5.984015  1.39096643 0.1697559779 0.261163043
+Choroid      0.400133968 -4.946076  1.13608866 0.2607739486 0.372534212
+Immature    -0.351354565 -2.132286 -0.93502886 0.3538012082 0.471734944
+Glut        -0.298293902 -2.434556 -0.73435635 0.4658055249 0.582256906
+InhGNRH      0.060332202 -5.109956  0.14540428 0.8849155093 0.993741277
+RGcycling   -0.024467615 -3.099198 -0.07482946 0.9406179504 0.993741277
+GlutNTS      0.032249545 -5.044153  0.06374942 0.9493975090 0.993741277
+GliaProg    -0.002639811 -3.319190 -0.00787944 0.9937412771 0.993741277
+                     B
+MidbrainDA   0.5294088
+InhMidbrain  0.3100114
+InhThalamic -0.7280777
+Oligo       -1.5787091
+InhSST      -2.9851292
+Cajal       -3.0644121
+CorticalHem -3.2841453
+RG          -3.6772805
+Inh         -3.8695222
+IP          -4.2958233
+NeuronOther -4.5778828
+IPcycling   -4.7238302
+VLMC        -5.4181372
+Choroid     -5.7270943
+Immature    -5.9287585
+Glut        -6.0921036
+InhGNRH     -6.3467254
+RGcycling   -6.3544010
+GlutNTS     -6.3551594
+GliaProg    -6.3571361</code></pre>
+<p>And the sex effect:</p>
+<pre class="r"><code>res &lt;- topTable(fit,coef=&quot;sex&quot;, number=dim(props_fine_hypoxia_logit$TransformedProps)[1])
+print(res)</code></pre>
+<pre><code>                    logFC   AveExpr             t    P.Value adj.P.Val
+InhSST      -2.1141120712 -6.121439 -2.6567876996 0.01026733 0.2053466
+Inh         -1.6780857058 -3.650756 -2.2396931881 0.02911248 0.2911248
+GliaProg    -1.2391674328 -3.319190 -1.8423165926 0.07074292 0.3565224
+MidbrainDA  -1.5336979396 -6.945211 -1.8064264405 0.07624383 0.3565224
+Glut         1.3504540879 -2.434556  1.6559764074 0.10333869 0.3565224
+InhThalamic -1.2972499147 -5.270054 -1.5900638181 0.11746912 0.3565224
+InhMidbrain -1.2049444218 -6.370012 -1.4555254494 0.15112553 0.3565224
+Immature     1.0931141388 -2.132286  1.4489612497 0.15294355 0.3565224
+NeuronOther -1.1927636823 -3.061484 -1.4169625981 0.16205152 0.3565224
+Cajal       -1.0645498970 -5.968346 -1.3633025897 0.17826122 0.3565224
+Oligo       -1.4068264758 -6.876801 -1.2386087158 0.22067429 0.3817069
+GlutNTS     -1.2352170652 -5.044153 -1.2162078663 0.22902415 0.3817069
+RG           0.6035828562 -2.012206  1.1029918414 0.27476369 0.4211484
+InhGNRH     -0.8809927430 -5.109956 -1.0575774249 0.29480388 0.4211484
+Choroid     -0.6677526505 -4.946076 -0.9443527970 0.34905943 0.4654126
+RGcycling    0.5167078907 -3.099198  0.7871144990 0.43454441 0.5431805
+IP           0.3547695827 -3.243165  0.6278277976 0.53267710 0.6266789
+CorticalHem -0.3871933546 -4.218096 -0.5564176282 0.58014942 0.6446105
+VLMC        -0.0675877249 -5.984015 -0.0740146540 0.94126334 0.9908035
+IPcycling    0.0001195088 -3.981136  0.0001847337 0.99985326 0.9998533
+                    B
+InhSST      -2.695072
+Inh         -3.477805
+GliaProg    -4.121605
+MidbrainDA  -4.174471
+Glut        -4.386118
+InhThalamic -4.473680
+InhMidbrain -4.642413
+Immature    -4.650297
+NeuronOther -4.688265
+Cajal       -4.750181
+Oligo       -4.885471
+GlutNTS     -4.908489
+RG          -5.018751
+InhGNRH     -5.060105
+Choroid     -5.155954
+RGcycling   -5.271664
+IP          -5.367941
+CorticalHem -5.404181
+VLMC        -5.535030
+IPcycling   -5.537394</code></pre>
+<p>And the passage number effect:</p>
+<pre class="r"><code>res &lt;- topTable(fit,coef=&quot;FFpassage&quot;, number=dim(props_fine_hypoxia_logit$TransformedProps)[1])
+print(res)</code></pre>
+<pre><code>                   logFC   AveExpr           t    P.Value adj.P.Val         B
+InhMidbrain -0.103398626 -6.370012 -2.42212593 0.01870292 0.1643851 -3.162623
+VLMC        -0.108878894 -5.984015 -2.31218591 0.02448075 0.1643851 -3.369649
+Oligo       -0.135250457 -6.876801 -2.30919976 0.02465776 0.1643851 -3.375165
+MidbrainDA  -0.077673260 -6.945211 -1.77411245 0.08149891 0.3327063 -4.266881
+Cajal       -0.070884596 -5.968346 -1.76038343 0.08382125 0.3327063 -4.287109
+GliaProg    -0.058046943 -3.319190 -1.67356578 0.09981189 0.3327063 -4.411805
+Immature     0.061213717 -2.132286  1.57350879 0.12125287 0.3409573 -4.548517
+GlutNTS     -0.079145009 -5.044153 -1.51118357 0.13638291 0.3409573 -4.629823
+RG           0.040298265 -2.012206  1.42807467 0.15884210 0.3529824 -4.733573
+InhSST      -0.053958325 -6.121439 -1.31497189 0.19389640 0.3877928 -4.866057
+Inh         -0.048368933 -3.650756 -1.25190121 0.21582672 0.3924122 -4.935512
+Choroid     -0.038544468 -4.946076 -1.05708492 0.29502659 0.4917110 -5.129666
+Glut         0.040372355 -2.434556  0.96003610 0.34117748 0.5248884 -5.214702
+InhGNRH     -0.038270112 -5.109956 -0.89089954 0.37680735 0.5382962 -5.270470
+RGcycling    0.024008137 -3.099198  0.70921912 0.48114058 0.6415208 -5.397690
+InhThalamic -0.015786287 -5.270054 -0.37523217 0.70890995 0.8571935 -5.557235
+CorticalHem -0.012513242 -4.218096 -0.34871611 0.72861444 0.8571935 -5.565724
+NeuronOther -0.006788170 -3.061484 -0.15638168 0.87629643 0.9692158 -5.608732
+IPcycling   -0.002673848 -3.981136 -0.08015162 0.93640336 0.9692158 -5.616724
+IP          -0.001129587 -3.243165 -0.03876529 0.96921584 0.9692158 -5.618906</code></pre>
+<p>Note that the most dramatic changes are for sample 19144, which was
+readily identifiable by eye. Differences between treatment conditions
+for other cell types are modest and similar between individuals.</p>
+<p>We can now repeat for the hyperoxia vs. normoxia comparison:</p>
+<pre class="r"><code>metadata &lt;- hyperoxia_subset@meta.data[match(colnames(props_coarse_hyperoxia_logit$TransformedProps), hyperoxia_subset@meta.data$sample),] %&gt;% 
+  mutate(sex=ifelse(sex==&quot;female&quot;, 0, 1)) %&gt;% 
+  dplyr::select(vireo.individual, treatment, batch, sex, FFpassage)
+
+rownames(metadata) &lt;- colnames(props_coarse_hyperoxia_logit$TransformedProps)
+metadata$treatment &lt;- factor(metadata$treatment, levels = c(&quot;control10&quot;, &quot;stim21pct&quot;))
+
+model_formula &lt;- model.matrix(~treatment + batch+ sex + FFpassage, metadata)
+
+dupcor &lt;- duplicateCorrelation(props_coarse_hyperoxia_logit$TransformedProps, design=model_formula, block=metadata$vireo.individual)
+
+
+fit &lt;- lmFit(props_coarse_hyperoxia_logit$TransformedProps, design=model_formula, block=metadata$vireo.individual, correlation=dupcor$consensus)
+fit &lt;- eBayes(fit)
+res &lt;- topTable(fit,coef=&quot;treatmentstim21pct&quot;, number=dim(props_coarse_hypoxia_logit$TransformedProps)[1])
+
+print(res)</code></pre>
+<pre><code>                  logFC   AveExpr           t    P.Value adj.P.Val         B
+Choroid     -0.34765134 -4.966536 -2.04631230 0.04587348 0.4587348 -4.206424
+Immature    -0.25391201 -2.448336 -1.59869522 0.11603789 0.5801894 -4.411922
+Cajal       -0.15250413 -5.974537 -0.70621429 0.48325408 0.8153953 -4.686948
+Inh          0.10183339 -2.753645  0.65548505 0.51508815 0.8153953 -4.696511
+IP           0.07641741 -2.613698  0.64990276 0.51865850 0.8153953 -4.697521
+Glia         0.11872324 -3.063634  0.61498420 0.54128709 0.8153953 -4.703649
+VLMC         0.13080764 -6.011817  0.57058260 0.57077672 0.8153953 -4.710964
+NeuronOther  0.08004257 -2.916632  0.42289440 0.67414207 0.8257494 -4.731422
+RG           0.04097716 -1.385439  0.32942896 0.74317448 0.8257494 -4.741262
+Glut         0.01529048 -2.151427  0.08572121 0.93202215 0.9320222 -4.755460</code></pre>
+<p>And using the fine classification:</p>
+<pre class="r"><code>metadata &lt;- hyperoxia_subset@meta.data[match(colnames(props_fine_hyperoxia_logit$TransformedProps), hyperoxia_subset@meta.data$sample),] %&gt;% mutate(sex=ifelse(sex==&quot;female&quot;, 0, 1)) %&gt;% dplyr::select(vireo.individual, treatment, batch, sex, FFpassage)
+
+rownames(metadata) &lt;- colnames(props_fine_hyperoxia_logit$TransformedProps)
+metadata$treatment &lt;- factor(metadata$treatment, levels = c(&quot;control10&quot;, &quot;stim21pct&quot;))
+
+model_formula &lt;- model.matrix(~treatment + batch+ sex + FFpassage, metadata)
+
+dupcor &lt;- duplicateCorrelation(props_fine_hyperoxia_logit$TransformedProps, design=model_formula, block=metadata$vireo.individual)
+
+
+fit &lt;- lmFit(props_fine_hyperoxia_logit$TransformedProps, design=model_formula, block=metadata$vireo.individual, correlation=dupcor$consensus)
+fit &lt;- eBayes(fit)
+res &lt;- topTable(fit,coef=&quot;treatmentstim21pct&quot;, number=dim(props_fine_hyperoxia_logit$TransformedProps)[1])
+print(res)</code></pre>
+<pre><code>                  logFC   AveExpr           t    P.Value adj.P.Val         B
+Choroid     -0.34282494 -4.975570 -2.04592384 0.04601609 0.4597177 -4.212639
+CorticalHem -0.32778576 -4.307498 -1.92112022 0.06039958 0.4597177 -4.272812
+IPcycling    0.23614627 -3.733601  1.85852520 0.06895765 0.4597177 -4.301907
+RGcycling    0.19308261 -3.072246  1.61774820 0.11197898 0.4981607 -4.406657
+Immature    -0.25009749 -2.458063 -1.56210848 0.12454018 0.4981607 -4.429169
+InhSST      -0.21774745 -6.224356 -1.26522974 0.21162583 0.7054194 -4.537787
+GliaProg     0.14998853 -3.208689  0.91535790 0.36437649 0.7545187 -4.639193
+GlutNTS     -0.19389426 -5.129465 -0.89559213 0.37474170 0.7545187 -4.644015
+Inh          0.12474008 -3.423211  0.72430970 0.47223527 0.7545187 -4.681594
+Cajal       -0.14750325 -5.983553 -0.69045553 0.49308539 0.7545187 -4.688116
+VLMC         0.13632445 -6.020866  0.60148757 0.55021989 0.7545187 -4.703814
+InhGNRH      0.10606260 -5.092186  0.59812554 0.55244314 0.7545187 -4.704366
+InhMidbrain  0.10486421 -6.259757  0.53474781 0.59518313 0.7545187 -4.714204
+NeuronOther  0.09539418 -2.949957  0.53025130 0.59827365 0.7545187 -4.714861
+Glut         0.09959027 -2.334210  0.52743756 0.60021139 0.7545187 -4.715269
+IP          -0.06042998 -3.182644 -0.52250554 0.60361496 0.7545187 -4.715980
+InhThalamic -0.06772051 -5.039418 -0.37324067 0.71053960 0.8359289 -4.734373
+MidbrainDA  -0.06757325 -7.077464 -0.30445539 0.76203855 0.8467095 -4.740805
+Oligo       -0.02015175 -6.776323 -0.07753503 0.93850590 0.9436221 -4.752794
+RG          -0.00790735 -2.144891 -0.07107259 0.94362215 0.9436221 -4.752927</code></pre>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.2.0 (2022-04-22)
+Platform: x86_64-pc-linux-gnu (64-bit)
+Running under: CentOS Linux 7 (Core)
+
+Matrix products: default
+BLAS/LAPACK: /software/openblas-0.3.13-el7-x86_64/lib/libopenblas_haswellp-r0.3.13.so
+
+locale:
+ [1] LC_CTYPE=en_US.UTF-8 LC_NUMERIC=C         LC_TIME=C           
+ [4] LC_COLLATE=C         LC_MONETARY=C        LC_MESSAGES=C       
+ [7] LC_PAPER=C           LC_NAME=C            LC_ADDRESS=C        
+[10] LC_TELEPHONE=C       LC_MEASUREMENT=C     LC_IDENTIFICATION=C 
+
+attached base packages:
+[1] stats4    stats     graphics  grDevices utils     datasets  methods  
+[8] base     
+
+other attached packages:
+ [1] ggalluvial_0.12.5    limma_3.54.2         speckle_0.99.7      
+ [4] GenomicRanges_1.50.2 GenomeInfoDb_1.34.9  IRanges_2.32.0      
+ [7] S4Vectors_0.36.2     BiocGenerics_0.44.0  harmony_1.1.0       
+[10] Rcpp_1.0.12          glmGamPoi_1.8.0      sctransform_0.4.1   
+[13] ggrepel_0.9.4        SeuratObject_4.1.4   Seurat_4.4.0        
+[16] forcats_0.5.1        stringr_1.5.0        dplyr_1.1.4         
+[19] purrr_1.0.2          readr_2.1.4          tidyr_1.3.0         
+[22] tibble_3.2.1         ggplot2_3.4.4        tidyverse_1.3.1     
+[25] workflowr_1.7.0     
+
+loaded via a namespace (and not attached):
+  [1] utf8_1.2.4                  spatstat.explore_3.0-6     
+  [3] reticulate_1.34.0           tidyselect_1.2.0           
+  [5] htmlwidgets_1.6.2           grid_4.2.0                 
+  [7] Rtsne_0.16                  munsell_0.5.0              
+  [9] codetools_0.2-18            ica_1.0-3                  
+ [11] statmod_1.4.36              future_1.33.1              
+ [13] miniUI_0.1.1.1              withr_2.5.2                
+ [15] spatstat.random_3.1-3       colorspace_2.1-0           
+ [17] progressr_0.14.0            Biobase_2.58.0             
+ [19] highr_0.9                   knitr_1.45                 
+ [21] rstudioapi_0.13             SingleCellExperiment_1.20.1
+ [23] ROCR_1.0-11                 tensor_1.5                 
+ [25] listenv_0.9.1               MatrixGenerics_1.10.0      
+ [27] labeling_0.4.3              git2r_0.30.1               
+ [29] GenomeInfoDbData_1.2.9      polyclip_1.10-0            
+ [31] farver_2.1.1                rprojroot_2.0.3            
+ [33] parallelly_1.37.0           vctrs_0.6.4                
+ [35] generics_0.1.3              xfun_0.41                  
+ [37] timechange_0.2.0            R6_2.5.1                   
+ [39] locfit_1.5-9.8              bitops_1.0-7               
+ [41] spatstat.utils_3.0-4        cachem_1.0.8               
+ [43] DelayedArray_0.24.0         promises_1.2.0.1           
+ [45] scales_1.2.1                gtable_0.3.4               
+ [47] globals_0.16.2              processx_3.8.2             
+ [49] goftest_1.2-3               rlang_1.1.3                
+ [51] splines_4.2.0               lazyeval_0.2.2             
+ [53] spatstat.geom_3.2-7         broom_1.0.5                
+ [55] yaml_2.3.5                  reshape2_1.4.4             
+ [57] abind_1.4-5                 modelr_0.1.8               
+ [59] backports_1.4.1             httpuv_1.6.5               
+ [61] tools_4.2.0                 ellipsis_0.3.2             
+ [63] jquerylib_0.1.4             RColorBrewer_1.1-3         
+ [65] ggridges_0.5.3              plyr_1.8.9                 
+ [67] zlibbioc_1.44.0             RCurl_1.98-1.13            
+ [69] ps_1.7.5                    deldir_1.0-6               
+ [71] pbapply_1.5-0               cowplot_1.1.1              
+ [73] zoo_1.8-12                  SummarizedExperiment_1.28.0
+ [75] haven_2.5.0                 cluster_2.1.3              
+ [77] fs_1.6.3                    magrittr_2.0.3             
+ [79] data.table_1.14.8           scattermore_1.2            
+ [81] lmtest_0.9-40               reprex_2.0.1               
+ [83] RANN_2.6.1                  whisker_0.4.1              
+ [85] fitdistrplus_1.1-8          matrixStats_1.1.0          
+ [87] hms_1.1.3                   patchwork_1.1.3            
+ [89] mime_0.12                   evaluate_0.23              
+ [91] xtable_1.8-4                readxl_1.4.0               
+ [93] gridExtra_2.3               compiler_4.2.0             
+ [95] KernSmooth_2.23-20          crayon_1.5.2               
+ [97] htmltools_0.5.7             later_1.3.0                
+ [99] tzdb_0.4.0                  lubridate_1.9.3            
+[101] DBI_1.1.3                   dbplyr_2.4.0               
+[103] MASS_7.3-56                 Matrix_1.6-3               
+[105] cli_3.6.1                   parallel_4.2.0             
+[107] igraph_1.5.1                pkgconfig_2.0.3            
+[109] getPass_0.2-2               sp_2.1-3                   
+[111] plotly_4.10.0               spatstat.sparse_3.0-3      
+[113] xml2_1.3.3                  bslib_0.5.1                
+[115] XVector_0.38.0              rvest_1.0.2                
+[117] callr_3.7.3                 digest_0.6.34              
+[119] RcppAnnoy_0.0.19            spatstat.data_3.0-3        
+[121] rmarkdown_2.26              cellranger_1.1.0           
+[123] leiden_0.4.2                uwot_0.1.16                
+[125] edgeR_3.40.2                shiny_1.7.5.1              
+[127] lifecycle_1.0.4             nlme_3.1-157               
+[129] jsonlite_1.8.7              viridisLite_0.4.2          
+[131] fansi_1.0.5                 pillar_1.9.0               
+[133] lattice_0.20-45             fastmap_1.1.1              
+[135] httr_1.4.7                  survival_3.3-1             
+[137] glue_1.6.2                  png_0.1-8                  
+[139] stringi_1.8.1               sass_0.4.7                 
+[141] irlba_2.3.5.1               future.apply_1.11.1        </code></pre>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+https://docs.mathjax.org/en/latest/web/configuration.html. This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

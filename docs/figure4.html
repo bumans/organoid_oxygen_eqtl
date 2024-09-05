@@ -1,0 +1,2391 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Ben Umans" />
+
+<meta name="date" content="2024-08-14" />
+
+<title>figure4</title>
+
+<script src="site_libs/header-attrs-2.26/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">oxygen_eqtl</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">figure4</h1>
+<h4 class="author">Ben Umans</h4>
+<h4 class="date">2024-08-14</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span
+class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2024-09-03
+</p>
+<p>
+<strong>Checks:</strong> <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 5
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> 2
+</p>
+<p>
+<strong>Knit directory:</strong> <code>oxygen_eqtl/</code> <span
+class="glyphicon glyphicon-question-sign" aria-hidden="true"
+title="This is the local directory in which the code in this file was executed.">
+</span>
+</p>
+<p>
+This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a>
+analysis was created with <a
+  href="https://github.com/workflowr/workflowr">workflowr</a> (version
+1.7.0). The <em>Checks</em> tab describes the reproducibility checks
+that were applied when the results were created. The <em>Past
+versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges">
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted
+changes </a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguncommittedchanges"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The R Markdown is untracked by Git. To know which version of the R
+Markdown file created these results, you’ll want to first commit it to
+the Git repo. If you’re still working on the analysis, you can ignore
+this warning. When you’re finished, you can run
+<code>wflow_publish</code> to commit the R Markdown file and build the
+HTML.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the
+global environment can affect the analysis in your R Markdown file in
+unknown ways. For reproduciblity it’s best to always run the code in an
+empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20220621code">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Seed:</strong>
+<code>set.seed(20220621)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20220621code"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20220621)</code> was run prior to running
+the code in the R Markdown file. Setting a seed ensures that any results
+that rely on randomness, e.g. subsampling or permutations, are
+reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Session information:</strong>
+recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package
+versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be
+confident that you successfully produced the results during this
+run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongabsolute">
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> <strong>File paths:</strong> absolute </a>
+</p>
+</div>
+<div id="strongFilepathsstrongabsolute" class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Using absolute paths to the files within your workflowr project makes it
+difficult for you and others to run your code on a different machine.
+Change the absolute path(s) below to the suggested relative path(s) to
+make your code more reproducible.
+</p>
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th style="text-align:left;">
+absolute
+</th>
+<th style="text-align:left;">
+relative
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+/project2/gilad/umans/oxygen_eqtl/topicqtl/outputs/topics15/all_genes_merged_fine_fasttopics_15_topics.cellregmap.sighits.tsv
+</td>
+<td style="text-align:left;">
+topicqtl/outputs/topics15/all_genes_merged_fine_fasttopics_15_topics.cellregmap.sighits.tsv
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+/project2/gilad/umans/oxygen_eqtl/topicqtl/outputs/topics15/fasttopics_fine_15_topics.
+</td>
+<td style="text-align:left;">
+topicqtl/outputs/topics15/fasttopics_fine_15_topics.
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+/project2/gilad/umans/oxygen_eqtl/topicqtl/pseudocell_loadings_k15.tsv
+</td>
+<td style="text-align:left;">
+topicqtl/pseudocell_loadings_k15.tsv
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongNocommitsyet">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Repository version:</strong> No
+commits yet </a>
+</p>
+</div>
+<div id="strongRepositoryversionstrongNocommitsyet"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development
+and connecting the code version to the results is critical for
+reproducibility.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for
+the analysis have been committed to Git prior to generating the results
+(you can use <code>wflow_publish</code> or
+<code>wflow_git_commit</code>). workflowr only checks the R Markdown
+file, but you know if there are other scripts or data files that it
+depends on. Below is the status of the Git repository when the results
+were generated:
+</p>
+<pre><code>
+Untracked files:
+    Untracked:  .DS_Store
+    Untracked:  18519_calling.Rmd
+    Untracked:  TOM/
+    Untracked:  _site.yml
+    Untracked:  about.Rmd
+    Untracked:  batch_variability.Rmd
+    Untracked:  batch_variability.knit.md
+    Untracked:  batch_variability.nb.html
+    Untracked:  cache/
+    Untracked:  cellregmap.Rmd
+    Untracked:  celltype.Rmd
+    Untracked:  celltype2.Rmd
+    Untracked:  celltype2.nb.html
+    Untracked:  construct_seurat.Rmd
+    Untracked:  construct_seurat2.Rmd
+    Untracked:  cormotif_eqtl.Rmd
+    Untracked:  de.Rmd
+    Untracked:  de2.Rmd
+    Untracked:  de2.nb.html
+    Untracked:  de_finalized.Rmd
+    Untracked:  de_finalized_reharmonized.Rmd
+    Untracked:  disease_gene_overlap.Rmd
+    Untracked:  disease_gene_overlap_EE.Rmd
+    Untracked:  disease_gene_overlap_EE_reharmonized.Rmd
+    Untracked:  disease_gene_overlap_EE_reharmonized_fine.Rmd
+    Untracked:  disease_gene_overlap_EE_reharmonized_fine_filter10.Rmd
+    Untracked:  docs/
+    Untracked:  figure1.Rmd
+    Untracked:  figure2.Rmd
+    Untracked:  figure3.Rmd
+    Untracked:  figure4.Rmd
+    Untracked:  figures_for_poster.R
+    Untracked:  for_yunqi_mash.rmd
+    Untracked:  gsea.Rmd
+    Untracked:  gsea.nb.html
+    Untracked:  gsea_reharmonized.Rmd
+    Untracked:  hgwgcna.Rmd
+    Untracked:  hgwgcna.nb.html
+    Untracked:  hippo_eqtl.Rmd
+    Untracked:  index.Rmd
+    Untracked:  index_old.Rmd
+    Untracked:  license.Rmd
+    Untracked:  mash_EE.R
+    Untracked:  mash_EE_PC.R
+    Untracked:  mash_de.Rmd
+    Untracked:  mash_for_peter.r
+    Untracked:  matrixEQTL.Rmd
+    Untracked:  matrixEQTL.nb.html
+    Untracked:  matrixEQTL_reharmonized.Rmd
+    Untracked:  ncell_permtesting.R
+    Untracked:  plot_eqtl.Rmd
+    Untracked:  prep_apex.Rmd
+    Untracked:  qtltools.Rmd
+    Untracked:  seurat.export.library1.h5Seurat
+    Untracked:  shared_functions_style_items.R
+    Untracked:  test.rmd
+    Untracked:  topics.R
+    Untracked:  topics.Rmd
+    Untracked:  topics_all.R
+    Untracked:  topics_pseudocell.R
+    Untracked:  topicsde.R
+    Untracked:  voxhunt.Rmd
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not
+included in this status report because it is ok for generated content to
+have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+<p>
+There are no past versions. Publish this analysis with
+<code>wflow_publish()</code> to start tracking its development.
+</p>
+<hr>
+</div>
+</div>
+</div>
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p>This page describes steps used to compare eQTLs to disease gene
+results.</p>
+<pre class="r"><code>library(Seurat)</code></pre>
+<pre><code>Attaching SeuratObject</code></pre>
+<pre class="r"><code>library(tidyverse)</code></pre>
+<pre><code>── Attaching packages ─────────────────────────────────────── tidyverse 1.3.1 ──</code></pre>
+<pre><code>✔ ggplot2 3.4.4     ✔ purrr   1.0.2
+✔ tibble  3.2.1     ✔ dplyr   1.1.4
+✔ tidyr   1.3.0     ✔ stringr 1.5.0
+✔ readr   2.1.4     ✔ forcats 0.5.1</code></pre>
+<pre><code>── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()</code></pre>
+<pre class="r"><code>library(pals)
+library(RColorBrewer)
+library(mashr)</code></pre>
+<pre><code>Loading required package: ashr</code></pre>
+<pre class="r"><code>library(udr)
+library(knitr)
+library(ggrepel)
+library(gridExtra)</code></pre>
+<pre><code>
+Attaching package: &#39;gridExtra&#39;</code></pre>
+<pre><code>The following object is masked from &#39;package:dplyr&#39;:
+
+    combine</code></pre>
+<pre class="r"><code>library(MatrixEQTL)
+library(vroom)</code></pre>
+<pre><code>
+Attaching package: &#39;vroom&#39;</code></pre>
+<pre><code>The following objects are masked from &#39;package:readr&#39;:
+
+    as.col_spec, col_character, col_date, col_datetime, col_double,
+    col_factor, col_guess, col_integer, col_logical, col_number,
+    col_skip, col_time, cols, cols_condense, cols_only, date_names,
+    date_names_lang, date_names_langs, default_locale, fwf_cols,
+    fwf_empty, fwf_positions, fwf_widths, locale, output_column,
+    problems, spec</code></pre>
+<pre class="r"><code>source(&quot;analysis/shared_functions_style_items.R&quot;)</code></pre>
+</div>
+<div id="process-gwas-results" class="section level2">
+<h2>Process GWAS results</h2>
+<p>Import GWAS Catalog data and separate the mapped genes.</p>
+<pre class="r"><code>gwas &lt;- read.delim(file = &quot;/project/gilad/umans/references/gwas/gwas_catalog_v1.0.2-associations_e110_r2023-09-10.tsv&quot;, quote = &quot;&quot;, fill = FALSE) %&gt;%
+  dplyr::select(!c(&quot;DATE.ADDED.TO.CATALOG&quot;, &quot;PUBMEDID&quot; ,&quot;FIRST.AUTHOR&quot;, &quot;DATE&quot;, &quot;JOURNAL&quot;,&quot;LINK&quot;, &quot;STUDY&quot;, &quot;INITIAL.SAMPLE.SIZE&quot;, &quot;REPLICATION.SAMPLE.SIZE&quot;, &quot;PLATFORM..SNPS.PASSING.QC.&quot;, &quot;P.VALUE..TEXT.&quot;, &quot;X95..CI..TEXT.&quot;, &quot;GENOTYPING.TECHNOLOGY&quot;, &quot;MAPPED_TRAIT_URI&quot;))
+
+gwas_formatted &lt;- gwas %&gt;% 
+  mutate(MAPPED_GENE=if_else(str_detect(MAPPED_GENE, pattern = &quot;No mapped genes&quot;), &quot;&quot;, MAPPED_GENE)) %&gt;% 
+  rowwise() %&gt;% 
+  mutate(gene=strsplit(MAPPED_GENE, split=&quot;[ - ]&quot;)[[1]][1], upstream_gene=strsplit(MAPPED_GENE, split=&quot; - &quot;)[[1]][1],  downstream_gene=strsplit(MAPPED_GENE, split=&quot; - &quot;)[[1]][2]) %&gt;% 
+  mutate(nearest_gene= case_when(UPSTREAM_GENE_DISTANCE&lt;DOWNSTREAM_GENE_DISTANCE ~ upstream_gene, 
+                                 UPSTREAM_GENE_DISTANCE&gt;DOWNSTREAM_GENE_DISTANCE ~ downstream_gene,
+                                 is.na(UPSTREAM_GENE_DISTANCE)|is.na(DOWNSTREAM_GENE_DISTANCE) ~ gene)) %&gt;% 
+  mutate(nearest_gene=gsub(&quot;([a-zA-Z]),&quot;, &quot;\\1 &quot;, nearest_gene)) %&gt;% 
+  mutate(nearest_gene=gsub(&quot;,&quot;, &quot;&quot;, nearest_gene)) %&gt;% 
+  mutate(nearest_gene=str_trim(nearest_gene)) %&gt;% 
+  mutate(trait=strsplit(DISEASE.TRAIT, split=&quot;, &quot;)[[1]][1]) %&gt;% 
+  add_count(trait) %&gt;% 
+  ungroup()</code></pre>
+<pre class="r"><code>gwas_formatted &lt;- readRDS(file = &quot;/project/gilad/umans/references/gwas/gwas_catalog_v1.0.2-associations_e110_r2023-09-10.RDS&quot;)</code></pre>
+<p>In cases where the GWAS reported a gene for a given SNP, use the
+reported gene. Otherwise, assign the nearest gene as the one that
+corresponds to the associated SNP.</p>
+<pre class="r"><code>gwas_formatted &lt;- gwas_formatted %&gt;%  
+  mutate(`REPORTED.GENE.S.`=if_else(str_detect(`REPORTED.GENE.S.`, pattern = &quot;NR&quot;), NA, `REPORTED.GENE.S.`)) %&gt;% 
+  mutate(`REPORTED.GENE.S.`=if_else(str_detect(`REPORTED.GENE.S.`, pattern = &quot;intergenic&quot;), NA, `REPORTED.GENE.S.`)) %&gt;% 
+  mutate(`REPORTED.GENE.S.`= na_if(`REPORTED.GENE.S.`, &quot;&quot;)) %&gt;% 
+  mutate(nearest_gene= case_when(!is.na(`REPORTED.GENE.S.`) ~ `REPORTED.GENE.S.`,
+                                 UPSTREAM_GENE_DISTANCE&lt;DOWNSTREAM_GENE_DISTANCE ~ upstream_gene, 
+                                 UPSTREAM_GENE_DISTANCE&gt;DOWNSTREAM_GENE_DISTANCE ~ downstream_gene,
+                                 is.na(UPSTREAM_GENE_DISTANCE)|is.na(DOWNSTREAM_GENE_DISTANCE) ~ gene
+                                 )) %&gt;% 
+     mutate(nearest_gene=str_extract(nearest_gene, &quot;[^, ]+&quot;)) %&gt;% 
+  mutate(nearest_gene=gsub(&quot;,&quot;, &quot;&quot;, nearest_gene)) %&gt;% 
+  mutate(nearest_gene=str_trim(nearest_gene)) </code></pre>
+<p>I next curated traits that were reasonably brain-related. This
+includes addiction-related traits, but not dietary preference
+traits.</p>
+<pre class="r"><code>filtered_traits &lt;- read_csv(file = &quot;/project/gilad/umans/references/gwas/gwas_catalog_v1.0.2-associations_e110_r2023-09-10_organoid-related_n15.csv&quot;, col_names = FALSE) %&gt;% pull(X1)</code></pre>
+<pre><code>Rows: 512 Columns: 1
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: &quot;,&quot;
+chr (1): X1
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<p>I next exclude traits with fewer than 15 associations or more than
+500 associations, and further filter consider only genome-wide
+significant associations.</p>
+<pre class="r"><code>gwas_gene_lists &lt;- split(gwas_formatted %&gt;% filter(trait %in% filtered_traits) %&gt;% filter(n&gt;15) %&gt;% filter(n&lt;500) %&gt;% filter(PVALUE_MLOG&gt;7.3)  %&gt;% pull(nearest_gene),  gwas_formatted %&gt;% filter(trait %in% filtered_traits) %&gt;% filter(n&gt;15) %&gt;% filter(n&lt;500) %&gt;% filter(PVALUE_MLOG&gt;7.3) %&gt;%  pull(trait))</code></pre>
+<pre class="r"><code>gwas_snps &lt;- gwas_formatted %&gt;% filter(trait %in% filtered_traits) %&gt;% filter(n&gt;15) %&gt;% filter(n&lt;500) %&gt;%
+  filter(PVALUE_MLOG&gt;7.3) %&gt;% unite(&quot;snp&quot;, CHR_ID:CHR_POS, sep = &quot;:&quot;) %&gt;% pull(snp) %&gt;% unique()</code></pre>
+<p>Note that for some common traits there are many GWAS studies:</p>
+<pre class="r"><code>gwas_formatted %&gt;% 
+  filter(trait %in% filtered_traits) %&gt;% 
+  filter(n&gt;15) %&gt;% filter(n&lt;500) %&gt;% filter(PVALUE_MLOG&gt;7.3)  %&gt;%
+  select(STUDY.ACCESSION, trait) %&gt;% distinct() %&gt;% group_by(trait) %&gt;% summarize(studies=n()) %&gt;%
+  arrange(desc(studies)) %&gt;% head()</code></pre>
+<pre><code># A tibble: 6 × 2
+  trait                            studies
+  &lt;chr&gt;                              &lt;int&gt;
+1 Alzheimer&#39;s disease                   35
+2 Parkinson&#39;s disease                   24
+3 Bipolar disorder                      18
+4 Amyotrophic lateral sclerosis         15
+5 Major depressive disorder             14
+6 Alzheimer&#39;s disease (late onset)      12</code></pre>
+<p>And, of course, there are a number of very similar traits in this
+large compendium.</p>
+<p>Next, I import significant eGenes from GTEx cerebral cortex tissue
+samples.</p>
+<pre class="r"><code>gtex_cortex_signif &lt;- read.table(file = &quot;/project/gilad/umans/references/gtex/GTEx_Analysis_v8_eQTL/Brain_Cortex.v8.egenes.txt.gz&quot;, header = TRUE, sep = &quot;\t&quot;, stringsAsFactors = FALSE) %&gt;% filter(qval&lt;0.05) %&gt;% pull(gene_name)
+gtex_frontalcortex_signif &lt;- read.table(file = &quot;/project/gilad/umans/references/gtex/GTEx_Analysis_v8_eQTL/Brain_Frontal_Cortex_BA9.v8.egenes.txt.gz&quot;, header = TRUE, sep = &quot;\t&quot;, stringsAsFactors = FALSE) %&gt;% filter(qval&lt;0.05) %&gt;% pull(gene_name)
+gtex_cortex_signif &lt;- unique(c(gtex_cortex_signif, gtex_frontalcortex_signif))</code></pre>
+<p>And import the eQTL results.</p>
+<pre class="r"><code>mash_by_condition_output &lt;- readRDS(file = &quot;output/combined_mash-by-condition_EE_fine_reharmonized_032024.rds&quot;) %&gt;% ungroup() </code></pre>
+<div id="compare-to-fine-clustered-eqtl-results" class="section level3">
+<h3>Compare to fine-clustered eQTL results</h3>
+<p>I classified eGenes from the organoid dataset by whether they were
+significant under normoxia and whether they are responsive to
+manipulating oxygen. These two binary classifications result in 4
+groups: (1) shared effects in all conditions, detectable under normoxia;
+(2) dynamic and detectable under normoxia; (3) dynamic and <em>not</em>
+detectable under normoxia; and (4) shared effects under all conditions
+but not detectable under normoxia. Implicitly, group 4 effects needed
+additional treatment conditions to detect them not because they’re
+responsive to treatment but because of the additional power we get.</p>
+<p>Here, I plot the number of eGenes of each these four classes that are
+the nearest genes to a significant GWAS variant in each cell type.</p>
+<pre class="r"><code>mash_by_condition_output %&gt;% 
+  filter(sig_anywhere) %&gt;% 
+  mutate(class=case_when(control10_lfsr &lt; 0.05 &amp; allsharing ~ &quot;class1&quot;,
+                         control10_lfsr &lt; 0.05 &amp;  !allsharing ~ &quot;class2&quot;,
+                         sig_anywhere &amp; control10_lfsr &gt; 0.05 &amp; !allsharing ~ &quot;class3&quot;,
+                         sig_anywhere &amp; allsharing ~ &quot;class4&quot;)) %&gt;% 
+  group_by(source, class) %&gt;% 
+  summarise(egene_gwas = sum(gene %in% (unlist(gwas_gene_lists) %&gt;% unique()))) %&gt;% 
+  ggplot(aes(x=factor(class, levels = c(&quot;class1&quot;, &quot;class4&quot;, &quot;class2&quot;, &quot;class3&quot;)), y=egene_gwas)) + geom_boxplot(outlier.shape = NA, aes(color=class)) + 
+  xlab(&quot;eGene class (see note)&quot;) + 
+  ylab(&quot;Number of eGenes in GWAS&quot;) + 
+  theme_light() + 
+  geom_point(aes(group=source, color=source), position = position_jitter(width = 0.2, height = 0)) +
+  scale_color_manual(values=c(manual_palette_fine, class_colors)) +
+  xlab(&quot;eGene class (see note)&quot;) + 
+  theme(legend.position=&quot;none&quot;)</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<p><img src="figure/figure4.Rmd/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" />
+Here, I show the numbers plotted above and perform a Wilcoxon test
+comparing the dynamic/not-detected-in-normoxia (“class3”)
+GWAS-associated eGenes with the non-dynamic/detected-in-normoxia
+(“class1”) GWAS-associated eGenes.</p>
+<pre class="r"><code>mash_by_condition_output %&gt;% 
+  filter(sig_anywhere) %&gt;% 
+  mutate(class=case_when(control10_lfsr &lt; 0.05 &amp; allsharing ~ &quot;class1&quot;,
+                         control10_lfsr &lt; 0.05 &amp;  !allsharing ~ &quot;class2&quot;,
+                         sig_anywhere &amp; control10_lfsr &gt; 0.05 &amp; !allsharing ~ &quot;class3&quot;,
+                         sig_anywhere &amp; allsharing ~ &quot;class4&quot;)) %&gt;% 
+   group_by(source, class) %&gt;% 
+  summarise(egene_gwas = sum(gene %in% (unlist(gwas_gene_lists) %&gt;% unique()))) %&gt;% 
+  group_by(class) %&gt;% 
+  summarize(median(egene_gwas)) %&gt;% kable()</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">class</th>
+<th align="right">median(egene_gwas)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">class1</td>
+<td align="right">215.0</td>
+</tr>
+<tr class="even">
+<td align="left">class2</td>
+<td align="right">125.0</td>
+</tr>
+<tr class="odd">
+<td align="left">class3</td>
+<td align="right">258.5</td>
+</tr>
+<tr class="even">
+<td align="left">class4</td>
+<td align="right">131.5</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>wilcox.test(mash_by_condition_output %&gt;% 
+  filter(sig_anywhere) %&gt;% 
+  mutate(class=case_when(control10_lfsr &lt; 0.05 &amp; allsharing ~ &quot;class1&quot;,
+                         control10_lfsr &lt; 0.05 &amp;  !allsharing ~ &quot;class2&quot;,
+                         sig_anywhere &amp; control10_lfsr &gt; 0.05 &amp; !allsharing ~ &quot;class3&quot;,
+                         sig_anywhere &amp; allsharing ~ &quot;class4&quot;)) %&gt;% 
+   group_by(source, class) %&gt;% 
+  summarise(egene_gwas = sum(gene %in% (unlist(gwas_gene_lists) %&gt;% unique()))) %&gt;% 
+  pivot_wider(names_from = class, values_from = egene_gwas) %&gt;% pull(class1),
+  mash_by_condition_output %&gt;% 
+  filter(sig_anywhere) %&gt;% 
+  mutate(class=case_when(control10_lfsr &lt; 0.05 &amp; allsharing ~ &quot;class1&quot;,
+                         control10_lfsr &lt; 0.05 &amp;  !allsharing ~ &quot;class2&quot;,
+                         sig_anywhere &amp; control10_lfsr &gt; 0.05 &amp; !allsharing ~ &quot;class3&quot;,
+                         sig_anywhere &amp; allsharing ~ &quot;class4&quot;)) %&gt;% 
+   group_by(source, class) %&gt;% 
+  summarise(egene_gwas = sum(gene %in% (unlist(gwas_gene_lists) %&gt;% unique()))) %&gt;% 
+  pivot_wider(names_from = class, values_from = egene_gwas) %&gt;% pull(class3),
+  paired = TRUE)</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.
+`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<pre><code>
+    Wilcoxon signed rank exact test
+
+data:  mash_by_condition_output %&gt;% filter(sig_anywhere) %&gt;% mutate(class = case_when(control10_lfsr &lt; 0.05 &amp; allsharing ~ &quot;class1&quot;, control10_lfsr &lt; 0.05 &amp; !allsharing ~ &quot;class2&quot;, sig_anywhere &amp; control10_lfsr &gt; 0.05 &amp; !allsharing ~ &quot;class3&quot;, sig_anywhere &amp; allsharing ~ &quot;class4&quot;)) %&gt;% group_by(source, class) %&gt;% summarise(egene_gwas = sum(gene %in% (unlist(gwas_gene_lists) %&gt;% unique()))) %&gt;% pivot_wider(names_from = class, values_from = egene_gwas) %&gt;% pull(class1) and mash_by_condition_output %&gt;% filter(sig_anywhere) %&gt;% mutate(class = case_when(control10_lfsr &lt; 0.05 &amp; allsharing ~ &quot;class1&quot;, control10_lfsr &lt; 0.05 &amp; !allsharing ~ &quot;class2&quot;, sig_anywhere &amp; control10_lfsr &gt; 0.05 &amp; !allsharing ~ &quot;class3&quot;, sig_anywhere &amp; allsharing ~ &quot;class4&quot;)) %&gt;% group_by(source, class) %&gt;% summarise(egene_gwas = sum(gene %in% (unlist(gwas_gene_lists) %&gt;% unique()))) %&gt;% pivot_wider(names_from = class, values_from = egene_gwas) %&gt;% pull(class3)
+V = 31, p-value = 0.1937
+alternative hypothesis: true location shift is not equal to 0</code></pre>
+<p>Overall (ie, not per-cell type):</p>
+<pre class="r"><code>mash_by_condition_output %&gt;% 
+  filter(sig_anywhere) %&gt;% 
+  mutate(class=case_when(control10_lfsr &lt; 0.05 &amp; allsharing ~ &quot;class1&quot;,
+                         control10_lfsr &lt; 0.05 &amp;  !allsharing ~ &quot;class2&quot;,
+                         sig_anywhere &amp; control10_lfsr &gt; 0.05 &amp; !allsharing ~ &quot;class3&quot;,
+                         sig_anywhere &amp; allsharing ~ &quot;class4&quot;)) %&gt;% 
+  select(gene, class) %&gt;% 
+  distinct() %&gt;% 
+   group_by(class) %&gt;% 
+  summarise(egene_gwas = sum(gene %in% (unlist(gwas_gene_lists) %&gt;% unique()))) %&gt;% 
+  kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">class</th>
+<th align="right">egene_gwas</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">class1</td>
+<td align="right">1411</td>
+</tr>
+<tr class="even">
+<td align="left">class2</td>
+<td align="right">1242</td>
+</tr>
+<tr class="odd">
+<td align="left">class3</td>
+<td align="right">1745</td>
+</tr>
+<tr class="even">
+<td align="left">class4</td>
+<td align="right">1091</td>
+</tr>
+</tbody>
+</table>
+<p>The same numbers can be calculated excluding genes that have already
+been identified as eGenes in GTEx cerebral cortex tissue.</p>
+<pre class="r"><code>mash_by_condition_output %&gt;% 
+  filter(sig_anywhere) %&gt;% 
+  filter(gene %not_in% gtex_cortex_signif) %&gt;% 
+  mutate(class=case_when(control10_lfsr &lt; 0.05 &amp; allsharing ~ &quot;class1&quot;,
+                         control10_lfsr &lt; 0.05 &amp;  !allsharing ~ &quot;class2&quot;,
+                         sig_anywhere &amp; control10_lfsr &gt; 0.05 &amp; !allsharing ~ &quot;class3&quot;,
+                         sig_anywhere &amp; allsharing ~ &quot;class4&quot;)) %&gt;% 
+   group_by(source, class) %&gt;% 
+  summarise(egene_gwas = sum(gene %in% (unlist(gwas_gene_lists) %&gt;% unique()))) %&gt;% 
+  group_by(class) %&gt;% 
+  summarize(median(egene_gwas))</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<pre><code># A tibble: 4 × 2
+  class  `median(egene_gwas)`
+  &lt;chr&gt;                 &lt;dbl&gt;
+1 class1                130. 
+2 class2                 73.5
+3 class3                158. 
+4 class4                 75  </code></pre>
+<p>Overall (ie, not per-cell type):</p>
+<pre class="r"><code>mash_by_condition_output %&gt;% 
+  filter(sig_anywhere) %&gt;% 
+  filter(gene %not_in% gtex_cortex_signif) %&gt;% 
+  mutate(class=case_when(control10_lfsr &lt; 0.05 &amp; allsharing ~ &quot;class1&quot;,
+                         control10_lfsr &lt; 0.05 &amp;  !allsharing ~ &quot;class2&quot;,
+                         sig_anywhere &amp; control10_lfsr &gt; 0.05 &amp; !allsharing ~ &quot;class3&quot;,
+                         sig_anywhere &amp; allsharing ~ &quot;class4&quot;)) %&gt;% 
+  select(gene, class) %&gt;% 
+  distinct() %&gt;% 
+   group_by(class) %&gt;% 
+  summarise(egene_gwas = sum(gene %in% (unlist(gwas_gene_lists) %&gt;% unique()))) %&gt;% 
+  kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">class</th>
+<th align="right">egene_gwas</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">class1</td>
+<td align="right">825</td>
+</tr>
+<tr class="even">
+<td align="left">class2</td>
+<td align="right">747</td>
+</tr>
+<tr class="odd">
+<td align="left">class3</td>
+<td align="right">1014</td>
+</tr>
+<tr class="even">
+<td align="left">class4</td>
+<td align="right">634</td>
+</tr>
+</tbody>
+</table>
+<p>To test whether the “dynamic” vs “standard” eGenes (defined solely by
+comparisons of effect size) are more likely to be present in GWAS gene
+lists, we group and test them as we did for comparison to GTEx. Note
+this yields a similar conclusion as above, where we broke eGenes down by
+whether they were dynamic and detectable at baseline.</p>
+<pre class="r"><code>wilcox.test(mash_by_condition_output %&gt;% 
+  filter(sig_anywhere) %&gt;% 
+ mutate(class=case_when(allsharing ~ &quot;standard&quot;,
+                        hypoxia_normoxia_shared &amp; sharing_contexts==1 ~ &quot;dynamic&quot;,
+                        hyperoxia_normoxia_shared &amp; sharing_contexts==1 ~ &quot;dynamic&quot;,
+                        hypoxia_hyperoxia_shared &amp; sharing_contexts==1 ~ &quot;dynamic&quot;,
+                        sharing_contexts==2 ~ &quot;standard&quot;, 
+                        sharing_contexts==0 ~ &quot;dynamic&quot;
+                        )) %&gt;% 
+   group_by(source, class) %&gt;% 
+  summarise(egene_gwas = sum(gene %in% (unlist(gwas_gene_lists) %&gt;% unique()))) %&gt;% 
+   filter(class %in% c(&quot;dynamic&quot;)) %&gt;% pull(egene_gwas), 
+  mash_by_condition_output %&gt;% 
+  filter(sig_anywhere) %&gt;% 
+ mutate(class=case_when(allsharing ~ &quot;standard&quot;,
+                        hypoxia_normoxia_shared &amp; sharing_contexts==1 ~ &quot;dynamic&quot;,
+                        hyperoxia_normoxia_shared &amp; sharing_contexts==1 ~ &quot;dynamic&quot;,
+                        hypoxia_hyperoxia_shared &amp; sharing_contexts==1 ~ &quot;dynamic&quot;,
+                        sharing_contexts==2 ~ &quot;standard&quot;, 
+                        sharing_contexts==0 ~ &quot;dynamic&quot;
+                        )) %&gt;% 
+   group_by(source, class) %&gt;% 
+  summarise(egene_gwas = sum(gene %in% (unlist(gwas_gene_lists) %&gt;% unique()))) %&gt;% 
+   filter(class %in% c(&quot;standard&quot;)) %&gt;% pull(egene_gwas), paired = TRUE, alternative = &quot;two.sided&quot;)</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.
+`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<pre><code>
+    Wilcoxon signed rank exact test
+
+data:  mash_by_condition_output %&gt;% filter(sig_anywhere) %&gt;% mutate(class = case_when(allsharing ~ &quot;standard&quot;, hypoxia_normoxia_shared &amp; sharing_contexts == 1 ~ &quot;dynamic&quot;, hyperoxia_normoxia_shared &amp; sharing_contexts == 1 ~ &quot;dynamic&quot;, hypoxia_hyperoxia_shared &amp; sharing_contexts == 1 ~ &quot;dynamic&quot;, sharing_contexts == 2 ~ &quot;standard&quot;, sharing_contexts == 0 ~ &quot;dynamic&quot;)) %&gt;% group_by(source, class) %&gt;% summarise(egene_gwas = sum(gene %in% (unlist(gwas_gene_lists) %&gt;% unique()))) %&gt;% filter(class %in% c(&quot;dynamic&quot;)) %&gt;%      pull(egene_gwas) and mash_by_condition_output %&gt;% filter(sig_anywhere) %&gt;% mutate(class = case_when(allsharing ~ &quot;standard&quot;, hypoxia_normoxia_shared &amp; sharing_contexts == 1 ~ &quot;dynamic&quot;, hyperoxia_normoxia_shared &amp; sharing_contexts == 1 ~ &quot;dynamic&quot;, hypoxia_hyperoxia_shared &amp; sharing_contexts == 1 ~ &quot;dynamic&quot;, sharing_contexts == 2 ~ &quot;standard&quot;, sharing_contexts == 0 ~ &quot;dynamic&quot;)) %&gt;% group_by(source, class) %&gt;% summarise(egene_gwas = sum(gene %in% (unlist(gwas_gene_lists) %&gt;% unique()))) %&gt;% filter(class %in% c(&quot;standard&quot;)) %&gt;%      pull(egene_gwas)
+V = 42, p-value = 0.5416
+alternative hypothesis: true location shift is not equal to 0</code></pre>
+</div>
+<div id="compare-to-coarse-clustered-results" class="section level3">
+<h3>Compare to coarse-clustered results</h3>
+<pre class="r"><code>mash_by_condition_output_coarse &lt;- readRDS(file = &quot;output/combined_mash-by-condition_EE_coarse_reharmonized_032024.rds&quot;) %&gt;% ungroup() %&gt;% filter(source != &quot;all&quot;)</code></pre>
+<p>Again, I plot the number of eGenes of each these four classes that
+are the nearest genes to a significant GWAS variant in each cell
+type.</p>
+<pre class="r"><code>mash_by_condition_output_coarse %&gt;% 
+  filter(sig_anywhere) %&gt;% 
+  mutate(class=case_when(control10_lfsr &lt; 0.05 &amp; allsharing ~ &quot;class1&quot;,
+                         control10_lfsr &lt; 0.05 &amp;  !allsharing ~ &quot;class2&quot;,
+                         sig_anywhere &amp; control10_lfsr &gt; 0.05 &amp; !allsharing ~ &quot;class3&quot;,
+                         sig_anywhere &amp; allsharing ~ &quot;class4&quot;)) %&gt;% 
+  group_by(source, class) %&gt;% 
+  summarise(egene_gwas = sum(gene %in% (unlist(gwas_gene_lists) %&gt;% unique()))) %&gt;% 
+  ggplot(aes(x=factor(class, levels = c(&quot;class1&quot;, &quot;class4&quot;, &quot;class2&quot;, &quot;class3&quot;)), y=egene_gwas)) + geom_boxplot(outlier.shape = NA, aes(color=class)) + 
+  xlab(&quot;eGene class (see note)&quot;) + 
+  ylab(&quot;Number of eGenes in GWAS&quot;) + 
+  theme_light() + 
+  geom_point(aes(group=source, color=source), position = position_jitter(width = 0.2, height = 0)) +
+  scale_color_manual(values=c(manual_palette_coarse, class_colors)) +
+  xlab(&quot;eGene class (see note)&quot;) + 
+  theme(legend.position=&quot;none&quot;)</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<p><img src="figure/figure4.Rmd/unnamed-chunk-19-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Here, I show the numbers plotted above and perform a Wilcoxon test
+comparing the dynamic/not-detected-in-normoxia (“class3”)
+GWAS-associated eGenes with the non-dynamic/detected-in-normoxia
+(“class1”) GWAS-associated eGenes.</p>
+<pre class="r"><code>mash_by_condition_output_coarse %&gt;% 
+  filter(sig_anywhere) %&gt;% 
+  mutate(class=case_when(control10_lfsr &lt; 0.05 &amp; allsharing ~ &quot;class1&quot;,
+                         control10_lfsr &lt; 0.05 &amp;  !allsharing ~ &quot;class2&quot;,
+                         sig_anywhere &amp; control10_lfsr &gt; 0.05 &amp; !allsharing ~ &quot;class3&quot;,
+                         sig_anywhere &amp; allsharing ~ &quot;class4&quot;)) %&gt;% 
+  group_by(source, class) %&gt;% 
+  summarise(egene_gwas = sum(gene %in% (unlist(gwas_gene_lists) %&gt;% unique()))) %&gt;% 
+  group_by(class) %&gt;% 
+  summarize(median(egene_gwas)) %&gt;% kable()</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">class</th>
+<th align="right">median(egene_gwas)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">class1</td>
+<td align="right">271.0</td>
+</tr>
+<tr class="even">
+<td align="left">class2</td>
+<td align="right">96.5</td>
+</tr>
+<tr class="odd">
+<td align="left">class3</td>
+<td align="right">218.0</td>
+</tr>
+<tr class="even">
+<td align="left">class4</td>
+<td align="right">158.5</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>wilcox.test(mash_by_condition_output_coarse %&gt;% 
+  filter(sig_anywhere) %&gt;% 
+  mutate(class=case_when(control10_lfsr &lt; 0.05 &amp; allsharing ~ &quot;class1&quot;,
+                         control10_lfsr &lt; 0.05 &amp;  !allsharing ~ &quot;class2&quot;,
+                         sig_anywhere &amp; control10_lfsr &gt; 0.05 &amp; !allsharing ~ &quot;class3&quot;,
+                         sig_anywhere &amp; allsharing ~ &quot;class4&quot;)) %&gt;% 
+   group_by(source, class) %&gt;% 
+  summarise(egene_gwas = sum(gene %in% (unlist(gwas_gene_lists) %&gt;% unique()))) %&gt;% 
+  pivot_wider(names_from = class, values_from = egene_gwas) %&gt;% pull(class1),
+  mash_by_condition_output_coarse %&gt;% 
+  filter(sig_anywhere) %&gt;% 
+  mutate(class=case_when(control10_lfsr &lt; 0.05 &amp; allsharing ~ &quot;class1&quot;,
+                         control10_lfsr &lt; 0.05 &amp;  !allsharing ~ &quot;class2&quot;,
+                         sig_anywhere &amp; control10_lfsr &gt; 0.05 &amp; !allsharing ~ &quot;class3&quot;,
+                         sig_anywhere &amp; allsharing ~ &quot;class4&quot;)) %&gt;% 
+   group_by(source, class) %&gt;% 
+  summarise(egene_gwas = sum(gene %in% (unlist(gwas_gene_lists) %&gt;% unique()))) %&gt;% 
+  pivot_wider(names_from = class, values_from = egene_gwas) %&gt;% pull(class3),
+  paired = TRUE)</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.
+`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<pre><code>
+    Wilcoxon signed rank exact test
+
+data:  mash_by_condition_output_coarse %&gt;% filter(sig_anywhere) %&gt;% mutate(class = case_when(control10_lfsr &lt; 0.05 &amp; allsharing ~ &quot;class1&quot;, control10_lfsr &lt; 0.05 &amp; !allsharing ~ &quot;class2&quot;, sig_anywhere &amp; control10_lfsr &gt; 0.05 &amp; !allsharing ~ &quot;class3&quot;, sig_anywhere &amp; allsharing ~ &quot;class4&quot;)) %&gt;% group_by(source, class) %&gt;% summarise(egene_gwas = sum(gene %in% (unlist(gwas_gene_lists) %&gt;% unique()))) %&gt;% pivot_wider(names_from = class, values_from = egene_gwas) %&gt;% pull(class1) and mash_by_condition_output_coarse %&gt;% filter(sig_anywhere) %&gt;% mutate(class = case_when(control10_lfsr &lt; 0.05 &amp; allsharing ~ &quot;class1&quot;, control10_lfsr &lt; 0.05 &amp; !allsharing ~ &quot;class2&quot;, sig_anywhere &amp; control10_lfsr &gt; 0.05 &amp; !allsharing ~ &quot;class3&quot;, sig_anywhere &amp; allsharing ~ &quot;class4&quot;)) %&gt;% group_by(source, class) %&gt;% summarise(egene_gwas = sum(gene %in% (unlist(gwas_gene_lists) %&gt;% unique()))) %&gt;% pivot_wider(names_from = class, values_from = egene_gwas) %&gt;% pull(class3)
+V = 18, p-value = 1
+alternative hypothesis: true location shift is not equal to 0</code></pre>
+<p>Note that, in the coarsely-clustered data, more GWAS-associated
+eGenes appear non-dynamic (ie, have equivalent responses across oxygen
+conditions) and fewer appear context-specific.</p>
+<p>The same numbers can be calculated excluding genes that have already
+been identified as eGenes in GTEx cerebral cortex tissue.</p>
+<pre class="r"><code>mash_by_condition_output_coarse %&gt;% 
+  filter(sig_anywhere) %&gt;% 
+  filter(gene %not_in% gtex_cortex_signif) %&gt;% 
+  mutate(class=case_when(control10_lfsr &lt; 0.05 &amp; allsharing ~ &quot;class1&quot;,
+                         control10_lfsr &lt; 0.05 &amp;  !allsharing ~ &quot;class2&quot;,
+                         sig_anywhere &amp; control10_lfsr &gt; 0.05 &amp; !allsharing ~ &quot;class3&quot;,
+                         sig_anywhere &amp; allsharing ~ &quot;class4&quot;)) %&gt;% 
+  group_by(source, class) %&gt;% 
+  summarise(egene_gwas = sum(gene %in% (unlist(gwas_gene_lists) %&gt;% unique()))) %&gt;% 
+  group_by(class) %&gt;% 
+  summarize(median(egene_gwas))</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<pre><code># A tibble: 4 × 2
+  class  `median(egene_gwas)`
+  &lt;chr&gt;                 &lt;dbl&gt;
+1 class1                156. 
+2 class2                 52  
+3 class3                122. 
+4 class4                 92.5</code></pre>
+<p>To test whether the “dynamic” vs “standard” eGenes (defined solely by
+comparisons of effect size) are more likely to be present in GWAS gene
+lists, we group and test them as we did for comparison to GTEx. Note
+this yields a similar conclusion as above, where we broke eGenes down by
+whether they were dynamic and detectable at baseline.</p>
+<pre class="r"><code>wilcox.test(mash_by_condition_output_coarse %&gt;% 
+  filter(sig_anywhere) %&gt;% 
+ mutate(class=case_when(allsharing ~ &quot;standard&quot;,
+                        hypoxia_normoxia_shared &amp; sharing_contexts==1 ~ &quot;dynamic&quot;,
+                        hyperoxia_normoxia_shared &amp; sharing_contexts==1 ~ &quot;dynamic&quot;,
+                        hypoxia_hyperoxia_shared &amp; sharing_contexts==1 ~ &quot;dynamic&quot;,
+                        sharing_contexts==2 ~ &quot;standard&quot;, 
+                        sharing_contexts==0 ~ &quot;dynamic&quot;
+                        )) %&gt;% 
+   group_by(source, class) %&gt;% 
+  summarise(egene_gwas = sum(gene %in% (unlist(gwas_gene_lists) %&gt;% unique()))) %&gt;% filter(class %in% c(&quot;dynamic&quot;)) %&gt;% pull(egene_gwas), 
+  mash_by_condition_output_coarse %&gt;% 
+  filter(sig_anywhere) %&gt;% 
+ mutate(class=case_when(allsharing ~ &quot;standard&quot;,
+                        hypoxia_normoxia_shared &amp; sharing_contexts==1 ~ &quot;dynamic&quot;,
+                        hyperoxia_normoxia_shared &amp; sharing_contexts==1 ~ &quot;dynamic&quot;,
+                        hypoxia_hyperoxia_shared &amp; sharing_contexts==1 ~ &quot;dynamic&quot;,
+                        sharing_contexts==2 ~ &quot;standard&quot;, 
+                        sharing_contexts==0 ~ &quot;dynamic&quot;
+                        )) %&gt;% 
+   group_by(source, class) %&gt;% 
+  summarise(egene_gwas = sum(gene %in% (unlist(gwas_gene_lists) %&gt;% unique()))) %&gt;% filter(class %in% c(&quot;standard&quot;)) %&gt;% pull(egene_gwas), paired = TRUE, alternative = &quot;two.sided&quot;)</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.
+`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<pre><code>
+    Wilcoxon signed rank exact test
+
+data:  mash_by_condition_output_coarse %&gt;% filter(sig_anywhere) %&gt;% mutate(class = case_when(allsharing ~ &quot;standard&quot;, hypoxia_normoxia_shared &amp; sharing_contexts == 1 ~ &quot;dynamic&quot;, hyperoxia_normoxia_shared &amp; sharing_contexts == 1 ~ &quot;dynamic&quot;, hypoxia_hyperoxia_shared &amp; sharing_contexts == 1 ~ &quot;dynamic&quot;, sharing_contexts == 2 ~ &quot;standard&quot;, sharing_contexts == 0 ~ &quot;dynamic&quot;)) %&gt;% group_by(source, class) %&gt;% summarise(egene_gwas = sum(gene %in% (unlist(gwas_gene_lists) %&gt;% unique()))) %&gt;% filter(class %in%      c(&quot;dynamic&quot;)) %&gt;% pull(egene_gwas) and mash_by_condition_output_coarse %&gt;% filter(sig_anywhere) %&gt;% mutate(class = case_when(allsharing ~ &quot;standard&quot;, hypoxia_normoxia_shared &amp; sharing_contexts == 1 ~ &quot;dynamic&quot;, hyperoxia_normoxia_shared &amp; sharing_contexts == 1 ~ &quot;dynamic&quot;, hypoxia_hyperoxia_shared &amp; sharing_contexts == 1 ~ &quot;dynamic&quot;, sharing_contexts == 2 ~ &quot;standard&quot;, sharing_contexts == 0 ~ &quot;dynamic&quot;)) %&gt;% group_by(source, class) %&gt;% summarise(egene_gwas = sum(gene %in% (unlist(gwas_gene_lists) %&gt;% unique()))) %&gt;% filter(class %in%      c(&quot;standard&quot;)) %&gt;% pull(egene_gwas)
+V = 5, p-value = 0.07813
+alternative hypothesis: true location shift is not equal to 0</code></pre>
+</div>
+</div>
+<div id="topic-interacting-eqtl-results" class="section level2">
+<h2>Topic-interacting eQTL results</h2>
+<p>Finally, compare the topic-interacting eQTL genes to the GWAS gene
+list. Obtain the topic 7-correlated eGenes the same as shown
+previously:</p>
+<pre class="r"><code>crm_signif &lt;- vroom(&quot;/project2/gilad/umans/oxygen_eqtl/topicqtl/outputs/topics15/all_genes_merged_fine_fasttopics_15_topics.cellregmap.sighits.tsv&quot;)</code></pre>
+<pre><code>Rows: 289 Columns: 5
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: &quot;\t&quot;
+chr (2): GENE_HGNC, VARIANT_ID
+dbl (3): P_CELLREGMAP, P_BONF, q
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>crm_iegenes &lt;- crm_signif$GENE_HGNC
+
+crm_betas &lt;- vroom(paste0(&quot;/project2/gilad/umans/oxygen_eqtl/topicqtl/outputs/topics15/fasttopics_fine_15_topics.&quot;, crm_iegenes, &quot;.cellregmap.betas.tsv&quot;))</code></pre>
+<pre><code>Rows: 3094323 Columns: 5
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: &quot;\t&quot;
+chr (3): PSEUDOCELL, GENE_HGNC, VARIANT_ID
+dbl (2): BETA_GXC, BETA_G
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>crm_betas_wide &lt;- dplyr::select(crm_betas, c(PSEUDOCELL, BETA_GXC, GENE_HGNC, VARIANT_ID)) %&gt;%
+  unite(TOPIC_QTL, GENE_HGNC, VARIANT_ID, sep=&quot;_&quot;) %&gt;%
+  pivot_wider(id_cols=PSEUDOCELL, names_from=TOPIC_QTL, values_from=BETA_GXC)
+
+topic_loadings &lt;- vroom(&quot;/project2/gilad/umans/oxygen_eqtl/topicqtl/pseudocell_loadings_k15.tsv&quot;)</code></pre>
+<pre><code>Rows: 10707 Columns: 16
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: &quot;\t&quot;
+chr  (1): pseudocell
+dbl (15): k1, k2, k3, k4, k5, k6, k7, k8, k9, k10, k11, k12, k13, k14, k15
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>crm_betas_loadings &lt;- left_join(crm_betas_wide, topic_loadings, by=c(&quot;PSEUDOCELL&quot;=&quot;pseudocell&quot;))
+
+beta_topic_corrs_matrix &lt;- cor(dplyr::select(crm_betas_loadings, -c(PSEUDOCELL, paste0(&quot;k&quot;, seq(15)))),
+                        dplyr::select(crm_betas_loadings, paste0(&quot;k&quot;, seq(15))))
+
+beta_topic_corrs_p &lt;- apply(dplyr::select(crm_betas_loadings, -c(PSEUDOCELL, paste0(&quot;k&quot;, seq(15)))) %&gt;% as.matrix(), MARGIN = 2, FUN = function(x) cor.test(x, crm_betas_loadings$k7)$p.value )
+
+k7_egenes &lt;- beta_topic_corrs_matrix %&gt;% as.data.frame() %&gt;% 
+  dplyr::select(k7) %&gt;% 
+  bind_cols(beta_topic_corrs_p) %&gt;% 
+  rownames_to_column(var = &quot;gene_snp&quot;) %&gt;%  
+   separate(gene_snp, into = c(&quot;genename&quot;, &quot;snp&quot;), sep = &quot;_&quot;) %&gt;% 
+    mutate(snp_short = str_sub(snp, end = -5)) %&gt;% 
+  filter(`...2` &lt; (0.05/289)) %&gt;% pull(genename)</code></pre>
+<pre><code>New names:
+• `` -&gt; `...2`</code></pre>
+<p>Now, intersect with GWAS genes:</p>
+<pre class="r"><code>sum(k7_egenes %in% (unlist(gwas_gene_lists) %&gt;% unique()))</code></pre>
+<pre><code>[1] 55</code></pre>
+<p>If we exclude the genes in GTEx cortex samples:</p>
+<pre class="r"><code>length(intersect(setdiff(k7_egenes, gtex_cortex_signif), (unlist(gwas_gene_lists) %&gt;% unique())))</code></pre>
+<pre><code>[1] 31</code></pre>
+</div>
+<div id="process-rare-variant-results" class="section level2">
+<h2>Process rare variant results</h2>
+<p>Here, I import datasets downloaded from SCHEMA, BipEx, Epi25, DDD,
+and SFARI Genes.</p>
+<pre class="r"><code>schema &lt;- read.table(file = &quot;data/external/SCHEMA_gene_results.txt&quot;, header = TRUE, sep = &quot;\t&quot;, stringsAsFactors = FALSE)
+# convert to gene symbols
+bipex &lt;- read.table(file = &quot;data/external/BipEx_gene_results_new.tsv&quot;, header = TRUE, sep = &quot;\t&quot;, stringsAsFactors = FALSE)
+# convert to gene symbols
+epi25 &lt;- read.table(file = &quot;data/external/Epi25_gene_results.tsv&quot;, header = TRUE, sep = &quot;\t&quot;, stringsAsFactors = FALSE)
+# convert to gene symbols
+ddd &lt;- read.csv(file = &quot;data/external/DDD_gene_results.csv&quot;, header = TRUE, stringsAsFactors = FALSE)
+sfari &lt;- read.csv(file = &quot;data/external/SFARI-Gene_genes.csv&quot;, header = TRUE,  stringsAsFactors = FALSE)</code></pre>
+<p>Change the ensembl gene names in the SCHEMA, BipEx, and Epi25
+sets:</p>
+<pre class="r"><code>library(GenomicRanges)</code></pre>
+<pre><code>Loading required package: stats4</code></pre>
+<pre><code>Loading required package: BiocGenerics</code></pre>
+<pre><code>
+Attaching package: &#39;BiocGenerics&#39;</code></pre>
+<pre><code>The following objects are masked from &#39;package:MatrixEQTL&#39;:
+
+    colnames, rownames</code></pre>
+<pre><code>The following object is masked from &#39;package:gridExtra&#39;:
+
+    combine</code></pre>
+<pre><code>The following objects are masked from &#39;package:dplyr&#39;:
+
+    combine, intersect, setdiff, union</code></pre>
+<pre><code>The following objects are masked from &#39;package:stats&#39;:
+
+    IQR, mad, sd, var, xtabs</code></pre>
+<pre><code>The following objects are masked from &#39;package:base&#39;:
+
+    Filter, Find, Map, Position, Reduce, anyDuplicated, aperm, append,
+    as.data.frame, basename, cbind, colnames, dirname, do.call,
+    duplicated, eval, evalq, get, grep, grepl, intersect, is.unsorted,
+    lapply, mapply, match, mget, order, paste, pmax, pmax.int, pmin,
+    pmin.int, rank, rbind, rownames, sapply, setdiff, sort, table,
+    tapply, union, unique, unsplit, which.max, which.min</code></pre>
+<pre><code>Loading required package: S4Vectors</code></pre>
+<pre><code>
+Attaching package: &#39;S4Vectors&#39;</code></pre>
+<pre><code>The following objects are masked from &#39;package:dplyr&#39;:
+
+    first, rename</code></pre>
+<pre><code>The following object is masked from &#39;package:tidyr&#39;:
+
+    expand</code></pre>
+<pre><code>The following objects are masked from &#39;package:base&#39;:
+
+    I, expand.grid, unname</code></pre>
+<pre><code>Loading required package: IRanges</code></pre>
+<pre><code>
+Attaching package: &#39;IRanges&#39;</code></pre>
+<pre><code>The following objects are masked from &#39;package:dplyr&#39;:
+
+    collapse, desc, slice</code></pre>
+<pre><code>The following object is masked from &#39;package:purrr&#39;:
+
+    reduce</code></pre>
+<pre><code>Loading required package: GenomeInfoDb</code></pre>
+<pre class="r"><code>gene.gr &lt;- readRDS(&#39;/project/gilad/umans/brainchromatin/data_files/rds/AllGenes_GenomicRanges.RDS&#39;)
+
+convertGeneIDs &lt;- function(genelist, id.mapping.table) {
+  return(mapValues(x = genelist, mapping.table = id.mapping.table))
+}
+mapValues &lt;- function(x,mapping.table) {
+  out &lt;- mapping.table[x]
+  if(any(is.na(out))) { 
+    na &lt;- sum(is.na(out)) 
+    cat(sprintf(&quot;Warning: mapping returned %s NA values\n&quot;, as.character(na)))
+  }
+  return(out)
+}
+
+name2ensembl &lt;- names(gene.gr)
+
+# Something funny about this one, unsure why yet
+name2ensembl[&#39;CDR1&#39;] &lt;- &#39;ENSG00000281508&#39;
+
+names(name2ensembl) &lt;- elementMetadata(gene.gr)[ ,&#39;gene_name&#39;]
+
+ensembl2name &lt;- elementMetadata(gene.gr)[ ,&#39;gene_name&#39;]
+names(ensembl2name) &lt;- names(gene.gr)
+
+schema$gene_name &lt;- unname(convertGeneIDs(schema$gene_id, ensembl2name))</code></pre>
+<pre><code>Warning: mapping returned 222 NA values</code></pre>
+<pre class="r"><code>bipex$gene_name &lt;- unname(convertGeneIDs(bipex$gene_id, ensembl2name))</code></pre>
+<pre><code>Warning: mapping returned 684 NA values</code></pre>
+<pre class="r"><code>epi25$gene_name &lt;- unname(convertGeneIDs(epi25$gene_id, ensembl2name))</code></pre>
+<pre><code>Warning: mapping returned 28 NA values</code></pre>
+<p>Compile results into a list.</p>
+<pre class="r"><code>rare_gene_list &lt;- list(bipex= bipex %&gt;% 
+                         filter(group==&quot;Bipolar Disorder&quot;) %&gt;% 
+                         filter(damaging_missense_fisher_gnom_non_psych_pval&lt;0.05|ptv_fisher_gnom_non_psych_pval&lt;0.05) %&gt;% 
+                         drop_na(gene_name) %&gt;% 
+                         pull(gene_name), 
+                       epi25 = epi25 %&gt;% filter(group==&quot;EPI&quot;) %&gt;% 
+                         filter(ptv_pval&lt;0.05) %&gt;%  
+                         drop_na(gene_name) %&gt;% 
+                         pull(gene_name), 
+                       schema = schema %&gt;% filter(Qmeta&lt;0.05) %&gt;%  
+                         drop_na(gene_name) %&gt;% 
+                         pull(gene_name), 
+                       sfari_asd = sfari %&gt;% filter(gene.score==1) %&gt;% 
+                         pull(gene.symbol), 
+                       sfari_syndromic = sfari %&gt;% filter(syndromic==1) %&gt;% 
+                         pull(gene.symbol),
+                       ddd= ddd %&gt;% filter(significant) %&gt;% pull(symbol)
+                       ) </code></pre>
+<p>Pleiotropy in psychiatric genetics is well documented. Are the genes
+pulled from each of these sources largely unique?</p>
+<pre class="r"><code>length(unique(unlist(rare_gene_list)))/length(unlist(rare_gene_list))</code></pre>
+<pre><code>[1] 0.8132296</code></pre>
+<p>Yes, about 81% of the genes here are not redundant across
+studies.</p>
+<p>Compile the same results into a data frame.</p>
+<pre class="r"><code>rare_gene_frame &lt;- rbind(data.frame(source= &quot;bipex&quot;, gene= bipex %&gt;% 
+                         filter(group==&quot;Bipolar Disorder&quot;) %&gt;% 
+                         filter(damaging_missense_fisher_gnom_non_psych_pval&lt;0.05|ptv_fisher_gnom_non_psych_pval&lt;0.05) %&gt;% 
+                         drop_na(gene_name) %&gt;% 
+                         pull(gene_name)),
+                         data.frame(source=&quot;epi25&quot;, gene = epi25 %&gt;% filter(group==&quot;EPI&quot;) %&gt;% 
+                         filter(ptv_pval&lt;0.05) %&gt;%  
+                         drop_na(gene_name) %&gt;% 
+                         pull(gene_name)), 
+                         data.frame(source= &quot;schema&quot;, gene = schema %&gt;% filter(Qmeta&lt;0.05) %&gt;%  
+                         drop_na(gene_name) %&gt;% 
+                         pull(gene_name)), 
+                         data.frame(source= &quot;sfari_asd&quot;, gene = sfari %&gt;% filter(gene.score==1) %&gt;% 
+                         pull(gene.symbol)), 
+                       data.frame(source=&quot;sfari_syndromic&quot;, gene = sfari %&gt;% filter(syndromic==1) %&gt;% 
+                         pull(gene.symbol)),
+                       data.frame(source= &quot;ddd&quot;, gene= ddd %&gt;% filter(significant) %&gt;% pull(symbol)))</code></pre>
+<p>Now, just like above for GWAS genes, compare each eGene class to rare
+variant genes in each cell type.</p>
+<pre class="r"><code>mash_by_condition_output %&gt;% 
+  filter(sig_anywhere) %&gt;% 
+  mutate(class=case_when(control10_lfsr &lt; 0.05 &amp; allsharing ~ &quot;class1&quot;,
+                         control10_lfsr &lt; 0.05 &amp;  !allsharing ~ &quot;class2&quot;,
+                         sig_anywhere &amp; control10_lfsr &gt; 0.05 &amp; !allsharing ~ &quot;class3&quot;,
+                         sig_anywhere &amp; allsharing ~ &quot;class4&quot;)) %&gt;%
+   group_by(source, class) %&gt;% 
+  summarise(egene_rare = sum(gene %in% (unlist(rare_gene_frame$gene) %&gt;% unique()))) %&gt;% 
+  ggplot(aes(x=factor(class, levels = c(&quot;class1&quot;, &quot;class4&quot;, &quot;class2&quot;, &quot;class3&quot;)), y=egene_rare)) + 
+  geom_boxplot(outlier.shape = NA, aes(color=class)) +  
+  ylab(&quot;Rare variant genes with eQTLs&quot;) + 
+  theme_light() + 
+  geom_point(aes(group=source, color=source), position = position_jitter(width = 0.2, height = 0)) +
+  scale_color_manual(values=c(manual_palette_fine, class_colors)) +
+  xlab(&quot;eGene class (see note)&quot;) + 
+  theme(legend.position=&quot;none&quot;)</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<p><img src="figure/figure4.Rmd/unnamed-chunk-31-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code># additionally, compare to GWAS results as above, but first restricting to rare variant-associated genes.  
+mash_by_condition_output %&gt;% 
+  filter(sig_anywhere) %&gt;% 
+  filter(gene %in% rare_gene_frame$gene) %&gt;% 
+  mutate(class=case_when(control10_lfsr &lt; 0.05 &amp; allsharing ~ &quot;class1&quot;,
+                         control10_lfsr &lt; 0.05 &amp;  !allsharing ~ &quot;class2&quot;,
+                         sig_anywhere &amp; control10_lfsr &gt; 0.05 &amp; !allsharing ~ &quot;class3&quot;,
+                         sig_anywhere &amp; allsharing ~ &quot;class4&quot;)) %&gt;%
+  group_by(source, class) %&gt;% 
+  summarise(egene_rare = sum(gene %in% (unlist(gwas_gene_lists) %&gt;% unique()))) %&gt;% 
+  ggplot(aes(x=factor(class, levels = c(&quot;class1&quot;, &quot;class4&quot;, &quot;class2&quot;, &quot;class3&quot;)), y=egene_rare)) + 
+  geom_boxplot(outlier.shape = NA, aes(color=class)) +  
+  xlab(&quot;eGene class (see note&quot;) + 
+  ylab(&quot;Rare variant genes with GWAS eQTLs&quot;) + 
+  theme_light() + 
+  scale_color_manual(values=c(manual_palette_fine, class_colors)) + 
+  theme(legend.position=&quot;none&quot;) +
+  geom_point(aes(group=source, color=source), position = position_jitter(width = 0.2, height = 0))</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<p><img src="figure/figure4.Rmd/unnamed-chunk-31-2.png" width="672" style="display: block; margin: auto;" />
+The total number of rare variant genes with an eQTL that correspond to
+one of our GWAS traits is:</p>
+<pre class="r"><code>mash_by_condition_output %&gt;% 
+  filter(sig_anywhere) %&gt;% 
+  filter(gene %in% rare_gene_frame$gene) %&gt;% 
+  filter(gene %in% (unlist(gwas_gene_lists) %&gt;% unique())) %&gt;% 
+  pull(gene) %&gt;% 
+  unique() %&gt;% 
+  length()</code></pre>
+<pre><code>[1] 349</code></pre>
+<p>Rare variant genes that are eGenes in our dataset allow us to ask
+about the phenotypic consequences of modulating expression levels of
+genes for which loss of function has an identified phenotype, linked
+together by a SNP. Here, we can join those together, bridging the GWAS
+results and the rare variant results by our eQTL results. Note that this
+is of course an underestimate of this analysis, since we’re only using
+those SNPs chosen as lead variants by mash which are themselves GWAS
+hits. There may be other equivalent or secondary SNPs masked by mash
+here that still provide information.</p>
+<pre class="r"><code>inner_join(x=mash_by_condition_output %&gt;% 
+filter(sig_anywhere) %&gt;% 
+  filter(gene %in% rare_gene_frame$gene) %&gt;% 
+  mutate(class=case_when(control10_lfsr &lt; 0.05 &amp; allsharing ~ &quot;class1&quot;,
+                         control10_lfsr &lt; 0.05 &amp;  !allsharing ~ &quot;class2&quot;,
+                         sig_anywhere &amp; control10_lfsr &gt; 0.05 &amp; !allsharing ~ &quot;class3&quot;,
+                         sig_anywhere &amp; allsharing ~ &quot;class4&quot;)) %&gt;% 
+  separate(gene_snp, into = c(&quot;genename&quot;, &quot;snp&quot;), sep = &quot;_&quot;) %&gt;% 
+    mutate(snp_short = str_sub(snp, end = -5)) %&gt;% 
+    select(gene, snp, snp_short, source, control10_lfsr:stim21pct_beta, class), 
+  y=gwas_formatted %&gt;% filter(trait %in% filtered_traits) %&gt;% filter(n&gt;15) %&gt;% filter(n&lt;500) %&gt;%
+  filter(PVALUE_MLOG&gt;7.3) %&gt;% unite(&quot;snp&quot;, CHR_ID:CHR_POS, sep = &quot;:&quot;) %&gt;% select(nearest_gene, REPORTED.GENE.S., trait, n, snp, STUDY.ACCESSION, PVALUE_MLOG, UPSTREAM_GENE_DISTANCE, DOWNSTREAM_GENE_DISTANCE) , 
+  by=join_by(snp_short==snp), relationship = &quot;many-to-many&quot;)  %&gt;% 
+  mutate(across(ends_with(&quot;lfsr&quot;), signif)) %&gt;% 
+  mutate(across(ends_with(&quot;beta&quot;), signif)) %&gt;% 
+  # drop_na() %&gt;% 
+  select(gene, source, class, snp, nearest_gene, STUDY.ACCESSION, trait) %&gt;% 
+  left_join(x=., y=rare_gene_frame, by=join_by(gene==gene), relationship = &quot;many-to-many&quot;) </code></pre>
+<pre><code>       gene    source.x  class              snp nearest_gene STUDY.ACCESSION
+1      GNB1     Choroid class1    1:1921745:T:C       CFAP74      GCST010085
+2    ATP2A2 CorticalHem class4 12:110285440:C:T       ATP2A2      GCST010645
+3    ATP2A2 CorticalHem class4 12:110285440:C:T       ATP2A2      GCST008595
+4    ATP2A2 CorticalHem class4 12:110285440:C:T       ATP2A2      GCST009600
+5    ATP2A2 CorticalHem class4 12:110285440:C:T       ATP2A2    GCST90016620
+6    ATP2A2 CorticalHem class4 12:110285440:C:T       ATP2A2    GCST90016619
+7    NUP160 CorticalHem class2  11:47886089:A:G         DDB2      GCST006943
+8      APOE    GliaProg class1  19:44917843:G:A        APOC1      GCST005921
+9      APOE    GliaProg class1  19:44917843:G:A        APOC1      GCST005922
+10   POU3F3    GliaProg class1  2:104849547:G:A       PANTR1    GCST90012894
+11   POU3F3    GliaProg class1  2:104849547:G:A       PANTR1    GCST90012894
+12   POU3F3    GliaProg class1  2:104849547:G:A       PANTR1    GCST90131905
+13   POU3F3    GliaProg class1  2:104849547:G:A       PANTR1    GCST90131905
+14   ATP2A2        Glut class1 12:110285440:C:T       ATP2A2      GCST010645
+15   ATP2A2        Glut class1 12:110285440:C:T       ATP2A2      GCST008595
+16   ATP2A2        Glut class1 12:110285440:C:T       ATP2A2      GCST009600
+17   ATP2A2        Glut class1 12:110285440:C:T       ATP2A2    GCST90016620
+18   ATP2A2        Glut class1 12:110285440:C:T       ATP2A2    GCST90016619
+19    NR2F1        Glut class1   5:93597828:T:G       VANGL2      GCST010700
+20    NR2F1        Glut class1   5:93597828:T:G       VANGL2      GCST010700
+21    NRXN3        Glut class1  14:78164146:C:G        NRXN3    GCST90267280
+22  ZSCAN26        Glut class4   6:28253486:G:A      ZKSCAN4    GCST90085697
+23    CELF2     GlutNTS class4  10:10811722:A:G        CELF2    GCST90267280
+24    CELF2     GlutNTS class4  10:10811722:A:G        CELF2    GCST90270074
+25     NPC1    Immature class1  18:23546117:A:C         NPC1      GCST008595
+26    PTCH1    Immature class1   9:95499896:G:A        PTCH1    GCST90027240
+27    PTCH1    Immature class1   9:95499896:G:A        PTCH1    GCST90027244
+28   ATP2A2         Inh class4 12:110285440:C:T       ATP2A2      GCST010645
+29   ATP2A2         Inh class4 12:110285440:C:T       ATP2A2      GCST008595
+30   ATP2A2         Inh class4 12:110285440:C:T       ATP2A2      GCST009600
+31   ATP2A2         Inh class4 12:110285440:C:T       ATP2A2    GCST90016620
+32   ATP2A2         Inh class4 12:110285440:C:T       ATP2A2    GCST90016619
+33    HIP1R         Inh class3 12:122811747:G:A       CCDC62      GCST000959
+34     CUL3     InhGNRH class3  2:224608546:C:T         CUL3    GCST90239693
+35    IGF1R     InhGNRH class4  15:98652883:G:A        IGF1R    GCST90100569
+36    IGF1R     InhGNRH class4  15:98652883:G:A        IGF1R      GCST007085
+37    NR2F1     InhGNRH class3   5:93597828:T:G       VANGL2      GCST010700
+38    NR2F1     InhGNRH class3   5:93597828:T:G       VANGL2      GCST010700
+39  CTTNBP2 InhThalamic class3  7:117883655:A:G      CTTNBP2      GCST005324
+40  CTTNBP2 InhThalamic class3  7:117883655:A:G      CTTNBP2      GCST008810
+41  CTTNBP2 InhThalamic class3  7:117883655:A:G      CTTNBP2      GCST007474
+42  CTTNBP2 InhThalamic class3  7:117883655:A:G      CTTNBP2      GCST007462
+43  CTTNBP2 InhThalamic class3  7:117883655:A:G      CTTNBP2      GCST007085
+44   BCL11B          IP class3  14:99268647:A:G       BCL11B      GCST007472
+45   BCL11B          IP class3  14:99268647:A:G       BCL11B    GCST90131904
+46    SCN1A NeuronOther class1  2:166142257:C:G        SCN3A      GCST007343
+47    SCN1A NeuronOther class1  2:166142257:C:G        SCN3A      GCST007343
+48    SCN1A NeuronOther class1  2:166142257:C:G        SCN3A      GCST007343
+49    SCN1A NeuronOther class1  2:166142257:C:G        SCN3A      GCST007343
+50    EP300          RG class3  22:41062780:C:G       WBP2NL      GCST006952
+51    EP300          RG class3  22:41062780:C:G       WBP2NL      GCST006952
+52    EP300          RG class3  22:41062780:C:G       WBP2NL      GCST006952
+53    GNAO1          RG class1  16:56227517:T:G        GNAO1      GCST007982
+54 HIST1H1E          RG class1   6:26122705:G:T        H2BC4    GCST90132260
+55 HIST1H1E          RG class1   6:26122705:G:T        H2BC4    GCST90132260
+56  NECTIN2          RG class1  19:44860443:A:G      NECTIN2      GCST005922
+57  NECTIN2          RG class1  19:44860443:A:G      NECTIN2      GCST005922
+58    VAMP2          RG class1   17:8154049:T:C         PER1      GCST007983
+59    VAMP2          RG class1   17:8154049:T:C         PER1      GCST007983
+60    VAMP2          RG class1   17:8154049:T:C         PER1      GCST007083
+61    VAMP2          RG class1   17:8154049:T:C         PER1      GCST007083
+62   ATP2A2   RGcycling class4 12:110285440:C:T       ATP2A2      GCST010645
+63   ATP2A2   RGcycling class4 12:110285440:C:T       ATP2A2      GCST008595
+64   ATP2A2   RGcycling class4 12:110285440:C:T       ATP2A2      GCST009600
+65   ATP2A2   RGcycling class4 12:110285440:C:T       ATP2A2    GCST90016620
+66   ATP2A2   RGcycling class4 12:110285440:C:T       ATP2A2    GCST90016619
+67     GNB1   RGcycling class3    1:1921745:T:C       CFAP74      GCST010085
+68    NR2F1   RGcycling class1   5:93597828:T:G       VANGL2      GCST010700
+69    NR2F1   RGcycling class1   5:93597828:T:G       VANGL2      GCST010700
+70   POU3F3   RGcycling class1  2:104849547:G:A       PANTR1    GCST90012894
+71   POU3F3   RGcycling class1  2:104849547:G:A       PANTR1    GCST90012894
+72   POU3F3   RGcycling class1  2:104849547:G:A       PANTR1    GCST90131905
+73   POU3F3   RGcycling class1  2:104849547:G:A       PANTR1    GCST90131905
+                                                                                                 trait
+1                                                           Leisure sedentary behaviour (computer use)
+2                                                                                 Schizophrenia (MTAG)
+3                                                                                    Cognitive ability
+4                                                                                     Anorexia nervosa
+5                             Schizophrenia vs autism spectrum disorder (ordinary least squares (OLS))
+6                                     Schizophrenia vs anorexia nervosa (ordinary least squares (OLS))
+7                                                                                    Feeling miserable
+8                                                                Family history of Alzheimer&#39;s disease
+9                                         Alzheimer&#39;s disease or family history of Alzheimer&#39;s disease
+10                                                                            Brain shape (segment 15)
+11                                                                            Brain shape (segment 15)
+12                                Whole brain restricted directional diffusion (multivariate analysis)
+13                                Whole brain restricted directional diffusion (multivariate analysis)
+14                                                                                Schizophrenia (MTAG)
+15                                                                                   Cognitive ability
+16                                                                                    Anorexia nervosa
+17                            Schizophrenia vs autism spectrum disorder (ordinary least squares (OLS))
+18                                    Schizophrenia vs anorexia nervosa (ordinary least squares (OLS))
+19                                                                        Cortical thickness (MOSTest)
+20                                                                        Cortical thickness (MOSTest)
+21                                                Age when finished full-time education (standard GWA)
+22                                                Major depressive disorder or stress-related disorder
+23                                                Age when finished full-time education (standard GWA)
+24                                      Personality traits or cognitive traits (multivariate analysis)
+25                                                                                   Cognitive ability
+26 Neuroticism conditioned on Townsend deprivation index (multi-trait conditioning and joint analysis)
+27    Neuroticism conditioned on self-rated math ability (multi-trait conditioning and joint analysis)
+28                                                                                Schizophrenia (MTAG)
+29                                                                                   Cognitive ability
+30                                                                                    Anorexia nervosa
+31                            Schizophrenia vs autism spectrum disorder (ordinary least squares (OLS))
+32                                    Schizophrenia vs anorexia nervosa (ordinary least squares (OLS))
+33                                                                                 Parkinson&#39;s disease
+34                                                        Risk-taking behavior (multivariate analysis)
+35                                                                                    Lifetime smoking
+36                                                                                      Smoking status
+37                                                                        Cortical thickness (MOSTest)
+38                                                                        Cortical thickness (MOSTest)
+39                                                                                 Depressive symptoms
+40                                                  Smoking initiation (ever regular vs never regular)
+41                                                  Smoking initiation (ever regular vs never regular)
+42                                                                    Age of smoking initiation (MTAG)
+43                                                                                      Smoking status
+44                                                        Alcohol consumption (drinks per week) (MTAG)
+45                                  Whole brain restricted isotropic diffusion (multivariate analysis)
+46                                                                                            Epilepsy
+47                                                                                            Epilepsy
+48                                                                                            Epilepsy
+49                                                                                            Epilepsy
+50                                                                                       Feeling tense
+51                                                                                       Feeling tense
+52                                                                                       Feeling tense
+53                                                                                      Sleep duration
+54                         Alzheimer’s disease polygenic risk score (upper quantile vs lower quantile)
+55                         Alzheimer’s disease polygenic risk score (upper quantile vs lower quantile)
+56                                        Alzheimer&#39;s disease or family history of Alzheimer&#39;s disease
+57                                        Alzheimer&#39;s disease or family history of Alzheimer&#39;s disease
+58                                                                                         Morningness
+59                                                                                         Morningness
+60                                                                                      Morning person
+61                                                                                      Morning person
+62                                                                                Schizophrenia (MTAG)
+63                                                                                   Cognitive ability
+64                                                                                    Anorexia nervosa
+65                            Schizophrenia vs autism spectrum disorder (ordinary least squares (OLS))
+66                                    Schizophrenia vs anorexia nervosa (ordinary least squares (OLS))
+67                                                          Leisure sedentary behaviour (computer use)
+68                                                                        Cortical thickness (MOSTest)
+69                                                                        Cortical thickness (MOSTest)
+70                                                                            Brain shape (segment 15)
+71                                                                            Brain shape (segment 15)
+72                                Whole brain restricted directional diffusion (multivariate analysis)
+73                                Whole brain restricted directional diffusion (multivariate analysis)
+          source.y
+1              ddd
+2            bipex
+3            bipex
+4            bipex
+5            bipex
+6            bipex
+7            bipex
+8            bipex
+9            bipex
+10 sfari_syndromic
+11             ddd
+12 sfari_syndromic
+13             ddd
+14           bipex
+15           bipex
+16           bipex
+17           bipex
+18           bipex
+19 sfari_syndromic
+20             ddd
+21       sfari_asd
+22           epi25
+23 sfari_syndromic
+24 sfari_syndromic
+25           bipex
+26             ddd
+27             ddd
+28           bipex
+29           bipex
+30           bipex
+31           bipex
+32           bipex
+33           epi25
+34       sfari_asd
+35           bipex
+36           bipex
+37 sfari_syndromic
+38             ddd
+39           epi25
+40           epi25
+41           epi25
+42           epi25
+43           epi25
+44             ddd
+45             ddd
+46           epi25
+47       sfari_asd
+48 sfari_syndromic
+49             ddd
+50       sfari_asd
+51 sfari_syndromic
+52             ddd
+53             ddd
+54          schema
+55             ddd
+56           bipex
+57           epi25
+58 sfari_syndromic
+59             ddd
+60 sfari_syndromic
+61             ddd
+62           bipex
+63           bipex
+64           bipex
+65           bipex
+66           bipex
+67             ddd
+68 sfari_syndromic
+69             ddd
+70 sfari_syndromic
+71             ddd
+72 sfari_syndromic
+73             ddd</code></pre>
+<p>Finally, we can look specifically for cases in which our data link a
+GWAS SNP to a different gene than was either reported in the GWAS or
+closest to the associated locus.</p>
+<pre class="r"><code>full_join(x=mash_by_condition_output %&gt;% 
+filter(sig_anywhere) %&gt;% 
+  mutate(class=case_when(control10_lfsr &lt; 0.05 &amp; allsharing ~ &quot;class1&quot;,
+                         control10_lfsr &lt; 0.05 &amp;  !allsharing ~ &quot;class2&quot;,
+                         sig_anywhere &amp; control10_lfsr &gt; 0.05 &amp; !allsharing ~ &quot;class3&quot;,
+                         sig_anywhere &amp; allsharing ~ &quot;class4&quot;)) %&gt;% 
+  separate(gene_snp, into = c(&quot;genename&quot;, &quot;snp&quot;), sep = &quot;_&quot;) %&gt;% 
+    mutate(snp = str_sub(snp, end = -5)) %&gt;% 
+  filter(snp %in% unique(gwas_snps)) %&gt;% 
+    select(gene, snp, source, control10_lfsr:stim21pct_beta, class), 
+  y=gwas_formatted %&gt;% filter(trait %in% filtered_traits) %&gt;% filter(n&gt;15) %&gt;% filter(n&lt;500) %&gt;%
+  filter(PVALUE_MLOG&gt;7.3) %&gt;% unite(&quot;snp&quot;, CHR_ID:CHR_POS, sep = &quot;:&quot;) %&gt;% select(nearest_gene, REPORTED.GENE.S., trait, n, snp, STUDY.ACCESSION, PVALUE_MLOG) , 
+  by=join_by(snp==snp), relationship = &quot;many-to-many&quot;)  %&gt;% 
+  mutate(across(ends_with(&quot;lfsr&quot;), signif)) %&gt;% 
+  mutate(across(ends_with(&quot;beta&quot;), signif)) %&gt;% 
+  filter(gene != nearest_gene) %&gt;%
+  select(gene) %&gt;% 
+  distinct() %&gt;% # remove this to get the number of associations (some pleiotoropic genes will be duplicated)
+  dim()</code></pre>
+<pre><code>[1] 76  1</code></pre>
+<pre class="r"><code># this gets the number of genes with a changed interpretation</code></pre>
+</div>
+<div id="plot-example-egenes" class="section level2">
+<h2>Plot example eGenes</h2>
+<p>Here, I plot a couple of example eGenes identified above as cases of
+changed or updated interpretation of a GWAS SNP’s regulatory target
+based on our data.</p>
+<pre class="r"><code>genotypes &lt;- read_table(&quot;data/MatrixEQTL/snps/YRI_genotypes_maf10hwee-6_full/chr1_for_matrixeqtl.snps&quot;) %&gt;% pivot_longer(cols=starts_with(&quot;NA&quot;), names_to = &quot;individual&quot;, values_to = &quot;snp&quot;) </code></pre>
+<pre><code>
+── Column specification ────────────────────────────────────────────────────────
+cols(
+  .default = col_double(),
+  ID = col_character()
+)
+ℹ Use `spec()` for the full column specifications.</code></pre>
+<pre class="r"><code>for (i in 2:22){
+  genotypes &lt;- rbind(genotypes, read_table(paste0(&quot;data/MatrixEQTL/snps/YRI_genotypes_maf10hwee-6_full/chr&quot;,i,&quot;_for_matrixeqtl.snps&quot;, sep=&quot;&quot;)) %&gt;% pivot_longer(cols=starts_with(&quot;NA&quot;), names_to = &quot;individual&quot;, values_to = &quot;snp&quot;))
+}</code></pre>
+<pre><code>
+── Column specification ────────────────────────────────────────────────────────
+cols(
+  .default = col_double(),
+  ID = col_character()
+)
+ℹ Use `spec()` for the full column specifications.
+
+
+── Column specification ────────────────────────────────────────────────────────
+cols(
+  .default = col_double(),
+  ID = col_character()
+)
+ℹ Use `spec()` for the full column specifications.
+
+
+── Column specification ────────────────────────────────────────────────────────
+cols(
+  .default = col_double(),
+  ID = col_character()
+)
+ℹ Use `spec()` for the full column specifications.
+
+
+── Column specification ────────────────────────────────────────────────────────
+cols(
+  .default = col_double(),
+  ID = col_character()
+)
+ℹ Use `spec()` for the full column specifications.
+
+
+── Column specification ────────────────────────────────────────────────────────
+cols(
+  .default = col_double(),
+  ID = col_character()
+)
+ℹ Use `spec()` for the full column specifications.
+
+
+── Column specification ────────────────────────────────────────────────────────
+cols(
+  .default = col_double(),
+  ID = col_character()
+)
+ℹ Use `spec()` for the full column specifications.
+
+
+── Column specification ────────────────────────────────────────────────────────
+cols(
+  .default = col_double(),
+  ID = col_character()
+)
+ℹ Use `spec()` for the full column specifications.
+
+
+── Column specification ────────────────────────────────────────────────────────
+cols(
+  .default = col_double(),
+  ID = col_character()
+)
+ℹ Use `spec()` for the full column specifications.
+
+
+── Column specification ────────────────────────────────────────────────────────
+cols(
+  .default = col_double(),
+  ID = col_character()
+)
+ℹ Use `spec()` for the full column specifications.
+
+
+── Column specification ────────────────────────────────────────────────────────
+cols(
+  .default = col_double(),
+  ID = col_character()
+)
+ℹ Use `spec()` for the full column specifications.
+
+
+── Column specification ────────────────────────────────────────────────────────
+cols(
+  .default = col_double(),
+  ID = col_character()
+)
+ℹ Use `spec()` for the full column specifications.
+
+
+── Column specification ────────────────────────────────────────────────────────
+cols(
+  .default = col_double(),
+  ID = col_character()
+)
+ℹ Use `spec()` for the full column specifications.
+
+
+── Column specification ────────────────────────────────────────────────────────
+cols(
+  .default = col_double(),
+  ID = col_character()
+)
+ℹ Use `spec()` for the full column specifications.
+
+
+── Column specification ────────────────────────────────────────────────────────
+cols(
+  .default = col_double(),
+  ID = col_character()
+)
+ℹ Use `spec()` for the full column specifications.
+
+
+── Column specification ────────────────────────────────────────────────────────
+cols(
+  .default = col_double(),
+  ID = col_character()
+)
+ℹ Use `spec()` for the full column specifications.
+
+
+── Column specification ────────────────────────────────────────────────────────
+cols(
+  .default = col_double(),
+  ID = col_character()
+)
+ℹ Use `spec()` for the full column specifications.
+
+
+── Column specification ────────────────────────────────────────────────────────
+cols(
+  .default = col_double(),
+  ID = col_character()
+)
+ℹ Use `spec()` for the full column specifications.
+
+
+── Column specification ────────────────────────────────────────────────────────
+cols(
+  .default = col_double(),
+  ID = col_character()
+)
+ℹ Use `spec()` for the full column specifications.
+
+
+── Column specification ────────────────────────────────────────────────────────
+cols(
+  .default = col_double(),
+  ID = col_character()
+)
+ℹ Use `spec()` for the full column specifications.
+
+
+── Column specification ────────────────────────────────────────────────────────
+cols(
+  .default = col_double(),
+  ID = col_character()
+)
+ℹ Use `spec()` for the full column specifications.
+
+
+── Column specification ────────────────────────────────────────────────────────
+cols(
+  .default = col_double(),
+  ID = col_character()
+)
+ℹ Use `spec()` for the full column specifications.</code></pre>
+<pre class="r"><code>genotypes &lt;- genotypes %&gt;% mutate(ID = str_sub(ID, end = -5)) 
+
+pseudo_data &lt;- readRDS(file = &quot;output/pseudo_fine_quality_filtered_nomap_qtl_20240305.RDS&quot;)
+pseudo_data &lt;- filter.pseudobulk(pseudo_data, threshold = 20)</code></pre>
+<p>As a first example, the SNP located at 17:75826364 (rs2008012), which
+is associated with a white matter structural phenotype (uncinate
+fasciculus thickness). The nearest gene to this SNP is UNK.</p>
+<pre class="r"><code>p1 &lt;- make_boxplot(celltype = &quot;Immature&quot;, condition = &quot;control10&quot;, testsnp = &quot;17:75826364&quot;, testgene = &quot;H3F3B&quot;) + geom_boxplot(alpha=0) + theme_classic() + theme(legend.position=&quot;none&quot;) + ylab(&quot;&quot;)</code></pre>
+<pre><code>
+── Column specification ────────────────────────────────────────────────────────
+cols(
+  .default = col_double(),
+  ID = col_character()
+)
+ℹ Use `spec()` for the full column specifications.</code></pre>
+<pre class="r"><code>p2 &lt;- make_boxplot(celltype = &quot;Immature&quot;, condition = &quot;stim1pct&quot;, testsnp = &quot;17:75826364&quot;, testgene = &quot;H3F3B&quot;) + geom_boxplot(alpha=0) + theme_classic() + theme(legend.position=&quot;none&quot;) + ylab(&quot;&quot;)</code></pre>
+<pre><code>
+── Column specification ────────────────────────────────────────────────────────
+cols(
+  .default = col_double(),
+  ID = col_character()
+)
+ℹ Use `spec()` for the full column specifications.</code></pre>
+<pre class="r"><code>p3 &lt;- make_boxplot(celltype = &quot;Immature&quot;, condition = &quot;stim21pct&quot;, testsnp = &quot;17:75826364&quot;, testgene = &quot;H3F3B&quot;) + geom_boxplot(alpha=0) + theme_classic() + theme(legend.position=&quot;none&quot;) + ylab(&quot;&quot;)</code></pre>
+<pre><code>
+── Column specification ────────────────────────────────────────────────────────
+cols(
+  ID = col_character(),
+  NA19153 = col_double(),
+  NA19207 = col_double(),
+  NA18913 = col_double(),
+  NA19098 = col_double(),
+  NA18853 = col_double(),
+  NA18856 = col_double(),
+  NA19093 = col_double(),
+  NA19210 = col_double(),
+  NA19190 = col_double(),
+  NA18508 = col_double(),
+  NA18517 = col_double(),
+  NA18507 = col_double(),
+  NA18519 = col_double(),
+  NA18501 = col_double(),
+  NA18489 = col_double(),
+  NA19102 = col_double(),
+  NA18511 = col_double(),
+  NA19128 = col_double()
+)</code></pre>
+<pre class="r"><code>grid.arrange(p1, p2, p3, nrow=1)</code></pre>
+<p><img src="figure/figure4.Rmd/unnamed-chunk-36-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>p1 &lt;- make_boxplot(celltype = &quot;IPcycling&quot;, condition = &quot;control10&quot;, testsnp = &quot;17:75826364&quot;, testgene = &quot;H3F3B&quot;) + geom_boxplot(alpha=0) + theme_classic() + theme(legend.position=&quot;none&quot;) + ylab(&quot;&quot;)</code></pre>
+<pre><code>
+── Column specification ────────────────────────────────────────────────────────
+cols(
+  ID = col_character(),
+  NA19153 = col_double(),
+  NA19207 = col_double(),
+  NA18913 = col_double(),
+  NA18853 = col_double(),
+  NA18856 = col_double(),
+  NA19093 = col_double(),
+  NA19210 = col_double(),
+  NA19190 = col_double(),
+  NA18502 = col_double(),
+  NA18517 = col_double(),
+  NA18507 = col_double(),
+  NA18501 = col_double(),
+  NA18489 = col_double(),
+  NA19102 = col_double(),
+  NA19128 = col_double()
+)</code></pre>
+<pre class="r"><code>p2 &lt;- make_boxplot(celltype = &quot;IPcycling&quot;, condition = &quot;stim1pct&quot;, testsnp = &quot;17:75826364&quot;, testgene = &quot;H3F3B&quot;) + geom_boxplot(alpha=0) + theme_classic() + theme(legend.position=&quot;none&quot;) + ylab(&quot;&quot;)</code></pre>
+<pre><code>
+── Column specification ────────────────────────────────────────────────────────
+cols(
+  ID = col_character(),
+  NA19153 = col_double(),
+  NA19207 = col_double(),
+  NA18913 = col_double(),
+  NA18853 = col_double(),
+  NA18856 = col_double(),
+  NA19093 = col_double(),
+  NA19144 = col_double(),
+  NA19210 = col_double(),
+  NA19190 = col_double(),
+  NA18502 = col_double(),
+  NA18517 = col_double(),
+  NA18507 = col_double(),
+  NA18501 = col_double(),
+  NA18489 = col_double(),
+  NA19102 = col_double(),
+  NA19128 = col_double()
+)</code></pre>
+<pre class="r"><code>p3 &lt;- make_boxplot(celltype = &quot;IPcycling&quot;, condition = &quot;stim21pct&quot;, testsnp = &quot;17:75826364&quot;, testgene = &quot;H3F3B&quot;) + geom_boxplot(alpha=0) + theme_classic() + theme(legend.position=&quot;none&quot;) + ylab(&quot;&quot;)</code></pre>
+<pre><code>
+── Column specification ────────────────────────────────────────────────────────
+cols(
+  ID = col_character(),
+  NA19153 = col_double(),
+  NA19207 = col_double(),
+  NA18913 = col_double(),
+  NA18853 = col_double(),
+  NA18856 = col_double(),
+  NA19093 = col_double(),
+  NA19210 = col_double(),
+  NA19190 = col_double(),
+  NA18502 = col_double(),
+  NA18517 = col_double(),
+  NA18507 = col_double(),
+  NA18519 = col_double(),
+  NA18501 = col_double(),
+  NA18489 = col_double(),
+  NA19102 = col_double(),
+  NA19128 = col_double()
+)</code></pre>
+<pre class="r"><code>grid.arrange(p1, p2, p3, nrow=1)</code></pre>
+<p><img src="figure/figure4.Rmd/unnamed-chunk-37-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>p1 &lt;- make_boxplot(celltype = &quot;RG&quot;, condition = &quot;control10&quot;, testsnp = &quot;22:41062780&quot;, testgene = &quot;EP300&quot;) + geom_boxplot(alpha=0) + theme_classic() + theme(legend.position=&quot;none&quot;) + ylab(&quot;&quot;)</code></pre>
+<pre><code>
+── Column specification ────────────────────────────────────────────────────────
+cols(
+  .default = col_double(),
+  ID = col_character()
+)
+ℹ Use `spec()` for the full column specifications.</code></pre>
+<pre class="r"><code>p2 &lt;- make_boxplot(celltype = &quot;RG&quot;, condition = &quot;stim1pct&quot;, testsnp = &quot;22:41062780&quot;, testgene = &quot;EP300&quot;) + geom_boxplot(alpha=0) + theme_classic() + theme(legend.position=&quot;none&quot;) + ylab(&quot;&quot;)</code></pre>
+<pre><code>
+── Column specification ────────────────────────────────────────────────────────
+cols(
+  .default = col_double(),
+  ID = col_character()
+)
+ℹ Use `spec()` for the full column specifications.</code></pre>
+<pre class="r"><code>p3 &lt;- make_boxplot(celltype = &quot;RG&quot;, condition = &quot;stim21pct&quot;, testsnp = &quot;22:41062780&quot;, testgene = &quot;EP300&quot;) + geom_boxplot(alpha=0) + theme_classic() + theme(legend.position=&quot;none&quot;) + ylab(&quot;&quot;)</code></pre>
+<pre><code>
+── Column specification ────────────────────────────────────────────────────────
+cols(
+  .default = col_double(),
+  ID = col_character()
+)
+ℹ Use `spec()` for the full column specifications.</code></pre>
+<pre class="r"><code>grid.arrange(p1, p2, p3, nrow=1)</code></pre>
+<p><img src="figure/figure4.Rmd/unnamed-chunk-38-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>library(Gviz)</code></pre>
+<pre><code>Loading required package: grid</code></pre>
+<pre><code>Warning: replacing previous import &#39;utils::download.file&#39; by
+&#39;restfulr::download.file&#39; when loading &#39;rtracklayer&#39;</code></pre>
+<pre><code>Warning: no function found corresponding to methods exports from &#39;BSgenome&#39;
+for: &#39;releaseName&#39;</code></pre>
+<pre class="r"><code>library(TxDb.Hsapiens.UCSC.hg38.refGene)</code></pre>
+<pre><code>Loading required package: GenomicFeatures</code></pre>
+<pre><code>Loading required package: AnnotationDbi</code></pre>
+<pre><code>Loading required package: Biobase</code></pre>
+<pre><code>Welcome to Bioconductor
+
+    Vignettes contain introductory material; view with
+    &#39;browseVignettes()&#39;. To cite Bioconductor, see
+    &#39;citation(&quot;Biobase&quot;)&#39;, and for packages &#39;citation(&quot;pkgname&quot;)&#39;.</code></pre>
+<pre><code>
+Attaching package: &#39;AnnotationDbi&#39;</code></pre>
+<pre><code>The following object is masked from &#39;package:dplyr&#39;:
+
+    select</code></pre>
+<pre class="r"><code>snptrack &lt;- AnnotationTrack(start = 75826364, width = 1, chromosome = 17, genome = &quot;hg38&quot;, name = &quot;rs2008012&quot;)
+gtrack &lt;- GenomeAxisTrack()
+
+getOption(&quot;Gviz.scheme&quot;)</code></pre>
+<pre><code>[1] &quot;default&quot;</code></pre>
+<pre class="r"><code>scheme &lt;- getScheme()
+scheme$GeneRegionTrack$fill &lt;- &quot;blue&quot;
+scheme$GeneRegionTrack$col &lt;- NULL
+scheme$GeneRegionTrack$transcriptAnnotation &lt;- NULL  #&quot;symbol&quot;
+addScheme(scheme, &quot;myScheme&quot;)
+options(Gviz.scheme = &quot;myScheme&quot;)
+
+
+grtrack &lt;- GeneRegionTrack(TxDb.Hsapiens.UCSC.hg38.refGene, genome = &quot;hg38&quot;, chromosome = 17, 
+                           name = &quot;Gene Model&quot;,
+                           start = 75770000, end = 75880000)
+
+plotTracks(list(gtrack, grtrack, snptrack), collapseTranscripts = &quot;longest&quot;, from = 75775000, to = 75880000)</code></pre>
+<p><img src="figure/figure4.Rmd/unnamed-chunk-39-1.png" width="672" style="display: block; margin: auto;" />
+As a second example, consider a SNP located at 22:39579302 (rs5757736),
+which is associated with cognitive/educational traits (with all those
+caveats…) as well as schizophrenia risk. The nearest gene to this SNP is
+CACNA1I. In our dataset, it is also associated with expression of
+RPS19BP1 under hypoxia in immature neurons.</p>
+<pre class="r"><code>p1 &lt;- make_boxplot(celltype = &quot;Immature&quot;, condition = &quot;stim1pct&quot;, testsnp = &quot;22:39579302&quot;, testgene = &quot;RPS19BP1&quot;) + geom_boxplot(alpha=0) + theme_classic() + theme(legend.position=&quot;none&quot;) + ylab(&quot;&quot;)</code></pre>
+<pre><code>
+── Column specification ────────────────────────────────────────────────────────
+cols(
+  .default = col_double(),
+  ID = col_character()
+)
+ℹ Use `spec()` for the full column specifications.</code></pre>
+<pre class="r"><code>p2 &lt;- make_boxplot(celltype = &quot;Immature&quot;, condition = &quot;stim21pct&quot;, testsnp = &quot;22:39579302&quot;, testgene = &quot;RPS19BP1&quot;) + geom_boxplot(alpha=0) + theme_classic() + theme(legend.position=&quot;none&quot;)+ ylab(&quot;&quot;)</code></pre>
+<pre><code>
+── Column specification ────────────────────────────────────────────────────────
+cols(
+  ID = col_character(),
+  NA19153 = col_double(),
+  NA19207 = col_double(),
+  NA18913 = col_double(),
+  NA19098 = col_double(),
+  NA18853 = col_double(),
+  NA18856 = col_double(),
+  NA19093 = col_double(),
+  NA19210 = col_double(),
+  NA19190 = col_double(),
+  NA18508 = col_double(),
+  NA18517 = col_double(),
+  NA18507 = col_double(),
+  NA18519 = col_double(),
+  NA18501 = col_double(),
+  NA18489 = col_double(),
+  NA19102 = col_double(),
+  NA18511 = col_double(),
+  NA19128 = col_double()
+)</code></pre>
+<pre class="r"><code>p3 &lt;- make_boxplot(celltype = &quot;Immature&quot;, condition = &quot;control10&quot;, testsnp = &quot;22:39579302&quot;, testgene = &quot;RPS19BP1&quot;) + geom_boxplot(alpha=0) + theme_classic() + theme(legend.position=&quot;none&quot;)+ ylab(&quot;&quot;)</code></pre>
+<pre><code>
+── Column specification ────────────────────────────────────────────────────────
+cols(
+  .default = col_double(),
+  ID = col_character()
+)
+ℹ Use `spec()` for the full column specifications.</code></pre>
+<pre class="r"><code>grid.arrange(p3, p1, p2, nrow=1)</code></pre>
+<p><img src="figure/figure4.Rmd/unnamed-chunk-40-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>library(Gviz)
+
+snptrack &lt;- AnnotationTrack(start = 39579302, width = 1, chromosome = 22, genome = &quot;hg38&quot;, name = &quot;rs5757736&quot;)
+gtrack &lt;- GenomeAxisTrack()
+
+
+getOption(&quot;Gviz.scheme&quot;)</code></pre>
+<pre><code>[1] &quot;myScheme&quot;</code></pre>
+<pre class="r"><code>scheme &lt;- getScheme()
+scheme$GeneRegionTrack$fill &lt;- &quot;blue&quot;
+scheme$GeneRegionTrack$col &lt;- NULL
+scheme$GeneRegionTrack$transcriptAnnotation &lt;- NULL  #&quot;symbol&quot;
+addScheme(scheme, &quot;myScheme&quot;)
+options(Gviz.scheme = &quot;myScheme&quot;)
+
+
+grtrack &lt;- GeneRegionTrack(TxDb.Hsapiens.UCSC.hg38.refGene, genome = &quot;hg38&quot;, chromosome = 22, 
+                           name = &quot;Gene Model&quot;,
+                           start = 39433403, end = 39729699)
+
+plotTracks(list(gtrack, grtrack, snptrack), collapseTranscripts = &quot;longest&quot;, from = 39433403, to = 39729699)</code></pre>
+<p><img src="figure/figure4.Rmd/unnamed-chunk-41-1.png" width="672" style="display: block; margin: auto;" /></p>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.2.0 (2022-04-22)
+Platform: x86_64-pc-linux-gnu (64-bit)
+Running under: CentOS Linux 7 (Core)
+
+Matrix products: default
+BLAS/LAPACK: /software/openblas-0.3.13-el7-x86_64/lib/libopenblas_haswellp-r0.3.13.so
+
+locale:
+ [1] LC_CTYPE=en_US.UTF-8 LC_NUMERIC=C         LC_TIME=C           
+ [4] LC_COLLATE=C         LC_MONETARY=C        LC_MESSAGES=C       
+ [7] LC_PAPER=C           LC_NAME=C            LC_ADDRESS=C        
+[10] LC_TELEPHONE=C       LC_MEASUREMENT=C     LC_IDENTIFICATION=C 
+
+attached base packages:
+[1] grid      stats4    stats     graphics  grDevices utils     datasets 
+[8] methods   base     
+
+other attached packages:
+ [1] TxDb.Hsapiens.UCSC.hg38.refGene_3.15.0
+ [2] GenomicFeatures_1.48.4                
+ [3] AnnotationDbi_1.60.2                  
+ [4] Biobase_2.58.0                        
+ [5] Gviz_1.40.1                           
+ [6] GenomicRanges_1.50.2                  
+ [7] GenomeInfoDb_1.34.9                   
+ [8] IRanges_2.32.0                        
+ [9] S4Vectors_0.36.2                      
+[10] BiocGenerics_0.44.0                   
+[11] vroom_1.6.4                           
+[12] MatrixEQTL_2.3                        
+[13] gridExtra_2.3                         
+[14] ggrepel_0.9.4                         
+[15] knitr_1.45                            
+[16] udr_0.3-153                           
+[17] mashr_0.2.79                          
+[18] ashr_2.2-63                           
+[19] RColorBrewer_1.1-3                    
+[20] pals_1.8                              
+[21] forcats_0.5.1                         
+[22] stringr_1.5.0                         
+[23] dplyr_1.1.4                           
+[24] purrr_1.0.2                           
+[25] readr_2.1.4                           
+[26] tidyr_1.3.0                           
+[27] tibble_3.2.1                          
+[28] ggplot2_3.4.4                         
+[29] tidyverse_1.3.1                       
+[30] SeuratObject_4.1.4                    
+[31] Seurat_4.4.0                          
+[32] workflowr_1.7.0                       
+
+loaded via a namespace (and not attached):
+  [1] rappdirs_0.3.3              rtracklayer_1.56.0         
+  [3] scattermore_1.2             bit64_4.0.5                
+  [5] irlba_2.3.5.1               DelayedArray_0.24.0        
+  [7] rpart_4.1.16                data.table_1.14.8          
+  [9] AnnotationFilter_1.20.0     KEGGREST_1.38.0            
+ [11] RCurl_1.98-1.13             generics_0.1.3             
+ [13] callr_3.7.3                 cowplot_1.1.1              
+ [15] RSQLite_2.3.3               RANN_2.6.1                 
+ [17] future_1.33.1               bit_4.0.5                  
+ [19] tzdb_0.4.0                  spatstat.data_3.0-3        
+ [21] xml2_1.3.3                  lubridate_1.9.3            
+ [23] httpuv_1.6.5                SummarizedExperiment_1.28.0
+ [25] assertthat_0.2.1            xfun_0.41                  
+ [27] hms_1.1.3                   jquerylib_0.1.4            
+ [29] evaluate_0.23               promises_1.2.0.1           
+ [31] fansi_1.0.5                 restfulr_0.0.14            
+ [33] progress_1.2.2              dbplyr_2.4.0               
+ [35] readxl_1.4.0                igraph_1.5.1               
+ [37] DBI_1.1.3                   htmlwidgets_1.6.2          
+ [39] spatstat.geom_3.2-7         ellipsis_0.3.2             
+ [41] backports_1.4.1             biomaRt_2.52.0             
+ [43] deldir_1.0-6                MatrixGenerics_1.10.0      
+ [45] vctrs_0.6.4                 ensembldb_2.20.2           
+ [47] ROCR_1.0-11                 abind_1.4-5                
+ [49] cachem_1.0.8                withr_2.5.2                
+ [51] BSgenome_1.64.0             progressr_0.14.0           
+ [53] checkmate_2.1.0             sctransform_0.4.1          
+ [55] GenomicAlignments_1.32.0    prettyunits_1.1.1          
+ [57] goftest_1.2-3               cluster_2.1.3              
+ [59] lazyeval_0.2.2              crayon_1.5.2               
+ [61] spatstat.explore_3.0-6      pkgconfig_2.0.3            
+ [63] labeling_0.4.3              ProtGenerics_1.28.0        
+ [65] nlme_3.1-157                nnet_7.3-17                
+ [67] rlang_1.1.3                 globals_0.16.2             
+ [69] lifecycle_1.0.4             miniUI_0.1.1.1             
+ [71] filelock_1.0.2              BiocFileCache_2.6.1        
+ [73] modelr_0.1.8                dichromat_2.0-0.1          
+ [75] invgamma_1.1                cellranger_1.1.0           
+ [77] rprojroot_2.0.3             polyclip_1.10-0            
+ [79] matrixStats_1.1.0           lmtest_0.9-40              
+ [81] Matrix_1.6-3                zoo_1.8-12                 
+ [83] base64enc_0.1-3             reprex_2.0.1               
+ [85] whisker_0.4.1               ggridges_0.5.3             
+ [87] processx_3.8.2              png_0.1-8                  
+ [89] viridisLite_0.4.2           rjson_0.2.21               
+ [91] bitops_1.0-7                getPass_0.2-2              
+ [93] KernSmooth_2.23-20          Biostrings_2.66.0          
+ [95] blob_1.2.4                  mixsqp_0.3-48              
+ [97] SQUAREM_2021.1              parallelly_1.37.0          
+ [99] spatstat.random_3.1-3       jpeg_0.1-10                
+[101] rmeta_3.0                   scales_1.2.1               
+[103] memoise_2.0.1               magrittr_2.0.3             
+[105] plyr_1.8.9                  ica_1.0-3                  
+[107] zlibbioc_1.44.0             compiler_4.2.0             
+[109] BiocIO_1.6.0                fitdistrplus_1.1-8         
+[111] Rsamtools_2.12.0            cli_3.6.1                  
+[113] XVector_0.38.0              listenv_0.9.1              
+[115] patchwork_1.1.3             pbapply_1.5-0              
+[117] ps_1.7.5                    htmlTable_2.4.0            
+[119] Formula_1.2-4               MASS_7.3-56                
+[121] tidyselect_1.2.0            stringi_1.8.1              
+[123] highr_0.9                   yaml_2.3.5                 
+[125] latticeExtra_0.6-30         VariantAnnotation_1.42.1   
+[127] sass_0.4.7                  tools_4.2.0                
+[129] timechange_0.2.0            future.apply_1.11.1        
+[131] parallel_4.2.0              rstudioapi_0.13            
+[133] foreign_0.8-82              git2r_0.30.1               
+[135] farver_2.1.1                Rtsne_0.16                 
+[137] digest_0.6.34               shiny_1.7.5.1              
+[139] Rcpp_1.0.12                 broom_1.0.5                
+[141] later_1.3.0                 RcppAnnoy_0.0.19           
+[143] httr_1.4.7                  biovizBase_1.44.0          
+[145] colorspace_2.1-0            rvest_1.0.2                
+[147] XML_3.99-0.15               fs_1.6.3                   
+[149] tensor_1.5                  reticulate_1.34.0          
+[151] truncnorm_1.0-9             splines_4.2.0              
+[153] uwot_0.1.16                 spatstat.utils_3.0-4       
+[155] sp_2.1-3                    mapproj_1.2.11             
+[157] plotly_4.10.0               xtable_1.8-4               
+[159] jsonlite_1.8.7              R6_2.5.1                   
+[161] Hmisc_5.1-1                 pillar_1.9.0               
+[163] htmltools_0.5.7             mime_0.12                  
+[165] glue_1.6.2                  fastmap_1.1.1              
+[167] BiocParallel_1.32.6         codetools_0.2-18           
+[169] maps_3.4.0                  mvtnorm_1.2-3              
+[171] utf8_1.2.4                  lattice_0.20-45            
+[173] bslib_0.5.1                 spatstat.sparse_3.0-3      
+[175] curl_5.1.0                  leiden_0.4.2               
+[177] interp_1.1-4                survival_3.3-1             
+[179] rmarkdown_2.26              munsell_0.5.0              
+[181] GenomeInfoDbData_1.2.9      haven_2.5.0                
+[183] reshape2_1.4.4              gtable_0.3.4               </code></pre>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+https://docs.mathjax.org/en/latest/web/configuration.html. This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

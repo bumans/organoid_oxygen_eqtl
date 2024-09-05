@@ -1,0 +1,1124 @@
+---
+title: "figure1"
+author: "Ben Umans"
+date: "2024-07-26"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+## Introduction
+
+This page describes steps used to process cellranger output, cluster and annotate cells, and generate results shown in Figure 1, Figure S1, and Figure S2.
+
+```{r setup}
+library(tidyverse)
+library(Seurat)
+library(ggrepel)
+library(sctransform)
+library(glmGamPoi)
+library(harmony)
+library(GenomicRanges)
+library(speckle)
+library(limma)
+library(ggalluvial)
+source("analysis/shared_functions_style_items.R")
+```
+
+
+## Create Seurat object from cellranger output
+
+Data were collected in two batches, with libraries composed of a mix of individuals from a single treatment condition.  Before clustering and cell type annotation, I first merge conditions for the same batch, and integrate across batch and individual using Harmony.  
+
+```{r batch1control, eval=FALSE}
+b1c <- CreateSeuratObject(Read10X(data.dir="/project/gilad/umans/oxygen_eqtl/data/YG-BU-01_human/outs/filtered_feature_bc_matrix/"))
+
+b1c <- add_vireo(b1c, "/project/gilad/umans/oxygen_eqtl/data/YG-BU-01_human/")
+
+b1c[["percent.mt"]] <- PercentageFeatureSet(b1c, pattern = "^MT-")
+
+b1c$cDNA <- 744.4
+b1c$cycles <- 12
+```
+
+```{r batch1hypoxia, eval=FALSE}
+b11pct <- CreateSeuratObject(Read10X(data.dir="/project/gilad/umans/oxygen_eqtl/data/YG-BU-03_human/outs/filtered_feature_bc_matrix/"))
+
+
+b11pct <- add_vireo(b11pct, "data/YG-BU-03_human/")
+
+b11pct[["percent.mt"]] <- PercentageFeatureSet(b11pct, pattern = "^MT-")
+
+b11pct$cDNA <- 578
+b11pct$cycles <- 12
+```
+
+```{r batch1hyperoxia, eval=FALSE}
+b121pct <- CreateSeuratObject(Read10X(data.dir="data/YG-BU-06_human/outs/filtered_feature_bc_matrix/"))
+
+b121pct <- add_vireo(b121pct, "data/YG-BU-06_human/")
+
+b121pct[["percent.mt"]] <- PercentageFeatureSet(b121pct, pattern = "^MT-")
+
+b121pct$cDNA <- 360.4
+b121pct$cycles <- 12
+```
+
+```{r, eval=FALSE}
+b1c <- AddMetaData(b1c, "BU1", col.name = "library")
+b11pct <- AddMetaData(b11pct, "BU3", col.name = "library")
+b121pct <- AddMetaData(b121pct, "BU6", col.name = "library")
+
+b1c <- AddMetaData(b1c, "batch1", col.name = "batch")
+b11pct <- AddMetaData(b11pct, "batch1", col.name = "batch")
+b121pct <- AddMetaData(b121pct, "batch1", col.name = "batch")
+```
+
+Filter droplets based on doublet/unidentified assignments from vireo, mitochondrial read content, and read depth.
+```{r batch1filtering, eval=FALSE}
+b1c <- subset(b1c, subset = vireo.individual != "doublet" & vireo.individual != "unassigned")
+b11pct <- subset(b11pct, subset = vireo.individual != "doublet" & vireo.individual != "unassigned")
+b121pct <- subset(b121pct, subset = vireo.individual != "doublet" & vireo.individual != "unassigned")
+
+b1c <- subset(b1c, subset = percent.mt < 10)
+b11pct <- subset(b11pct, subset = percent.mt < 10)
+b121pct <- subset(b121pct, subset = percent.mt < 10)
+
+b1c <- subset(b1c, subset = nFeature_RNA > 1200 & nCount_RNA >2000 & nCount_RNA < 20000)
+b11pct <- subset(b11pct, subset = nFeature_RNA > 1200 & nCount_RNA >2000 & nCount_RNA < 20000)
+b121pct <- subset(b121pct, subset = nFeature_RNA > 1200 & nCount_RNA >2000 & nCount_RNA < 20000)
+```
+
+```{r batch2import, eval=FALSE}
+b2c <- CreateSeuratObject(Read10X(data.dir="/project/gilad/umans/oxygen_eqtl/data/YG-BU-07_human/outs/filtered_feature_bc_matrix/"))
+b21pct <- CreateSeuratObject(Read10X(data.dir="/project/gilad/umans/oxygen_eqtl/data/YG-BU-08_human/outs/filtered_feature_bc_matrix/"))
+b221pct <- CreateSeuratObject(Read10X(data.dir="/project/gilad/umans/oxygen_eqtl/data/YG-BU-09_human/outs/filtered_feature_bc_matrix/"))
+b221control <- CreateSeuratObject(Read10X(data.dir="/project/gilad/umans/oxygen_eqtl/data/YG-BU-10_human/outs/filtered_feature_bc_matrix/"))
+
+b2c <- add_vireo(b2c, "/project/gilad/umans/oxygen_eqtl/data/YG-BU-07_human/")
+b21pct <- add_vireo(b21pct, "/project/gilad/umans/oxygen_eqtl/data/YG-BU-08_human/")
+b221pct <- add_vireo(b221pct, "/project/gilad/umans/oxygen_eqtl/data/YG-BU-09_human/")
+b221control <- add_vireo(b221control, "/project/gilad/umans/oxygen_eqtl/data/YG-BU-10_human/")
+
+b2c <- AddMetaData(b2c, "BU7", col.name = "library")
+b21pct <- AddMetaData(b21pct, "BU8", col.name = "library")
+b221pct <- AddMetaData(b221pct, "BU9", col.name = "library")
+b221control <- AddMetaData(b221control, "BU10", col.name = "library")
+
+b2c <- AddMetaData(b2c, "batch2", col.name = "batch")
+b21pct <- AddMetaData(b21pct, "batch2", col.name = "batch")
+b221pct <- AddMetaData(b221pct, "batch2", col.name = "batch")
+b221control <- AddMetaData(b221control, "batch2", col.name = "batch")
+
+
+b2c[["percent.mt"]] <- PercentageFeatureSet(b2c, pattern = "^MT-")
+b21pct[["percent.mt"]] <- PercentageFeatureSet(b21pct, pattern = "^MT-")
+b221pct[["percent.mt"]] <- PercentageFeatureSet(b221pct, pattern = "^MT-")
+b221control[["percent.mt"]] <- PercentageFeatureSet(b221control, pattern = "^MT-")
+
+b2c$cDNA <- 210
+b21pct$cDNA <- 359.4
+b221pct$cDNA <- 479
+b221control$cDNA <- 520
+b2c$cycles <- 13
+b21pct$cycles <- 12
+b221pct$cycles <- 12
+b221control$cycles <- 12
+```
+
+```{r batch2filtering, eval=FALSE}
+b2c <- subset(b2c, subset = percent.mt < 10)
+b2c <- subset(b2c, subset = vireo.individual != "doublet" & vireo.individual != "unassigned")
+
+b21pct <- subset(b21pct, subset = percent.mt < 10)
+b21pct <- subset(b21pct, subset = vireo.individual != "doublet" & vireo.individual != "unassigned")
+
+b221pct <- subset(b221pct, subset = percent.mt < 10)
+b221pct <- subset(b221pct, subset = vireo.individual != "doublet" & vireo.individual != "unassigned")
+
+b221control <- subset(b221control, subset = percent.mt < 10)
+b221control <- subset(b221control, subset = vireo.individual != "doublet" & vireo.individual != "unassigned")
+
+b2c <- subset(b2c, subset = nFeature_RNA > 1200)
+b21pct <- subset(b21pct, subset = nFeature_RNA > 1200)
+b221pct <- subset(b221pct, subset = nFeature_RNA > 1200)
+b221control <- subset(b221control, subset = nFeature_RNA > 1200)
+
+b2c <- subset(b2c, subset = nCount_RNA >2000 & nCount_RNA < 20000)
+b21pct <- subset(b21pct, subset = nCount_RNA >2000 & nCount_RNA < 20000)
+b221pct <- subset(b221pct, subset = nCount_RNA >2000 & nCount_RNA < 20000)
+b221control <- subset(b221control, subset = nCount_RNA >2000 & nCount_RNA < 20000)
+
+```
+
+
+```{r, eval=FALSE}
+batch1 <- SCTransform(batch1, variable.features.n = 6000, method = "glmGamPoi", verbose = TRUE)
+batch2 <- SCTransform(batch2, variable.features.n = 6000, method = "glmGamPoi", verbose = TRUE)
+
+batch1 <- RunPCA(batch1, verbose = TRUE, npcs = 100)
+batch1 <- RunUMAP(batch1, dims = 1:100, verbose = TRUE)
+
+batch2 <- RunPCA(batch2, verbose = TRUE, npcs = 100)
+batch2 <- RunUMAP(batch2, dims = 1:100, verbose = TRUE)
+
+```
+
+```{r integrate_batches, eval=FALSE}
+batches.list <- list(batch1, batch2)
+var.features <- SelectIntegrationFeatures(object.list = batches.list, nfeatures = 3000)
+rm(batches.list)
+var.features <- setdiff(var.features, c(cc.genes$s.genes, cc.genes$g2m.genes))
+
+harmony.input <- merge(batch1, batch2)
+VariableFeatures(harmony.input) <- var.features
+
+harmony.input <- RunPCA(harmony.input, verbose = FALSE, npcs = 100)
+harmony.batchandindividual.sct <-RunHarmony(harmony.input, group.by.vars = c("batch", "vireo.individual"),  
+                          plot_convergence = TRUE,
+                          max_iter = 30)
+
+harmony.batchandindividual.sct <- RunUMAP(harmony.batchandindividual.sct, reduction = "harmony", dims = 1:100)
+harmony.batchandindividual.sct <- FindNeighbors(harmony.batchandindividual.sct, dims=1:100, reduction = "harmony")
+
+harmony.batchandindividual.sct <- PrepSCTFindMarkers(harmony.batchandindividual.sct)
+```
+
+
+
+```{r add_sex_passage, eval=FALSE}
+harmony.batchandindividual.sct$Fpassage <- NA
+harmony.batchandindividual.sct$FFpassage <- NA
+
+harmony.batchandindividual.sct$Fpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = batch=="batch1" &
+                                                     vireo.individual=="NA19190")] <- 13
+harmony.batchandindividual.sct$FFpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                    expression = batch=="batch1" &
+                                                      vireo.individual=="NA19190")] <- 30
+
+harmony.batchandindividual.sct$Fpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = batch=="batch1" &
+                                                     vireo.individual=="NA19207")] <- 11
+harmony.batchandindividual.sct$FFpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                    expression = batch=="batch1" &
+                                                      vireo.individual=="NA19207")] <- 14
+
+
+harmony.batchandindividual.sct$Fpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = batch=="batch1" &
+                                                     vireo.individual=="NA18508")] <- 13
+harmony.batchandindividual.sct$FFpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                    expression = batch=="batch1" &
+                                                      vireo.individual=="NA18508")] <- 27
+
+harmony.batchandindividual.sct$Fpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = batch=="batch1" &
+                                                     vireo.individual=="NA19098")] <- 12
+harmony.batchandindividual.sct$FFpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                    expression = batch=="batch1" &
+                                                      vireo.individual=="NA19098")] <- 37
+
+harmony.batchandindividual.sct$Fpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = batch=="batch1" &
+                                                     vireo.individual=="NA18519")] <- 14
+harmony.batchandindividual.sct$FFpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                    expression = batch=="batch1" &
+                                                      vireo.individual=="NA18519")] <- 18
+
+
+harmony.batchandindividual.sct$Fpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = batch=="batch1" &
+                                                     vireo.individual=="NA18856")] <- 12
+harmony.batchandindividual.sct$FFpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                    expression = batch=="batch1" &
+                                                      vireo.individual=="NA18856")] <- 24
+
+harmony.batchandindividual.sct$Fpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = batch=="batch1" &
+                                                     vireo.individual=="NA18913")] <- 19
+harmony.batchandindividual.sct$FFpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                    expression = batch=="batch1" &
+                                                      vireo.individual=="NA18913")] <- 33
+
+harmony.batchandindividual.sct$Fpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = batch=="batch1" &
+                                                     vireo.individual=="NA19153")] <- 17
+harmony.batchandindividual.sct$FFpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                    expression = batch=="batch1" &
+                                                      vireo.individual=="NA19153")] <- 26
+
+harmony.batchandindividual.sct$Fpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = batch=="batch1" &
+                                                     vireo.individual=="NA19144")] <- 14
+harmony.batchandindividual.sct$FFpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                    expression = batch=="batch1" &
+                                                      vireo.individual=="NA19144")] <- 20
+
+harmony.batchandindividual.sct$Fpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = batch=="batch1" &
+                                                     vireo.individual=="NA19093")] <- 30
+harmony.batchandindividual.sct$FFpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                    expression = batch=="batch1" &
+                                                      vireo.individual=="NA19093")] <- 29
+
+harmony.batchandindividual.sct$Fpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = batch=="batch1" &
+                                                     vireo.individual=="NA19210")] <- 13
+harmony.batchandindividual.sct$FFpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                    expression = batch=="batch1" &
+                                                      vireo.individual=="NA19210")] <- 30
+
+harmony.batchandindividual.sct$Fpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = batch=="batch1" &
+                                                     vireo.individual=="NA18853")] <- 20
+harmony.batchandindividual.sct$FFpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                    expression = batch=="batch1" &
+                                                      vireo.individual=="NA18853")] <- 29
+
+harmony.batchandindividual.sct$Fpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = batch=="batch1" &
+                                                     vireo.individual=="NA18502")] <- 14
+harmony.batchandindividual.sct$FFpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                    expression = batch=="batch1" &
+                                                      vireo.individual=="NA18502")] <- 34
+
+harmony.batchandindividual.sct$Fpassage[WhichCells(harmony.batchandindividual.sct,
+                                                   expression = batch=="batch1" &
+                                                     vireo.individual=="NA18507")] <- 10
+harmony.batchandindividual.sct$FFpassage[WhichCells(harmony.batchandindividual.sct,
+                                                    expression = batch=="batch1" &
+                                                      vireo.individual=="NA18507")] <- 36
+
+harmony.batchandindividual.sct$Fpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = batch=="batch1" &
+                                                     vireo.individual=="NA18517")] <- 19
+harmony.batchandindividual.sct$FFpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                    expression = batch=="batch1" &
+                                                      vireo.individual=="NA18517")] <- 40
+
+harmony.batchandindividual.sct$Fpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = batch=="batch1" &
+                                                     vireo.individual=="NA19143")] <- 11
+harmony.batchandindividual.sct$FFpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                    expression = batch=="batch1" &
+                                                      vireo.individual=="NA19143")] <- 23
+
+
+harmony.batchandindividual.sct$Fpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = batch=="batch2" &
+                                                     vireo.individual=="NA19102")] <- 11
+harmony.batchandindividual.sct$FFpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                    expression = batch=="batch2" &
+                                                      vireo.individual=="NA19102")] <- 48
+
+harmony.batchandindividual.sct$Fpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = batch=="batch2" &
+                                                     vireo.individual=="NA18519")] <- 14
+harmony.batchandindividual.sct$FFpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                    expression = batch=="batch2" &
+                                                      vireo.individual=="NA18519")] <- 17
+
+harmony.batchandindividual.sct$Fpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = batch=="batch2" &
+                                                     vireo.individual=="NA19207")] <- 11
+harmony.batchandindividual.sct$FFpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                    expression = batch=="batch2" &
+                                                      vireo.individual=="NA19207")] <- 16
+
+harmony.batchandindividual.sct$Fpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = batch=="batch2" &
+                                                     vireo.individual=="NA18511")] <- 19
+harmony.batchandindividual.sct$FFpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                    expression = batch=="batch2" &
+                                                      vireo.individual=="NA18511")] <- 32
+
+harmony.batchandindividual.sct$Fpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = batch=="batch2" &
+                                                     vireo.individual=="NA18489")] <- 16
+harmony.batchandindividual.sct$FFpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                    expression = batch=="batch2" &
+                                                      vireo.individual=="NA18489")] <- 40
+
+harmony.batchandindividual.sct$Fpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = batch=="batch2" &
+                                                     vireo.individual=="NA18501")] <- 14
+harmony.batchandindividual.sct$FFpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                    expression = batch=="batch2" &
+                                                      vireo.individual=="NA18501")] <- 16
+
+harmony.batchandindividual.sct$Fpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = batch=="batch2" &
+                                                     vireo.individual=="NA19128")] <- 22
+harmony.batchandindividual.sct$FFpassage[WhichCells(harmony.batchandindividual.sct, 
+                                                    expression = batch=="batch2" &
+                                                      vireo.individual=="NA19128")] <- 20
+
+harmony.batchandindividual.sct$Fpassage[WhichCells(harmony.batchandindividual.sct,
+                                                   expression = batch=="batch2" &
+                                                     vireo.individual=="NA19190")] <- 22
+harmony.batchandindividual.sct$FFpassage[WhichCells(harmony.batchandindividual.sct,
+                                                    expression = batch=="batch2" &
+                                                      vireo.individual=="NA19190")] <- 20
+
+
+harmony.batchandindividual.sct$sex <- NA
+
+harmony.batchandindividual.sct$sex[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = vireo.individual=="NA18489")] <- "female"
+
+harmony.batchandindividual.sct$sex[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = vireo.individual=="NA18501")] <- "male"
+
+harmony.batchandindividual.sct$sex[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = vireo.individual=="NA18502")] <- "female"
+harmony.batchandindividual.sct$sex[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = vireo.individual=="NA18507")] <- "male"
+harmony.batchandindividual.sct$sex[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = vireo.individual=="NA18508")] <- "female"
+
+harmony.batchandindividual.sct$sex[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = vireo.individual=="NA18511")] <- "female"
+harmony.batchandindividual.sct$sex[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = vireo.individual=="NA18517")] <- "female"
+harmony.batchandindividual.sct$sex[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = vireo.individual=="NA18519")] <- "male"
+
+harmony.batchandindividual.sct$sex[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = vireo.individual=="NA18853")] <- "male"
+harmony.batchandindividual.sct$sex[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = vireo.individual=="NA18856")] <- "male"
+
+harmony.batchandindividual.sct$sex[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = vireo.individual=="NA18913")] <- "male"
+
+harmony.batchandindividual.sct$sex[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = vireo.individual=="NA19093")] <- "female"
+harmony.batchandindividual.sct$sex[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = vireo.individual=="NA19098")] <- "male"
+
+harmony.batchandindividual.sct$sex[WhichCells(harmony.batchandindividual.sct,
+                                                   expression = vireo.individual=="NA19102")] <- "female"
+
+harmony.batchandindividual.sct$sex[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = vireo.individual=="NA19128")] <- "male"
+
+harmony.batchandindividual.sct$sex[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = vireo.individual=="NA19143")] <- "female"
+
+harmony.batchandindividual.sct$sex[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = vireo.individual=="NA19144")] <- "male"
+harmony.batchandindividual.sct$sex[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = vireo.individual=="NA19153")] <- "male"
+
+harmony.batchandindividual.sct$sex[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = vireo.individual=="NA19190")] <- "female"
+
+harmony.batchandindividual.sct$sex[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = vireo.individual=="NA19207")] <- "male"
+
+harmony.batchandindividual.sct$sex[WhichCells(harmony.batchandindividual.sct, 
+                                                   expression = vireo.individual=="NA19210")] <- "male"
+
+saveRDS(harmony.batchandindividual.sct, file = "output/harmony_organoid_dataset.rds")
+```
+
+```{r}
+harmony.batchandindividual.sct <- readRDS(file = "output/harmony_organoid_dataset.rds")
+```
+
+## Annotate cell types
+
+I first use the Seurat MapQuery() function to compare this organoid data against fetal single-cell data obtained from [Polioudakis et al.](https://www.sciencedirect.com/science/article/pii/S0896627319305616?via%3Dihub) and [Trevino et al.](https://www.sciencedirect.com/science/article/pii/S0092867421009429?via%3Dihub).  
+
+The data were first imported into Seurat and updated, with gene names converted from Ensembl IDs.
+```{r, eval=FALSE}
+load("/project/gilad/umans/HumanChimpCellranger/HumanChimpOrganoidPilot/data/geschwind-raw_counts_mat.rdata")
+geschwind_meta <- read_csv("/project/gilad/umans/HumanChimpCellranger/HumanChimpOrganoidPilot/data/geschwind-cell_metadata.csv") %>% column_to_rownames(var="Cell")
+
+geschwind <- CreateSeuratObject(raw_counts_mat)
+geschwind <- AddMetaData(object = geschwind, metadata = geschwind_meta)
+rm(raw_counts_mat)
+
+geschwind <- SCTransform(geschwind, method = "glmGamPoi", verbose = TRUE)
+geschwind <- RunPCA(geschwind, npcs = 100)
+```
+
+```{r, eval=FALSE}
+pasca <- readRDS(file = "/project2/gilad/umans/brainchromatin/data_files/rds/scRNA_Seurat.RDS")
+pasca <- UpdateSeuratObject(pasca)
+```
+
+```{r, eval=FALSE}
+gene.gr <- readRDS('/project/gilad/umans/brainchromatin/data_files/rds/AllGenes_GenomicRanges.RDS')
+
+# Mapping gene IDs and gene symbols (for easier use of gene symbols)
+# This annotation file contains metadata about each gene, including the Ensembl 
+# ID and the gene symbol
+
+name2ensembl <- names(gene.gr)
+
+# Something funny about this one, unsure why yet
+name2ensembl['CDR1'] <- 'ENSG00000281508'
+
+names(name2ensembl) <- elementMetadata(gene.gr)[ ,'gene_name']
+
+ensembl2name <- elementMetadata(gene.gr)[ ,'gene_name']
+names(ensembl2name) <- names(gene.gr)
+
+```
+
+Cell clusters were then renamed according to the original publication.
+```{r, eval=FALSE}
+# pasca[["numbered.ident"]] <- Idents(object = pasca)
+
+# Rename classes.
+pasca <- RenameIdents(object = pasca, 
+                      `c0` = "GluN5", `c1` = "CGE-IN", 
+                      `c2` = "GluN1", `c3` = "MGE-IN",
+                      `c4` = "GluN4", `c5` = "GluN2",
+                      `c6` = "earlyRG", `c7` = "GluN7",
+                      `c8` = "CyclingProgenitors", `c9` = "GluN3",
+                      `c10` = "lateRG", `c11` = "mGPC",
+                      `c12` = "GluN6", `c13` = "Subplate",
+                      `c14` = "nIPC", `c15` = "GluN8",
+                      `c16` = "MG", `c17` = "OPC-oligo",
+                      `c18` = "tRG", `c19` = "Pericyte",
+                      `c20` = "EC", `c21` = "RBC",
+                      `c22` = "VLMC")
+
+pasca <- StashIdent(object = pasca, save.name = "named.cluster")
+```
+
+Cell types that are not present in the organoid data labeled as "unassigned" for removal from the reference:
+```{r, eval=FALSE}
+geschwind$coarse <- NA
+geschwind$coarse[WhichCells(geschwind, expression = Cluster=="End")] <- "Unassigned"
+geschwind$coarse[WhichCells(geschwind, expression = Cluster=="Per")] <- "Unassigned"
+geschwind$coarse[WhichCells(geschwind, expression = Cluster=="Mic")] <- "Unassigned"
+```
+
+```{r, eval=FALSE}
+geschwind <- subset(geschwind, subset = coarse != "Unassigned")
+# saveRDS(geschwind, file = "data/external/geschwind_process.RDS")
+```
+
+```{r, eval=FALSE}
+pasca$coarse[WhichCells(pasca, expression = named.cluster=="MG")] <- "Unassigned"
+pasca$coarse[WhichCells(pasca, expression = named.cluster=="Pericyte")] <- "Unassigned"
+pasca$coarse[WhichCells(pasca, expression = named.cluster=="RBC")] <- "Unassigned"
+pasca$coarse[WhichCells(pasca, expression = named.cluster=="EC")] <- "Unassigned"
+```
+
+```{r, eval=FALSE}
+counts <- pasca@assays$RNA@counts
+rownames(counts) <- unname(convertGeneIDs(rownames(counts), ensembl2name))
+
+renamedRNA <- CreateAssayObject(counts)
+pasca[['renamedRNA']] <- renamedRNA
+DefaultAssay(pasca) <- "renamedRNA"
+rm(renamedRNA)
+rm(counts)
+```
+
+```{r, eval=FALSE}
+pasca <- subset(pasca, subset = coarse != "Unassigned")
+```
+
+Use MapQuery() to transfer labels from the two references.
+```{r, eval=FALSE}
+geschwind <- RunPCA(geschwind, npcs = 100, assay="SCT")
+pasca <- RunPCA(pasca, npcs = 100, assay = "SCT")
+
+pasca.anchors.batchindividual <- FindTransferAnchors(reference = pasca, 
+                                                     query = harmony.batchandindividual.sct,
+                                                     dims = 1:80, reference.reduction = "pca",
+                                                      k.anchor = 30, k.score = 50, n.trees = 100)
+
+
+harmony.batchandindividual.sct <- MapQuery(anchorset = pasca.anchors.batchindividual, 
+                         reference = pasca, 
+                         query = harmony.batchandindividual.sct,
+                         refdata = list(pascacelltype.fine = "named.cluster"), 
+                         reference.reduction = "pca", 
+                         reduction.model = "umap",
+                          integrateembeddings.args = list(reductions = "pcaproject.l2"),
+                         projectumap.args = list(reduction.name="pasca.umap",
+                                                 reduction.key="pascaUMAP_"))
+
+geschwind.anchors.batchindividual <- FindTransferAnchors(reference = geschwind, 
+                                                     query = harmony.batchandindividual.sct,
+                                                     dims = 1:80, reference.reduction = "pca", 
+                                                     k.anchor = 30, k.score = 50, n.trees = 100)
+
+
+harmony.batchandindividual.sct <- MapQuery(anchorset = geschwind.anchors.batchindividual, 
+                         reference = geschwind, 
+                         query = harmony.batchandindividual.sct,
+                         refdata = list(geschwindcelltype.fine = "Cluster"), 
+                         reference.reduction = "pca", 
+                         reduction.model = "umap",
+                         projectumap.args = list(reduction.name="geschwind.umap",
+                                                 reduction.key="geschwindUMAP_"))
+```
+
+Then, perform unsupervised clustering.
+```{r, eval=FALSE}
+harmony.batchandindividual.sct <- FindClusters(harmony.batchandindividual.sct, resolution=0.6, verbose = TRUE)
+```
+
+Finally, assign clusters based on references and marker genes.
+
+```{r, eval=FALSE}
+harmony.batchandindividual.sct$combined.annotation.coarse.harmony <- NA
+harmony.batchandindividual.sct$combined.annotation.fine.harmony <- NA
+
+# Cluster 0 is are immature neurons
+# Lower levels of SATB2, Trevino and Polioudakis both say neurons
+harmony.batchandindividual.sct$combined.annotation.coarse.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==0)] <- "Immature"
+harmony.batchandindividual.sct$combined.annotation.fine.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==0)] <- "Immature"
+
+# Cluster 1 excitatory neurons.  Polioudakis thinks these are enriched for Dp1 (deep layer), which has higher levels of NR4A2 and then have subsets enriched for layer markers [CRYM, TBR1, and FOXP2] or [RORB, FOXP1,  ETV1]. This cluster also shows enrichment of NR4A2, CRYM, RORB, and ETV1.  Trevino says these are nearly 100% Subplate neurons. 
+harmony.batchandindividual.sct$combined.annotation.coarse.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==1)] <- "Glut"
+harmony.batchandindividual.sct$combined.annotation.fine.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==1)] <- "Glut"
+
+# Cluster 2 is composed of radial glia
+harmony.batchandindividual.sct$combined.annotation.coarse.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==2)] <- "RG"
+harmony.batchandindividual.sct$combined.annotation.fine.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==2)] <- "RG"
+
+# Cluster 3 is a mix of CGE-IN/MGE-IN and (more) Subplate neurons according to Trevino, while Polioudakis says a similar mix but more lopsided to InMGE.  Some of these cells are also WLS+, possibly rhombic lip or roof plate.  Many also ZIC1+ (point in favor of rhombic lip), but not ATOH1+.  The neurons that Polioudakis calls InMGE and Trevino calls subplate are largely double-positive for excitatory and inhibitory markers.  They cluster with the inhibitory neuron group.  This is the cloud that includes a (smaller) subcluster of GNRH1+ neurons.  There are not other markers of similar hypothalamic neurons here that might have GNRH (e.g., KISS1, CRH, PNOC, GRP).  However, it's been hypothesized that the inputs to GNRH neurons are both GABAergic and glutamatergic.  Comparing further to data from [Uzquiano et al.](https://singlecell.broadinstitute.org/single_cell/study/SCP1756/cortical-organoids-atlas) suggests a mix of newborn projection neurons that are not yet well specified, which they explicitly called unspecified neurons.
+
+harmony.batchandindividual.sct$combined.annotation.coarse.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==3)] <- "NeuronOther"
+harmony.batchandindividual.sct$combined.annotation.fine.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==3)] <- "NeuronOther"
+
+# Cluster 4 is composed of dividing radial glia
+harmony.batchandindividual.sct$combined.annotation.coarse.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==4)] <- "RG"
+harmony.batchandindividual.sct$combined.annotation.fine.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==4)] <- "RGcycling"
+
+# Cluster 5 is is a mix of glial progenitor cells and radial glia according to the references.  A subset of them express OLIG1 and OLIG2.  They also express AQP4, PLP1, and GFAP, implying astrocytic character.  Other markers are ID3, SPARCL1, DNAH7, and WLS, though these markers are not entirely specific to this cluster and are shared by other early cells, as might be expected.  Notably, a portion of this cluster is Netrin1+, implying a nascent floorplate identity.
+
+harmony.batchandindividual.sct$combined.annotation.coarse.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==5)] <- "Glia"
+harmony.batchandindividual.sct$combined.annotation.fine.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==5)] <- "GliaProg"
+
+# Cluster 6 is intermediate progenitors on their way into immature neurons. 
+
+harmony.batchandindividual.sct$combined.annotation.coarse.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==6)] <- "IP"
+harmony.batchandindividual.sct$combined.annotation.fine.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==6)] <- "IP"
+
+
+# Cluster 7 is called cycling progenitors by both references.  They  express EOMES, and KI67 and TOP2A.  These are dividing intermediate progenitors
+
+harmony.batchandindividual.sct$combined.annotation.coarse.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==7)] <- "IP" 
+harmony.batchandindividual.sct$combined.annotation.fine.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==7)] <- "IPcycling" 
+
+# Cluster 8 is  mature excitatory neurons.
+harmony.batchandindividual.sct$combined.annotation.coarse.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==8)] <- "Glut"
+harmony.batchandindividual.sct$combined.annotation.fine.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==8)] <- "Glut"
+
+# Cluster 9 is immature inhibitory neurons.  
+harmony.batchandindividual.sct$combined.annotation.coarse.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==9)] <- "Inh"
+harmony.batchandindividual.sct$combined.annotation.fine.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==9)] <- "Inh"
+
+# Cluster 10 is classed by the Trevino reference as a mix of mGPC and radial glial subtypes, while Polioudakis calls it mostly vRG with some other glia and, a small number of ExN.  This cluster is not an excitatory neuron cluster.  The vRG marker CRYAB is focally expressed here, and there's some additional expression of RG markers (e.g., LIFR).  
+
+# The expression of WLS implies that these are WNT-secreting cells.  Of all members of the human WNT family, these cells selectively express WNT2B, WNT5A, and WNT8B.  WNT5A is required for (adult) hippocampal dendritic maintenance (though in mice it's expressed only postnatally), and WNT8B is expressed in the ventricle precursors that give rise to the hippocampus, along with hypothalamus and thalamus.  This makes it sound like it is cortical hem.  Indeed, [Uzquiano et al.](https://www.sciencedirect.com/science/article/pii/S0092867422011680) identified cells that express WLS, RSPO1, and RSPO2 (also in this cluster) as cortical hem, which concords with the more general radial glial identity.
+
+harmony.batchandindividual.sct$combined.annotation.coarse.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==10)] <- "RG"
+harmony.batchandindividual.sct$combined.annotation.fine.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==10)] <- "CorticalHem"
+
+# Cluster 11 is made of SATB2- excitatory neurons.  
+harmony.batchandindividual.sct$combined.annotation.coarse.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==11)] <- "Immature"
+harmony.batchandindividual.sct$combined.annotation.fine.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==11)] <- "Immature"
+
+# Cluster 12 is composed of radial glia
+harmony.batchandindividual.sct$combined.annotation.coarse.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==12)] <- "RG"
+harmony.batchandindividual.sct$combined.annotation.fine.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==12)] <- "RG"
+
+# Cluster 13 is made of mature neurons, expressing higher levels of SATB2.  
+harmony.batchandindividual.sct$combined.annotation.coarse.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==13)] <- "Glut"
+harmony.batchandindividual.sct$combined.annotation.fine.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==13)] <- "Glut"
+
+# Cluster 14 is a distinct cluster of the "other neurons" identified by expression of the hormone GNRH.  Ordinarily this would imply a hypothalamic identity, but they don't expression other markers consistent with that.  Trevino reference  classifies these as subplate neurons, Polioudakis reference calls them CGE inhibitory neurons.  They are GAD2+.  At a coarse level, we can call them a kind of inhibitory neuron, while at a fine level we can call them GNRH+ inhibitory neurons.
+
+harmony.batchandindividual.sct$combined.annotation.coarse.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==14)] <- "Inh" 
+harmony.batchandindividual.sct$combined.annotation.fine.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==14)] <- "InhGNRH" 
+
+# Cluster 15 is identified by the Trevino reference as subplate neurons and the Polioudakis reference as InMGE.  It is not particularly GABAergic and doesn't share other inhibitory neuron markers.  These are also best identified as "unspecified" neurons as above.
+harmony.batchandindividual.sct$combined.annotation.coarse.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==15)] <- "NeuronOther" 
+harmony.batchandindividual.sct$combined.annotation.fine.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==15)] <- "NeuronOther" 
+
+# Cluster 16 is made of GAD2+ neurons.  Additional markers include SIX3+, ISL1+, and ESRRG+, which point to thalamic inhibitory neurons.
+harmony.batchandindividual.sct$combined.annotation.coarse.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==16)] <- "Inh"
+harmony.batchandindividual.sct$combined.annotation.fine.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==16)] <- "InhThalamic"
+
+# Cluster 17 is made of GAD2+ neurons.  It's also quite TAC1+, which is consistent with PVALB interneurons (though no PVALB itself in this cluster).  
+harmony.batchandindividual.sct$combined.annotation.coarse.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==17)] <- "Inh"
+harmony.batchandindividual.sct$combined.annotation.fine.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==17)] <- "Inh" 
+
+# Cluster 18 is choroid plexus. It expresses TTR, CLIC6, FOLR1, which are clear markers; choroid plexus is not present in the references and they therefore provide discrepant assignments.
+harmony.batchandindividual.sct$combined.annotation.coarse.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==18)] <- "Choroid"
+harmony.batchandindividual.sct$combined.annotation.fine.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==18)] <- "Choroid"
+
+
+# Cluster 19  is made of GAD2+ neurons.  Both references identify this cluster as mostly inhibitory neurons, with some other subplate neurons as well.  This cluster does express TFAP2B, as well as ZIC1 and RELN, but not LMX1A or WLS.
+harmony.batchandindividual.sct$combined.annotation.coarse.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==19)] <- "Inh" 
+harmony.batchandindividual.sct$combined.annotation.fine.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==19)] <- "Inh"
+
+# Cluster 20 is ventricular leptomeningeal cells (VLMC).
+harmony.batchandindividual.sct$combined.annotation.coarse.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==20)] <- "VLMC"
+harmony.batchandindividual.sct$combined.annotation.fine.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==20)] <- "VLMC"
+
+# Cluster 21 consists of NTS+ mature projection neurons.
+harmony.batchandindividual.sct$combined.annotation.coarse.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==21)] <- "Glut" 
+harmony.batchandindividual.sct$combined.annotation.fine.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==21)] <- "GlutNTS" 
+
+# Cluster 22 appears to be a type of radial glia, distinguished by expression of the lncRNA PURPL, although this cluster does not appear to be correlated with treatment.
+harmony.batchandindividual.sct$combined.annotation.coarse.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==22)] <- "RG"
+harmony.batchandindividual.sct$combined.annotation.fine.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==22)] <- "RG"
+
+# Cluster 23 is identified as excitatory neurons by both references.  It's budding off of the main cluster 
+harmony.batchandindividual.sct$combined.annotation.coarse.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==23)] <- "Glut"
+harmony.batchandindividual.sct$combined.annotation.fine.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==23)] <- "Glut"
+
+# Cluster 24 is composed of Cajal-Retzius cells, with clear expression of Cajal-Retzius markers NDNF, RELN, and TP73.  
+harmony.batchandindividual.sct$combined.annotation.coarse.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==24)] <- "Cajal" #or just call NeuronOther??
+harmony.batchandindividual.sct$combined.annotation.fine.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==24)] <- "Cajal"
+
+# Cluster 25 is GAD1+, as well as TAC1+ and OTX2+, implying midbrain-localized inhibitory neurons.
+harmony.batchandindividual.sct$combined.annotation.coarse.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==25)] <- "Inh" 
+harmony.batchandindividual.sct$combined.annotation.fine.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==25)] <- "InhMidbrain"
+
+# Cluster 26 is made up of inhibitory neurons positive for markers GAD1 and SST.
+harmony.batchandindividual.sct$combined.annotation.coarse.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==26)] <- "Inh"
+harmony.batchandindividual.sct$combined.annotation.fine.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==26)] <- "InhSST"
+
+# Cluster 27 is a very small group of neurons identifiable as early midbrain dopaminergic neurons (FOXA2+, TH+, EN1+, NTN1+).
+harmony.batchandindividual.sct$combined.annotation.coarse.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==27)] <- "NeuronOther" #(MidbrainDA)
+harmony.batchandindividual.sct$combined.annotation.fine.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==27)] <- "MidbrainDA" #(MidbrainDA)
+
+# Cluster 28 consists of radial glia
+harmony.batchandindividual.sct$combined.annotation.coarse.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==28)] <- "RG" 
+harmony.batchandindividual.sct$combined.annotation.fine.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==28)] <- "RG" 
+
+# Cluster 29 is made of oligodendrocytes.    
+harmony.batchandindividual.sct$combined.annotation.coarse.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==29)] <- "Glia"
+harmony.batchandindividual.sct$combined.annotation.fine.harmony[WhichCells(harmony.batchandindividual.sct, expression = louvain06==29)] <- "Oligo"
+```
+
+
+```{r}
+DimPlot(harmony.batchandindividual.sct, group.by = "combined.annotation.coarse.harmony", label = TRUE, repel = TRUE, cols = manual_palette_coarse) + NoLegend()
+```
+
+```{r}
+DimPlot(harmony.batchandindividual.sct, group.by = "combined.annotation.fine.harmony", label = TRUE, repel = TRUE, cols = manual_palette_fine) + NoLegend()
+```
+
+
+
+Plot cell type markers (in the control condition) in a dotplot format:
+```{r}
+control_subset <- subset(harmony.batchandindividual.sct, subset =  vireo.prob.singlet > 0.95 & nCount_RNA<20000 & nCount_RNA>2500 &  treatment =="control10" )  
+
+control_subset$combined.annotation.fine.harmony.ordered <- factor(control_subset$combined.annotation.fine.harmony, levels=rev(c("RGcycling" , "RG", "CorticalHem", "GliaProg", "IPcycling", "IP", "Immature", "Glut", "GlutNTS", "NeuronOther", "Cajal", "MidbrainDA", "Inh",  "InhThalamic", "InhGNRH",  "InhSST", "InhMidbrain", "VLMC", "Oligo", "Choroid")))
+
+features_ordered <- c("MKI67", "TOP2A", "BIRC5", #cycling cells
+  "HOPX", "LIFR", "PDGFD", "GLI3", #RG
+  "NES", "SOX2",
+  "RSPO1", "RSPO2", "WLS", "WNT2B", "WNT5A", "WNT8B", "GJA1", #corticalhem
+  "SPARC", "AQP4", "SPARCL1",  "GFAP", #glialprog
+  "EOMES", "NEUROD1", #IP
+   "RBFOX3", "NR4A2", "CRYM", "BCL11B", 
+  "SLA", "SATB2", "SLC17A7",
+  "NTS",
+  "LHX9", "NEFM", "SYP", "SYN1", "DLG4",#neuronother
+  "RELN", "NDNF", "TP73", "EMX2", #Cajal
+  "FOXA2", "TH" , "EN1", "NTN1", "LMX1A", "SHH", #DA
+  "GAD1", "GAD2", "DLX1", "DLX2", "DLX5", "SCGN", #inh
+  "SIX3" , "ESRRG",  "ISL1",
+   "GNRH1", "LHX8",
+  "SST",
+  "OTX2",
+  "MGP", "POSTN", "COL1A1" ,"PDGFRA","LUM", #VLMC
+  "PLP1", "S100B", "MPZ",  #olig
+  "TTR", "CLIC6", "FOLR1" #Choroid
+  )
+
+DotPlot(control_subset, col.min = 0, features = features_ordered, cols = c("light gray", "dark red"), group.by = "combined.annotation.fine.harmony.ordered") + 
+  theme_linedraw() + 
+    theme(
+      legend.direction = "horizontal",
+      legend.position = "bottom",
+      axis.title.y = element_blank(), 
+      axis.title.x = element_blank(), 
+      axis.text.x = element_text(angle = 60, vjust = 0, hjust=0)) +                               
+      scale_x_discrete(position = "top")
+
+```
+
+## Alluvial plot of cell type classifications
+
+```{r}
+alluvial_data <- harmony.batchandindividual.sct@meta.data %>% 
+  group_by(combined.annotation.fine.harmony, combined.annotation.coarse.harmony) %>% 
+  summarise(count=n()) %>%
+  as.data.frame()
+```
+
+
+```{r}
+alluvial_data$combined.annotation.fine.harmony <- factor(alluvial_data$combined.annotation.fine.harmony, levels = fine.order)
+
+alluvial_data$combined.annotation.coarse.harmony <- factor(alluvial_data$combined.annotation.coarse.harmony, levels = coarse.order, ordered = TRUE)
+
+alluvial_data_long <- to_lodes_form(alluvial_data,
+                              key = "celltype", value = "type", id = "classification",
+                              axes = 1:2)
+ggplot(data = alluvial_data_long,
+       aes(x = celltype, stratum = type, alluvium = classification, y = count)) +
+  geom_flow(aes(fill=type)) +
+  geom_stratum(aes( fill=type),  color="white") + #color=type,
+  # geom_text(stat = "stratum", aes(label = type)) +
+  theme_minimal() +
+  scale_fill_manual(values=c(manual_palette_fine, manual_palette_coarse) )+
+  scale_color_manual(values=c(manual_palette_fine, manual_palette_coarse) )
+
+```
+
+
+## Cell type abundance
+Here, I plot stacked bar charts of fractional abundance of each cell type in each individual and condition, as well as a few direct comparisons of individuals collected in two batches and organoids collected after long-term culture in physiological vs. atmospheric oxygen.
+
+```{r}
+vireo.order <- c(
+  "NA19102", "NA18511", "NA18489",
+  "NA19128", "NA18501",
+  "NA19207", "NA18519",  #double batch
+  "NA18507",
+  "NA19144", "NA19210","NA18853",
+  "NA18856",  "NA19098", "NA18913", "NA19153", 
+  "NA18517",
+  "NA19093", 
+  "NA18502","NA19143",
+  "NA18508",  "NA19190"
+)
+```
+
+In the control condition:
+```{r}
+control_subset@meta.data %>% 
+  group_by(vireo.individual) %>% 
+  mutate(cells=n()) %>% 
+  ungroup() %>% 
+  group_by(vireo.individual, combined.annotation.fine.harmony) %>% 
+  mutate(cellnums=n()) %>% 
+  ungroup() %>%  
+  mutate(cellfrac=cellnums/cells) %>% 
+  dplyr::select(vireo.individual, combined.annotation.fine.harmony, cells, cellnums, cellfrac) %>%  
+  unique() %>% 
+  ggplot(mapping = aes(x=factor(vireo.individual, vireo.order), y=cellfrac, fill=factor(combined.annotation.fine.harmony, fine.order))) + 
+  geom_col() + 
+  scale_fill_manual(values = manual_palette_fine) + 
+  ggtitle("Fine annotation, cell type fractions") + coord_flip() + theme_light()
+```
+
+Across the three treatment conditions:
+```{r}
+plot.data <- subset(harmony.batchandindividual.sct, subset =  vireo.prob.singlet > 0.95 & nCount_RNA<20000 & nCount_RNA>2500 &  treatment !="control21" )  
+ 
+plot.data@meta.data %>% 
+  group_by(vireo.individual, treatment) %>% 
+  mutate(cells=n()) %>% 
+  ungroup() %>% 
+  group_by(vireo.individual, combined.annotation.fine.harmony, treatment) %>% 
+  mutate(cellnums=n()) %>% 
+  ungroup() %>%  
+  mutate(cellfrac=cellnums/cells) %>% 
+  dplyr::select(vireo.individual, combined.annotation.fine.harmony, cells, cellnums, cellfrac, treatment) %>%  
+  unique() %>% 
+  ggplot(mapping = aes(x=factor(vireo.individual, vireo.order), y=cellfrac, fill=factor(combined.annotation.fine.harmony, fine.order))) + 
+  geom_col() + 
+  scale_fill_manual(values = manual_palette_fine) + 
+  ggtitle("Fine annotation, cell type fractions") + coord_flip() + theme_light() + facet_wrap(vars(treatment), nrow = 1)
+
+rm(plot.data)
+```
+
+Across batches in the two individuals collected twice:
+```{r}
+repeat.data <- subset(harmony.batchandindividual.sct, subset =  vireo.prob.singlet > 0.95 & nCount_RNA<20000 & nCount_RNA>2500 &  treatment =="control10" & vireo.individual %in% c("NA18519", "NA19207"))  
+
+repeat.data@meta.data %>% 
+  group_by(vireo.individual, batch) %>% 
+  mutate(cells=n()) %>% 
+  ungroup() %>% 
+  group_by(vireo.individual, combined.annotation.fine.harmony, batch) %>% 
+  mutate(cellnums=n()) %>% 
+  ungroup() %>%  
+  mutate(cellfrac=cellnums/cells) %>% 
+  dplyr::select(vireo.individual, combined.annotation.fine.harmony, cells, cellnums, cellfrac, batch) %>%  
+  unique() %>% 
+  ggplot(mapping = aes(x=factor(vireo.individual, vireo.order), y=cellfrac, fill=factor(combined.annotation.fine.harmony, fine.order))) + 
+  geom_col() + 
+  scale_fill_manual(values = manual_palette_fine) + 
+  ggtitle("Fine annotation, cell type fractions") + coord_flip() + theme_light() + facet_wrap(vars(batch), nrow = 1) 
+
+rm(repeat.data)
+```
+
+Compare organoids cultured chronically at 10% oxygen and 21% oxygen (not acute perturbation condition).
+```{r}
+plot.data.oxygen <- subset(harmony.batchandindividual.sct, subset =  vireo.prob.singlet > 0.95 & nCount_RNA<20000 & nCount_RNA>2500 &  treatment %in% c("control10", "control21")  & vireo.individual %in% c( "NA19207", "NA18519", "NA18489", "NA18511", "NA19102"))  
+ 
+plot.data.oxygen@meta.data %>% 
+  group_by(vireo.individual, treatment) %>% 
+  mutate(cells=n()) %>% 
+  ungroup() %>% 
+  group_by(vireo.individual, combined.annotation.fine.harmony, treatment) %>% 
+  mutate(cellnums=n()) %>% 
+  ungroup() %>%  
+  mutate(cellfrac=cellnums/cells) %>% 
+  dplyr::select(vireo.individual, combined.annotation.fine.harmony, cells, cellnums, cellfrac, treatment) %>%  
+  unique() %>% 
+  ggplot(mapping = aes(x=factor(vireo.individual, vireo.order), y=cellfrac, fill=factor(combined.annotation.fine.harmony, fine.order))) + 
+  geom_col() + 
+  scale_fill_manual(values = manual_palette_fine) + 
+  ggtitle("Fine annotation, cell type fractions") + coord_flip() + theme_light() + facet_wrap(vars(treatment), nrow = 1)
+
+rm(plot.data.oxygen)
+```
+
+### Cell types per individual
+
+First, generate and filter pseudobulk data from the Seurat object.
+
+```{r}
+subset_seurat <- subset(harmony.batchandindividual.sct, subset = vireo.prob.singlet > 0.95 & nCount_RNA<20000 & nCount_RNA>2500 & treatment !="control21" )
+```
+
+```{r, eval=FALSE}
+pseudo_coarse_quality <- generate.pseudobulk(subset_seurat, labels = c("combined.annotation.coarse.harmony", "treatment", "vireo.individual", "batch"))
+pseudo_fine_quality <- generate.pseudobulk(subset_seurat, labels = c("combined.annotation.fine.harmony", "treatment", "vireo.individual", "batch"))
+```
+
+```{r}
+pseudo_fine_quality <- readRDS(file = "output/pseudo_fine_quality_filtered_de_20240305.RDS")
+pseudo_coarse_quality <- readRDS(file = "output/pseudo_coarse_quality_filtered_de_20240305.RDS")
+```
+
+
+```{r}
+pseudo_coarse_quality_de <- filter.pseudobulk(pseudo_coarse_quality, threshold = 20)
+pseudo_fine_quality_de <- filter.pseudobulk(pseudo_fine_quality, threshold = 20)
+```
+
+For the coarse cell type assignment, DE and QTL analysis therefore has available:
+```{r}
+pseudo_coarse_quality_de$meta %>%  group_by(vireo.individual, treatment) %>% summarize(celltypes=length(combined.annotation.coarse.harmony)) %>% ungroup() %>% group_by(treatment) %>% summarize(median(celltypes))
+```
+Median 7 cell types (out of a total of 10)
+
+For the fine clustering:
+```{r}
+pseudo_fine_quality_de$meta %>%  group_by(vireo.individual, treatment) %>% summarize(celltypes=length(combined.annotation.fine.harmony)) %>% ungroup() %>% group_by(treatment) %>% summarize(median(celltypes))
+```
+Median 11-12 cell types (out of a total of 20)
+
+Or, plotted for the control condition:
+```{r}
+pseudo_coarse_quality_de$meta %>% 
+  filter(treatment=="control10") %>%  
+  group_by(vireo.individual) %>% 
+  summarize(celltypes=length(combined.annotation.coarse.harmony)) %>% 
+  ggplot(aes(x=factor(vireo.individual, vireo.order), y=celltypes)) +
+  geom_segment( aes(x=factor(vireo.individual, vireo.order), xend=factor(vireo.individual, vireo.order), y=0, yend=celltypes), color="gray") + 
+  geom_point() + 
+  coord_flip() + 
+  geom_hline(yintercept = 7, linetype=2) + 
+  theme_light() + ylim(0, 13)
+
+
+pseudo_fine_quality_de$meta %>% 
+  filter(treatment=="control10") %>%  
+  group_by(vireo.individual) %>%
+  summarize(celltypes=length(combined.annotation.fine.harmony)) %>% 
+  ggplot(aes(x=factor(vireo.individual, vireo.order), y=celltypes)) +
+  geom_segment( aes(x=factor(vireo.individual, vireo.order), xend=factor(vireo.individual, vireo.order), y=0, yend=celltypes), color="gray") + 
+  geom_point() +
+  ylim(0, 20) + 
+  coord_flip() + 
+  geom_hline(yintercept = 11, linetype=2) + 
+  theme_light() 
+```
+
+Conversely, to ask how many individuals are there for each cell type:
+```{r}
+pseudo_fine_quality_de$meta %>% 
+  filter(treatment=="control10") %>%  
+  group_by(combined.annotation.fine.harmony) %>%
+  summarize(individuals=length(unique(vireo.individual))) %>% 
+  ggplot(aes(x=factor(combined.annotation.fine.harmony, rev(fine.order)), y=individuals)) +
+  geom_segment( aes(x=factor(combined.annotation.fine.harmony, rev(fine.order)), xend=factor(combined.annotation.fine.harmony, rev(fine.order)), y=0, yend=individuals), color="gray") + 
+  geom_point() + 
+  ylim(0, 21) +
+  coord_flip() +
+  geom_hline(yintercept = 11.5, linetype=2, color="black") + 
+  theme_light() 
+
+
+pseudo_coarse_quality_de$meta %>% 
+  filter(treatment=="control10") %>%  
+  group_by(combined.annotation.coarse.harmony) %>% 
+  summarize(individuals=length(unique(vireo.individual))) %>% 
+  ggplot(aes(x=factor(combined.annotation.coarse.harmony, coarse.order), y=individuals)) +
+  geom_segment( aes(x=factor(combined.annotation.coarse.harmony, coarse.order), xend=factor(combined.annotation.coarse.harmony, coarse.order), y=0, yend=individuals), color="gray") + 
+  geom_point() + 
+  ylim(0, 21) + 
+  coord_flip() + 
+  geom_hline(yintercept = 17.5, linetype=2, color="gray") + 
+  theme_light()
+```
+
+
+## Test for cell type proportion changes with propeller
+Here, I use a linear mixed model to test for the effect of different experimental factors on cell type proportion, using the cell line (vireo.individual) as a blocking factor.
+
+Following the guidance of the propeller package documentation, I first get transformed proportions.
+
+```{r}
+hypoxia_subset <- subset(subset_seurat, treatment %in% c("control10", "stim1pct"))
+hyperoxia_subset <- subset(subset_seurat, treatment %in% c("control10", "stim21pct"))
+
+hypoxia_subset$sample <- paste(hypoxia_subset$vireo.individual, hypoxia_subset$batch, hypoxia_subset$treatment, sep="_")
+hyperoxia_subset$sample <- paste(hyperoxia_subset$vireo.individual, hyperoxia_subset$batch, hyperoxia_subset$treatment, sep="_")
+
+props_coarse_hypoxia_logit <- getTransformedProps(hypoxia_subset$combined.annotation.coarse.harmony, hypoxia_subset$sample, transform="logit")
+
+props_fine_hypoxia_logit <- getTransformedProps(hypoxia_subset$combined.annotation.fine.harmony, hypoxia_subset$sample, transform="logit")
+
+
+props_coarse_hyperoxia_logit <- getTransformedProps(hyperoxia_subset$combined.annotation.coarse.harmony, hyperoxia_subset$sample, transform="logit")
+
+props_fine_hyperoxia_logit <- getTransformedProps(hyperoxia_subset$combined.annotation.fine.harmony, hyperoxia_subset$sample, transform="logit")
+
+```
+Now set up a linear mixed model and test for the treatment effect:
+```{r}
+metadata <- hypoxia_subset@meta.data[match(colnames(props_coarse_hypoxia_logit$TransformedProps), hypoxia_subset@meta.data$sample),] %>% 
+  mutate(sex=ifelse(sex=="female", 0, 1)) %>% 
+  dplyr::select(vireo.individual, treatment, batch, sex, FFpassage)
+
+rownames(metadata) <- colnames(props_coarse_hypoxia_logit$TransformedProps)
+metadata$treatment <- factor(metadata$treatment, levels = c("control10", "stim1pct"))
+
+model_formula <- model.matrix(~treatment + batch+ sex + FFpassage, metadata)
+# model_formula <- model.matrix(~treatment, metadata)
+
+dupcor <- duplicateCorrelation(props_coarse_hypoxia_logit$TransformedProps, design=model_formula, block=metadata$vireo.individual)
+
+
+fit <- lmFit(props_coarse_hypoxia_logit$TransformedProps, design=model_formula, block=metadata$vireo.individual, correlation=dupcor$consensus)
+fit <- eBayes(fit)
+res <- topTable(fit,coef="treatmentstim1pct", number=dim(props_coarse_hypoxia_logit$TransformedProps)[1])
+
+print(res)
+```
+
+Test also for the batch effect:
+```{r}
+res <- topTable(fit,coef="batchbatch2", number=dim(props_coarse_hypoxia_logit$TransformedProps)[1])
+print(res)
+```
+
+Test also for the sex effect:
+```{r}
+res <- topTable(fit,coef="sex", number=dim(props_coarse_hypoxia_logit$TransformedProps)[1])
+print(res)
+```
+And the passage number:
+Test also for the sex effect:
+```{r}
+res <- topTable(fit,coef="FFpassage", number=dim(props_coarse_hypoxia_logit$TransformedProps)[1])
+print(res)
+```
+
+
+And again with the fine classification:
+```{r}
+metadata <- hypoxia_subset@meta.data[match(colnames(props_fine_hypoxia_logit$TransformedProps), hypoxia_subset@meta.data$sample),] %>% mutate(sex=ifelse(sex=="female", 0, 1)) %>% dplyr::select(vireo.individual, treatment, batch, sex, FFpassage)
+
+rownames(metadata) <- colnames(props_fine_hypoxia_logit$TransformedProps)
+metadata$treatment <- factor(metadata$treatment, levels = c("control10", "stim1pct"))
+
+model_formula <- model.matrix(~treatment + batch+ sex + FFpassage, metadata)
+# model_formula <- model.matrix(~treatment, metadata)
+
+dupcor <- duplicateCorrelation(props_fine_hypoxia_logit$TransformedProps, design=model_formula, block=metadata$vireo.individual)
+
+
+fit <- lmFit(props_fine_hypoxia_logit$TransformedProps, design=model_formula, block=metadata$vireo.individual, correlation=dupcor$consensus)
+fit <- eBayes(fit)
+res <- topTable(fit,coef="treatmentstim1pct", number=dim(props_fine_hypoxia_logit$TransformedProps)[1])
+print(res)
+```
+
+
+And the batch effect:
+```{r}
+res <- topTable(fit,coef="batchbatch2", number=dim(props_fine_hypoxia_logit$TransformedProps)[1])
+print(res)
+```
+
+And the sex effect:
+```{r}
+res <- topTable(fit,coef="sex", number=dim(props_fine_hypoxia_logit$TransformedProps)[1])
+print(res)
+```
+And the passage number effect:
+```{r}
+res <- topTable(fit,coef="FFpassage", number=dim(props_fine_hypoxia_logit$TransformedProps)[1])
+print(res)
+```
+
+Note that the most dramatic changes are for sample 19144, which was readily identifiable by eye.  Differences between treatment conditions for other cell types are modest and similar between individuals.
+
+
+
+We can now repeat for the hyperoxia vs. normoxia comparison:
+```{r}
+metadata <- hyperoxia_subset@meta.data[match(colnames(props_coarse_hyperoxia_logit$TransformedProps), hyperoxia_subset@meta.data$sample),] %>% 
+  mutate(sex=ifelse(sex=="female", 0, 1)) %>% 
+  dplyr::select(vireo.individual, treatment, batch, sex, FFpassage)
+
+rownames(metadata) <- colnames(props_coarse_hyperoxia_logit$TransformedProps)
+metadata$treatment <- factor(metadata$treatment, levels = c("control10", "stim21pct"))
+
+model_formula <- model.matrix(~treatment + batch+ sex + FFpassage, metadata)
+
+dupcor <- duplicateCorrelation(props_coarse_hyperoxia_logit$TransformedProps, design=model_formula, block=metadata$vireo.individual)
+
+
+fit <- lmFit(props_coarse_hyperoxia_logit$TransformedProps, design=model_formula, block=metadata$vireo.individual, correlation=dupcor$consensus)
+fit <- eBayes(fit)
+res <- topTable(fit,coef="treatmentstim21pct", number=dim(props_coarse_hypoxia_logit$TransformedProps)[1])
+
+print(res)
+```
+
+And using the fine classification:
+```{r}
+metadata <- hyperoxia_subset@meta.data[match(colnames(props_fine_hyperoxia_logit$TransformedProps), hyperoxia_subset@meta.data$sample),] %>% mutate(sex=ifelse(sex=="female", 0, 1)) %>% dplyr::select(vireo.individual, treatment, batch, sex, FFpassage)
+
+rownames(metadata) <- colnames(props_fine_hyperoxia_logit$TransformedProps)
+metadata$treatment <- factor(metadata$treatment, levels = c("control10", "stim21pct"))
+
+model_formula <- model.matrix(~treatment + batch+ sex + FFpassage, metadata)
+
+dupcor <- duplicateCorrelation(props_fine_hyperoxia_logit$TransformedProps, design=model_formula, block=metadata$vireo.individual)
+
+
+fit <- lmFit(props_fine_hyperoxia_logit$TransformedProps, design=model_formula, block=metadata$vireo.individual, correlation=dupcor$consensus)
+fit <- eBayes(fit)
+res <- topTable(fit,coef="treatmentstim21pct", number=dim(props_fine_hyperoxia_logit$TransformedProps)[1])
+print(res)
+```
