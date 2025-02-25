@@ -2097,11 +2097,11 @@ Next, plot the distributions of cell types here.  Note that, as this is intended
 positions <- c( #"DividingProgenitors",
                "IP",
                "Excitatory-early",
-               "Excitatory-late",
                "RadialGlia",
-               "Cajal",
+               "Excitatory-late",
                "Inhibitory",
                "Glia",
+               "Cajal",
                "unlabeled"
               )
 
@@ -2117,14 +2117,16 @@ color_set <- c("unlabeled"= "black",
                "Glia"="#FFFFB3")
 
 
-ggplot(combined_plotting_singlesection, aes(x=cell_type_pooled_revised, y=`Distance to annotation with Other µm`, color=cell_type_pooled_revised)) + geom_boxplot() + scale_x_discrete(limits = positions) + 
+ggplot(combined_plotting_singlesection, aes(x=cell_type_pooled_revised, y=`Distance to annotation with Other µm`, color=cell_type_pooled_revised)) + geom_boxplot(linewidth=0.4, outlier.size = 0.5) + scale_x_discrete(limits = positions) + 
   ggtitle("Cell distances, aggregated over individuals") +
   scale_colour_manual(values = color_set) +
   stat_summary(fun.y = median, 
                geom = "point",
                aes(group = interaction(Parent, cell_type_pooled_revised)),
-               size = 1, show.legend = F, color="black") + 
+               size = 0.5, show.legend = F, color="black") + 
   theme_light() + theme(legend.position="none") + coord_flip()
+
+
 ```
 
 There are, of course, differences between cell types when all aggregated together.  To compare the differences between individuals to the differences between cell types, we can use ANOVA, using the mean values for cells within each sample (ie, individual).  
