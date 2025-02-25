@@ -106,47 +106,180 @@ scale_this <- function(x){
   (x - mean(x, na.rm=TRUE)) / sd(x, na.rm=TRUE)
 }
 
-combined_across_chroms <- function(results_directory, results_basename, condition, celltype, output_basename="results_combined_"){
-  if(file.exists(paste0(results_directory, results_basename, condition, "_", celltype, "_chr1_cpm-inorm.cis"))){
-    m = read.table(paste0(results_directory, results_basename, condition, "_", celltype, "_chr1_cpm-inorm.cis"), head=TRUE, stringsAsFactors=FALSE)
-  }else{
-    print(paste0(results_directory, results_basename, condition, "_", celltype, "_chr1_cpm-inorm.cis does not exist!"))
+combined_across_chroms <- function(results_directory,
+                                   results_basename,
+                                   condition,
+                                   celltype,
+                                   output_basename = "results_combined_") {
+  if (file.exists(
+    paste0(
+      results_directory,
+      results_basename,
+      condition,
+      "_",
+      celltype,
+      "_chr1_cpm-inorm.cis"
+    )
+  )) {
+    m = read.table(
+      paste0(
+        results_directory,
+        results_basename,
+        condition,
+        "_",
+        celltype,
+        "_chr1_cpm-inorm.cis"
+      ),
+      head = TRUE,
+      stringsAsFactors = FALSE
+    )
+  } else{
+    print(
+      paste0(
+        results_directory,
+        results_basename,
+        condition,
+        "_",
+        celltype,
+        "_chr1_cpm-inorm.cis does not exist!"
+      )
+    )
   }
-  for (i in 2:22){
-    if(file.exists(paste0(results_directory, results_basename, condition, "_", celltype, "_chr", i, "_cpm-inorm.cis"))){
-      m = rbind(m, read.table(paste0(results_directory, results_basename, condition, "_", celltype, "_chr", i, "_cpm-inorm.cis"), head=TRUE, stringsAsFactors=FALSE))
-    }else{
-      print(paste0(results_directory, results_basename, condition, "_", celltype, "_chr", i, "_cpm-inorm.cis does not exist!"))
+  for (i in 2:22) {
+    if (file.exists(
+      paste0(
+        results_directory,
+        results_basename,
+        condition,
+        "_",
+        celltype,
+        "_chr",
+        i,
+        "_cpm-inorm.cis"
+      )
+    )) {
+      m = rbind(m,
+                read.table(
+                  paste0(
+                    results_directory,
+                    results_basename,
+                    condition,
+                    "_",
+                    celltype,
+                    "_chr",
+                    i,
+                    "_cpm-inorm.cis"
+                  ),
+                  head = TRUE,
+                  stringsAsFactors = FALSE
+                ))
+    } else{
+      print(
+        paste0(
+          results_directory,
+          results_basename,
+          condition,
+          "_",
+          celltype,
+          "_chr",
+          i,
+          "_cpm-inorm.cis does not exist!"
+        )
+      )
     }
   }
-  write.table(m, paste0(results_directory, output_basename, condition, "_", celltype, "_nominal.txt"), quote=FALSE, row.names=FALSE, col.names=TRUE, append = FALSE)  
+  write.table(
+    m,
+    paste0(
+      results_directory,
+      output_basename,
+      condition,
+      "_",
+      celltype,
+      "_nominal.txt"
+    ),
+    quote = FALSE,
+    row.names = FALSE,
+    col.names = TRUE,
+    append = FALSE
+  )
   print(paste0("done with ", celltype, " ", condition))
   rm(m)
 }
 
-plot_cisqtl_cvrt <- function(expression.data, genotype.data, snp, gene, covariate_file){
-  test.genotypes <- genotype.data[which(genotype.data$ID==snp),]
-  test.expression <- expression.data[which(expression.data$ID==gene),]
-  cvrt <- read_table(file = covariate_file, col_names = TRUE, show_col_types = FALSE) %>%
-    pivot_longer(-id) %>% 
-    pivot_wider(names_from=id, values_from=value)
+plot_cisqtl_cvrt <- function(expression.data,
+                             genotype.data,
+                             snp,
+                             gene,
+                             covariate_file) {
+  test.genotypes <- genotype.data[which(genotype.data$ID == snp), ]
+  test.expression <- expression.data[which(expression.data$ID == gene), ]
+  cvrt <- read_table(file = covariate_file,
+                     col_names = TRUE,
+                     show_col_types = FALSE) %>%
+    pivot_longer(-id) %>%
+    pivot_wider(names_from = id, values_from = value)
   
-  for_regression <- left_join(test.expression, cvrt, by=c("individual"="name"))
-  for_regression$resids <- lm(formula = as.formula(paste("expression ~ ", paste(colnames(cvrt)[-1], collapse= "+"))), data = for_regression)$residuals
-  combined <- left_join(for_regression, test.genotypes, by="individual")
-
-  ggplot(combined, mapping = aes(x=factor(snp), y=resids)) + geom_point(alpha=0.5, position = position_jitter(width = 0.2, height = 0)) + ggtitle(gene) + xlab(snp) + theme_light()
+  for_regression <- left_join(test.expression, cvrt, by = c("individual" =
+                                                              "name"))
+  for_regression$resids <- lm(formula = as.formula(paste(
+    "expression ~ ", paste(colnames(cvrt)[-1], collapse = "+")
+  )), data = for_regression)$residuals
+  combined <- left_join(for_regression, test.genotypes, by = "individual")
+  
+  ggplot(combined, mapping = aes(x = factor(snp), y = resids)) + geom_point(alpha =
+                                                                              0.5, position = position_jitter(width = 0.2, height = 0)) + ggtitle(gene) + xlab(snp) + theme_light()
 }
 
-make_boxplot <- function(celltype, condition, testsnp, testgene){
-  expression <- read_table(paste0("data/MatrixEQTL/expression/combined_fine_quality_filter20_032024/expressiontable_matrixeqtl_combined_fine_", condition, "_", celltype, "_chr1_cpm-inorm.bed")) %>% pivot_longer(cols=starts_with("NA"), names_to = "individual", values_to = "expression") 
-  for (i in 2:22){
-    expression <- rbind(expression, read_table(paste0("data/MatrixEQTL/expression/combined_fine_quality_filter20_032024/expressiontable_matrixeqtl_combined_fine_", condition, "_", celltype, "_chr",i, "_cpm-inorm.bed"), show_col_types = FALSE) %>% pivot_longer(cols=starts_with("NA"), names_to = "individual", values_to = "expression"))
+make_boxplot <- function(celltype, condition, testsnp, testgene) {
+  expression <- read_table(
+    paste0(
+      "/project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/expression/combined_fine_quality_filter20_032024/expressiontable_matrixeqtl_combined_fine_",
+      condition,
+      "_",
+      celltype,
+      "_chr1_cpm-inorm.bed"
+    )
+  ) %>% pivot_longer(cols = starts_with("NA"),
+                     names_to = "individual",
+                     values_to = "expression")
+  for (i in 2:22) {
+    expression <- rbind(
+      expression,
+      read_table(
+        paste0(
+          "/project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/expression/combined_fine_quality_filter20_032024/expressiontable_matrixeqtl_combined_fine_",
+          condition,
+          "_",
+          celltype,
+          "_chr",
+          i,
+          "_cpm-inorm.bed"
+        ),
+        show_col_types = FALSE
+      ) %>% pivot_longer(
+        cols = starts_with("NA"),
+        names_to = "individual",
+        values_to = "expression"
+      )
+    )
   }
   
-  covariate_file <- paste0("/project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/covariates/combined_fine_quality_filter20_032024/expressiontable_matrixeqtl_combined_fine_", condition, "_", celltype, "_chr1_cpm-inorm.bed.covs")
+  covariate_file <- paste0(
+    "/project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/covariates/combined_fine_quality_filter20_032024/expressiontable_matrixeqtl_combined_fine_",
+    condition,
+    "_",
+    celltype,
+    "_chr1_cpm-inorm.bed.covs"
+  )
   # uniquely weighted
-  plot_cisqtl_cvrt(expression.data = expression, genotype.data = genotypes, snp = testsnp, gene=testgene, covariate_file = covariate_file) + ggtitle(paste0(testgene, " ", celltype, " ", condition))
+  plot_cisqtl_cvrt(
+    expression.data = expression,
+    genotype.data = genotypes,
+    snp = testsnp,
+    gene = testgene,
+    covariate_file = covariate_file
+  ) + ggtitle(paste0(testgene, " ", celltype, " ", condition))
 }
 
 
