@@ -326,7 +326,7 @@ div.tocify {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">oxygen_eqtl</a>
+      <a class="navbar-brand" href="index.html">organoid_oxygen_eqtl</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -361,7 +361,7 @@ div.tocify {
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
 <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
+workflowr <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span>
 </button>
 </p>
@@ -372,8 +372,8 @@ aria-hidden="true"></span>
 </li>
 <li>
 <a data-toggle="tab" href="#checks"> Checks <span
-class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> </a>
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -382,17 +382,17 @@ aria-hidden="true"></span> </a>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2024-08-30
+<strong>Last updated:</strong> 2025-02-24
 </p>
 <p>
 <strong>Checks:</strong> <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 5
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
 <span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> 2
+aria-hidden="true"></span> 0
 </p>
 <p>
-<strong>Knit directory:</strong> <code>oxygen_eqtl/</code> <span
-class="glyphicon glyphicon-question-sign" aria-hidden="true"
+<strong>Knit directory:</strong> <code>organoid_oxygen_eqtl/</code>
+<span class="glyphicon glyphicon-question-sign" aria-hidden="true"
 title="This is the local directory in which the code in this file was executed.">
 </span>
 </p>
@@ -411,21 +411,18 @@ versions</em> tab lists the development history.
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges">
-<span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted
-changes </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
+</a>
 </p>
 </div>
-<div id="strongRMarkdownfilestronguncommittedchanges"
+<div id="strongRMarkdownfilestronguptodate"
 class="panel-collapse collapse">
 <div class="panel-body">
-<p>The R Markdown is untracked by Git. To know which version of the R
-Markdown file created these results, you’ll want to first commit it to
-the Git repo. If you’re still working on the analysis, you can ignore
-this warning. When you’re finished, you can run
-<code>wflow_publish</code> to commit the R Markdown file and build the
-HTML.</p>
+<p>Great! Since the R Markdown file has been committed to the Git
+repository, you know the exact version of the code that produced these
+results.</p>
 </div>
 </div>
 </div>
@@ -449,16 +446,16 @@ empty environment.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20220621code">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20250224code">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Seed:</strong>
-<code>set.seed(20220621)</code> </a>
+<code>set.seed(20250224)</code> </a>
 </p>
 </div>
-<div id="strongSeedstrongcodesetseed20220621code"
+<div id="strongSeedstrongcodesetseed20250224code"
 class="panel-collapse collapse">
 <div class="panel-body">
-<p>The command <code>set.seed(20220621)</code> was run prior to running
+<p>The command <code>set.seed(20250224)</code> was run prior to running
 the code in the R Markdown file. Setting a seed ensures that any results
 that rely on randomness, e.g. subsampling or permutations, are
 reproducible.</p>
@@ -501,116 +498,42 @@ run.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongabsolute">
-<span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> <strong>File paths:</strong> absolute </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
 </p>
 </div>
-<div id="strongFilepathsstrongabsolute" class="panel-collapse collapse">
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
 <div class="panel-body">
-<p>
-Using absolute paths to the files within your workflowr project makes it
-difficult for you and others to run your code on a different machine.
-Change the absolute path(s) below to the suggested relative path(s) to
-make your code more reproducible.
-</p>
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th style="text-align:left;">
-absolute
-</th>
-<th style="text-align:left;">
-relative
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-/project2/gilad/umans/oxygen_eqtl/output/de_results_combinedcoarse_filtered_reharmonize_20240305.RDS
-</td>
-<td style="text-align:left;">
-output/de_results_combinedcoarse_filtered_reharmonize_20240305.RDS
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-/project2/gilad/umans/oxygen_eqtl/output/de_results_combinedfine_filtered_reharmonize_20240305.RDS
-</td>
-<td style="text-align:left;">
-output/de_results_combinedfine_filtered_reharmonize_20240305.RDS
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-/project2/gilad/umans/oxygen_eqtl/output/de_results_pseudoall_filtered_20231107.RDS
-</td>
-<td style="text-align:left;">
-output/de_results_pseudoall_filtered_20231107.RDS
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-/project2/gilad/umans/oxygen_eqtl/output/de_results_combinedfine_filtered_reharmonize_for_mash_20240731.RDS
-</td>
-<td style="text-align:left;">
-output/de_results_combinedfine_filtered_reharmonize_for_mash_20240731.RDS
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-/project2/gilad/umans/oxygen_eqtl/output/de_results_combinedcoarse_filtered_reharmonize_for_mash_20240731.RDS
-</td>
-<td style="text-align:left;">
-output/de_results_combinedcoarse_filtered_reharmonize_for_mash_20240731.RDS
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-/project2/gilad/umans/oxygen_eqtl/output/fgsea/
-</td>
-<td style="text-align:left;">
-output/fgsea
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-/project2/gilad/umans/oxygen_eqtl/output/de_results_combinedfine_filtered_reharmonize_censored_20240802.RDS
-</td>
-<td style="text-align:left;">
-output/de_results_combinedfine_filtered_reharmonize_censored_20240802.RDS
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-/project2/gilad/umans/oxygen_eqtl/output/de_results_combinedfine_filtered_reharmonize_random_censored_20240802.RDS
-</td>
-<td style="text-align:left;">
-output/de_results_combinedfine_filtered_reharmonize_random_censored_20240802.RDS
-</td>
-</tr>
-</tbody>
-</table>
+<p>Great job! Using relative paths to the files within your workflowr
+project makes it easier to run your code on other machines.</p>
 </div>
 </div>
 </div>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongNocommitsyet">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcombumansorganoidoxygeneqtltree1cb030f8746ba5e8b4fceac6803d98746a89d3b3targetblank1cb030fa">
 <span class="glyphicon glyphicon-ok text-success"
-aria-hidden="true"></span> <strong>Repository version:</strong> No
-commits yet </a>
+aria-hidden="true"></span> <strong>Repository version:</strong>
+<a href="https://github.com/bumans/organoid_oxygen_eqtl/tree/1cb030f8746ba5e8b4fceac6803d98746a89d3b3" target="_blank">1cb030f</a>
+</a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongNocommitsyet"
+<div
+id="strongRepositoryversionstrongahrefhttpsgithubcombumansorganoidoxygeneqtltree1cb030f8746ba5e8b4fceac6803d98746a89d3b3targetblank1cb030fa"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development
 and connecting the code version to the results is critical for
 reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version
+<a href="https://github.com/bumans/organoid_oxygen_eqtl/tree/1cb030f8746ba5e8b4fceac6803d98746a89d3b3" target="_blank">1cb030f</a>.
+See the <em>Past versions</em> tab to see a history of the changes made
+to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for
@@ -623,71 +546,13 @@ were generated:
 </p>
 <pre><code>
 Ignored files:
-    Ignored:    figure/
+    Ignored:    .DS_Store
+    Ignored:    analysis/figure/
+    Ignored:    code/.DS_Store
 
-Untracked files:
-    Untracked:  .DS_Store
-    Untracked:  18519_calling.Rmd
-    Untracked:  TOM/
-    Untracked:  _site.yml
-    Untracked:  about.Rmd
-    Untracked:  batch_variability.Rmd
-    Untracked:  batch_variability.knit.md
-    Untracked:  batch_variability.nb.html
-    Untracked:  cache/
-    Untracked:  cellregmap.Rmd
-    Untracked:  celltype.Rmd
-    Untracked:  celltype2.Rmd
-    Untracked:  celltype2.nb.html
-    Untracked:  construct_seurat.Rmd
-    Untracked:  construct_seurat2.Rmd
-    Untracked:  cormotif_eqtl.Rmd
-    Untracked:  de.Rmd
-    Untracked:  de2.Rmd
-    Untracked:  de2.nb.html
-    Untracked:  de_finalized.Rmd
-    Untracked:  de_finalized_reharmonized.Rmd
-    Untracked:  disease_gene_overlap.Rmd
-    Untracked:  disease_gene_overlap_EE.Rmd
-    Untracked:  disease_gene_overlap_EE_reharmonized.Rmd
-    Untracked:  disease_gene_overlap_EE_reharmonized_fine.Rmd
-    Untracked:  disease_gene_overlap_EE_reharmonized_fine_filter10.Rmd
-    Untracked:  docs/
-    Untracked:  figure1.Rmd
-    Untracked:  figure2.Rmd
-    Untracked:  figure3.Rmd
-    Untracked:  figure4.Rmd
-    Untracked:  figures_for_poster.R
-    Untracked:  for_yunqi_mash.rmd
-    Untracked:  gsea.Rmd
-    Untracked:  gsea.nb.html
-    Untracked:  gsea_reharmonized.Rmd
-    Untracked:  hgwgcna.Rmd
-    Untracked:  hgwgcna.nb.html
-    Untracked:  hippo_eqtl.Rmd
-    Untracked:  index.Rmd
-    Untracked:  index_old.Rmd
-    Untracked:  license.Rmd
-    Untracked:  mash_EE.R
-    Untracked:  mash_EE_PC.R
-    Untracked:  mash_de.Rmd
-    Untracked:  mash_for_peter.r
-    Untracked:  matrixEQTL.Rmd
-    Untracked:  matrixEQTL.nb.html
-    Untracked:  matrixEQTL_reharmonized.Rmd
-    Untracked:  ncell_permtesting.R
-    Untracked:  plot_eqtl.Rmd
-    Untracked:  prep_apex.Rmd
-    Untracked:  qtltools.Rmd
-    Untracked:  seurat.export.library1.h5Seurat
-    Untracked:  shared_functions_style_items.R
-    Untracked:  test.rmd
-    Untracked:  topics.R
-    Untracked:  topics.Rmd
-    Untracked:  topics_all.R
-    Untracked:  topics_pseudocell.R
-    Untracked:  topicsde.R
-    Untracked:  voxhunt.Rmd
+Unstaged changes:
+    Modified:   analysis/figure3.Rmd
+    Modified:   analysis/index.Rmd
 
 </code></pre>
 <p>
@@ -702,10 +567,91 @@ have uncommitted changes.
 <hr>
 </div>
 <div id="versions" class="tab-pane fade">
+
 <p>
-There are no past versions. Publish this analysis with
-<code>wflow_publish()</code> to start tracking its development.
+These are the previous versions of the repository in which changes were
+made to the R Markdown (<code>analysis/figure2.Rmd</code>) and HTML
+(<code>docs/figure2.html</code>) files. If you’ve configured a remote
+Git repository (see <code>?wflow_git_remote</code>), click on the
+hyperlinks in the table below to view the files as they were in that
+past version.
 </p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/bumans/organoid_oxygen_eqtl/blob/1cb030f8746ba5e8b4fceac6803d98746a89d3b3/analysis/figure2.Rmd" target="_blank">1cb030f</a>
+</td>
+<td>
+Ben Umans
+</td>
+<td>
+2025-02-24
+</td>
+<td>
+updated for reviews
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/bumans/organoid_oxygen_eqtl/blob/f0eaf05032fddf90549dcb3c3274e965ceb16048/analysis/figure2.Rmd" target="_blank">f0eaf05</a>
+</td>
+<td>
+Ben Umans
+</td>
+<td>
+2024-09-05
+</td>
+<td>
+organized for upload to github
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/bumans/organoid_oxygen_eqtl/f0eaf05032fddf90549dcb3c3274e965ceb16048/docs/figure2.html" target="_blank">f0eaf05</a>
+</td>
+<td>
+Ben Umans
+</td>
+<td>
+2024-09-05
+</td>
+<td>
+organized for upload to github
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 <hr>
 </div>
 </div>
@@ -720,14 +666,15 @@ shown in Figure 2, Figure S2, and Figure S3.</p>
 library(Seurat)</code></pre>
 <pre><code>Attaching SeuratObject</code></pre>
 <pre class="r"><code>library(tidyverse)</code></pre>
-<pre><code>── Attaching packages ─────────────────────────────────────── tidyverse 1.3.1 ──</code></pre>
-<pre><code>✔ tibble  3.2.1     ✔ dplyr   1.1.4
-✔ tidyr   1.3.0     ✔ stringr 1.5.0
-✔ readr   2.1.4     ✔ forcats 0.5.1
-✔ purrr   1.0.2     </code></pre>
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.4
+✔ forcats   1.0.0     ✔ stringr   1.5.0
+✔ lubridate 1.9.3     ✔ tibble    3.2.1
+✔ purrr     1.0.2     ✔ tidyr     1.3.0</code></pre>
 <pre><code>── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
 ✖ dplyr::filter() masks stats::filter()
-✖ dplyr::lag()    masks stats::lag()</code></pre>
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
 <pre class="r"><code>library(pals)
 library(RColorBrewer)
 library(ggbreak)</code></pre>
@@ -753,7 +700,7 @@ source(&quot;analysis/shared_functions_style_items.R&quot;)</code></pre>
 <h2>Pseudobulk and DE analysis</h2>
 <p>Subset data to high quality cells from normoxia, hypoxia, and
 hyperoxia conditions.</p>
-<pre class="r"><code>harmony.batchandindividual.sct &lt;- readRDS(file = &quot;output/harmony_organoid_dataset.rds&quot;)
+<pre class="r"><code>harmony.batchandindividual.sct &lt;- readRDS(file = &quot;/project2/gilad/umans/oxygen_eqtl/output/harmony_organoid_dataset.rds&quot;)
 
 subset_seurat &lt;- subset(harmony.batchandindividual.sct, subset = vireo.prob.singlet &gt; 0.95 &amp; nCount_RNA&lt;20000 &amp; nCount_RNA&gt;2500 &amp; treatment != &quot;control21&quot; )</code></pre>
 <p>Then, pseudobulk data by individual, collection batch, cell type
@@ -764,8 +711,8 @@ pseudobulk dataset that ignores cell type.</p>
 pseudo_fine_quality &lt;- generate.pseudobulk(subset_seurat, labels = c(&quot;combined.annotation.fine.harmony&quot;, &quot;treatment&quot;, &quot;vireo.individual&quot;, &quot;batch&quot;))
 
 pseudo_all_quality &lt;- generate.pseudobulk(subset_seurat, labels = c(&quot;treatment&quot;, &quot;batch&quot;, &quot;vireo.individual&quot;))</code></pre>
-<pre class="r"><code>pseudo_fine_quality &lt;- readRDS(file = &quot;output/pseudo_fine_quality_filtered_de_20240305.RDS&quot;)
-pseudo_coarse_quality &lt;- readRDS(file = &quot;output/pseudo_coarse_quality_filtered_de_20240305.RDS&quot;)</code></pre>
+<pre class="r"><code>pseudo_fine_quality &lt;- readRDS(file = &quot;/project2/gilad/umans/oxygen_eqtl/output/pseudo_fine_quality_filtered_de_20240305.RDS&quot;)
+pseudo_coarse_quality &lt;- readRDS(file = &quot;/project2/gilad/umans/oxygen_eqtl/output/pseudo_coarse_quality_filtered_de_20240305.RDS&quot;)</code></pre>
 <p>We previously determined that filtering to a minimum of 20 cells per
 pseudobulk sample minimizes excess sample variation associated with cell
 numbers.</p>
@@ -843,13 +790,13 @@ de_results_combinedcoarse_filtered[[&quot;VLMC&quot;]] &lt;- de_results_combined
 saveRDS(de_results_combinedcoarse_filtered, file = &quot;/project2/gilad/umans/oxygen_eqtl/output/de_results_combinedcoarse_filtered_reharmonize_20240305.RDS&quot;)</code></pre>
 <pre class="r"><code>de_results_combinedcoarse_filtered &lt;- readRDS(file = &quot;/project2/gilad/umans/oxygen_eqtl/output/de_results_combinedcoarse_filtered_reharmonize_20240305.RDS&quot;)</code></pre>
 <p>Results are given in the supplementary tables:</p>
-<pre class="r"><code>hypoxia_coarse &lt;- lapply(names(de_results_combinedcoarse_filtered), function(x) topTable(de_results_combinedcoarse_filtered[[x]], coef = &quot;treatmentstim1pct&quot;, number = Inf))
+<pre class="r"><code>hypoxia_coarse &lt;- lapply(names(de_results_combinedcoarse_filtered), function(x) topTable(de_results_combinedcoarse_filtered[[x]], coef = &quot;treatmentstim1pct&quot;, number = Inf) %&gt;% rownames_to_column(var = &quot;gene&quot;))
 
 hypoxia_coarse_table &lt;- gdata::combine(hypoxia_coarse[[1]], hypoxia_coarse[[2]], hypoxia_coarse[[3]], hypoxia_coarse[[4]], hypoxia_coarse[[5]], hypoxia_coarse[[6]], hypoxia_coarse[[7]], hypoxia_coarse[[8]], hypoxia_coarse[[9]], hypoxia_coarse[[10]], names = names(de_results_combinedcoarse_filtered)) 
 
 write_csv(x = hypoxia_coarse_table, file = &quot;output/hypoxia_de_genes_coarse.csv&quot;)
 
-hyperoxia_coarse &lt;- lapply(names(de_results_combinedcoarse_filtered), function(x) topTable(de_results_combinedcoarse_filtered[[x]], coef = &quot;treatmentstim21pct&quot;, number = Inf))
+hyperoxia_coarse &lt;- lapply(names(de_results_combinedcoarse_filtered), function(x) topTable(de_results_combinedcoarse_filtered[[x]], coef = &quot;treatmentstim21pct&quot;, number = Inf) %&gt;% rownames_to_column(var = &quot;gene&quot;))
 
 hyperoxia_coarse_table &lt;- gdata::combine(hyperoxia_coarse[[1]], hyperoxia_coarse[[2]], hyperoxia_coarse[[3]], hyperoxia_coarse[[4]], hyperoxia_coarse[[5]], hyperoxia_coarse[[6]], hyperoxia_coarse[[7]], hyperoxia_coarse[[8]], hyperoxia_coarse[[9]], hyperoxia_coarse[[10]], names = names(de_results_combinedcoarse_filtered)) 
 
@@ -878,13 +825,13 @@ de_results_combinedfine_filtered_vlmc[[&quot;VLMC&quot;]] &lt;- de_results_combi
 saveRDS(de_results_combinedfine_filtered, file = &quot;/project2/gilad/umans/oxygen_eqtl/output/de_results_combinedfine_filtered_reharmonize_20240305.RDS&quot;)</code></pre>
 <pre class="r"><code>de_results_combinedfine_filtered &lt;- readRDS(file = &quot;/project2/gilad/umans/oxygen_eqtl/output/de_results_combinedfine_filtered_reharmonize_20240305.RDS&quot;)</code></pre>
 <p>Results are given in the supplementary tables:</p>
-<pre class="r"><code>hypoxia_fine &lt;- lapply(names(de_results_combinedfine_filtered), function(x) topTable(de_results_combinedfine_filtered[[x]], coef = &quot;treatmentstim1pct&quot;, number = Inf))
+<pre class="r"><code>hypoxia_fine &lt;- lapply(names(de_results_combinedfine_filtered), function(x) topTable(de_results_combinedfine_filtered[[x]], coef = &quot;treatmentstim1pct&quot;, number = Inf) %&gt;% rownames_to_column(var = &quot;gene&quot;))
       
 hypoxia_fine_table &lt;- gdata::combine(hypoxia_fine[[1]], hypoxia_fine[[2]], hypoxia_fine[[3]], hypoxia_fine[[4]], hypoxia_fine[[5]], hypoxia_fine[[6]], hypoxia_fine[[7]], hypoxia_fine[[8]], hypoxia_fine[[9]], hypoxia_fine[[10]], hypoxia_fine[[11]], hypoxia_fine[[12]], hypoxia_fine[[13]], hypoxia_fine[[14]], hypoxia_fine[[15]], hypoxia_fine[[16]], hypoxia_fine[[17]], hypoxia_fine[[18]], names = names(de_results_combinedfine_filtered)) 
 
 write_csv(x = hypoxia_fine_table, file = &quot;output/hypoxia_de_genes_fine.csv&quot;)
 
-hyperoxia_fine &lt;- lapply(names(de_results_combinedfine_filtered), function(x) topTable(de_results_combinedfine_filtered[[x]], coef = &quot;treatmentstim21pct&quot;, number = Inf))
+hyperoxia_fine &lt;- lapply(names(de_results_combinedfine_filtered), function(x) topTable(de_results_combinedfine_filtered[[x]], coef = &quot;treatmentstim21pct&quot;, number = Inf) %&gt;% rownames_to_column(var = &quot;gene&quot;))
 
 hyperoxia_fine_table &lt;- gdata::combine(hyperoxia_fine[[1]], hyperoxia_fine[[2]], hyperoxia_fine[[3]], hyperoxia_fine[[4]], hyperoxia_fine[[5]], hyperoxia_fine[[6]], hyperoxia_fine[[7]], hyperoxia_fine[[8]], hyperoxia_fine[[9]], hyperoxia_fine[[10]], hyperoxia_fine[[11]], hyperoxia_fine[[12]], hyperoxia_fine[[13]], hyperoxia_fine[[14]], hyperoxia_fine[[15]], hyperoxia_fine[[16]], hyperoxia_fine[[17]], hyperoxia_fine[[18]], names = names(de_results_combinedfine_filtered)) 
 
@@ -925,6 +872,43 @@ genes.</p>
   theme(legend.position = &quot;none&quot;) + 
     scale_y_continuous(name = &quot;Fraction DE Genes&quot;, sec.axis = sec_axis(~ . *30000, name=&quot;Genes tested&quot;)) </code></pre>
 <p><img src="figure/figure2.Rmd/unnamed-chunk-16-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-16-1">
+Past versions of unnamed-chunk-16-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-16-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bumans/organoid_oxygen_eqtl/blob/f0eaf05032fddf90549dcb3c3274e965ceb16048/docs/figure/figure2.Rmd/unnamed-chunk-16-1.png" target="_blank">f0eaf05</a>
+</td>
+<td>
+Ben Umans
+</td>
+<td>
+2024-09-05
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>ggplot(de.summary.fine, mapping = aes(x=reorder(celltype, hyperoxia/hyperoxia_testedgenes), y=hyperoxia/hyperoxia_testedgenes, fill=celltype)) +  geom_bar(stat = &quot;identity&quot;, alpha=0.5) + ggtitle(&quot;DE summary, fine clusters, hyperoxia&quot;)  + theme_light() + 
   geom_bar(aes(y=hyperoxia_mineffect/hyperoxia_testedgenes), stat = &quot;identity&quot;, alpha=1) +
   ylab(&quot;Fraction of genes differentially expressed&quot;) + 
@@ -935,6 +919,43 @@ genes.</p>
   theme(legend.position = &quot;none&quot;) + 
     scale_y_continuous(name = &quot;Fraction DE Genes&quot;, sec.axis = sec_axis(~ . *30000, name=&quot;Genes tested&quot;)) </code></pre>
 <p><img src="figure/figure2.Rmd/unnamed-chunk-16-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-16-2">
+Past versions of unnamed-chunk-16-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-16-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bumans/organoid_oxygen_eqtl/blob/f0eaf05032fddf90549dcb3c3274e965ceb16048/docs/figure/figure2.Rmd/unnamed-chunk-16-2.png" target="_blank">f0eaf05</a>
+</td>
+<td>
+Ben Umans
+</td>
+<td>
+2024-09-05
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>The number of DE genes after hypoxia, aggregated across cell types,
 is given by:</p>
 <pre class="r"><code>sapply(c(&quot;GlutNTS&quot;, &quot;Glut&quot;, &quot;NeuronOther&quot; ,&quot;IP&quot; ,&quot;RG&quot;, &quot;Inh&quot;, &quot;GliaProg&quot;, &quot;Immature&quot;,&quot;CorticalHem&quot;, &quot;IPcycling&quot;,   &quot;RGcycling&quot;, &quot;Choroid&quot;,  &quot;Cajal&quot;, &quot;InhGNRH&quot;, &quot;InhThalamic&quot;, &quot;InhMidbrain&quot;, &quot;InhSST&quot;,&quot;VLMC&quot;), function(i) topTable(de_results_combinedfine_filtered[[i]], coef = &quot;treatmentstim1pct&quot;, number = Inf, p.value = 0.05) %&gt;% rownames_to_column(var = &quot;gene&quot;) %&gt;% pull(gene)) %&gt;% unlist() %&gt;% unname() %&gt;% unique() %&gt;% length()</code></pre>
@@ -958,10 +979,10 @@ rownames(de.summary.coarse) &lt;- names(de_results_combinedcoarse_filtered)
 for (cell in names(de_results_combinedcoarse_filtered)){
   de.summary.coarse[cell, 1] &lt;- sum(topTable(de_results_combinedcoarse_filtered[[cell]], coef=&quot;treatmentstim1pct&quot;, number = Inf)$adj.P.Val &lt; 0.05)
   de.summary.coarse[cell, 2] &lt;- sum(topTable(de_results_combinedcoarse_filtered[[cell]], coef=&quot;treatmentstim21pct&quot;, number = Inf)$adj.P.Val &lt; 0.05)
-    de.summary.coarse[cell, 3] &lt;- pseudo_fine_quality_de$meta %&gt;% filter(combined.annotation.fine.harmony==cell) %&gt;% dplyr::filter(treatment %in% c(&quot;control10&quot;, &quot;stim1pct&quot;)) %&gt;% summarize(total=sum(ncells)) %&gt;% pull(total)
-    de.summary.coarse[cell, 4] &lt;- pseudo_fine_quality_de$meta %&gt;% filter(combined.annotation.fine.harmony==cell) %&gt;% dplyr::filter(treatment %in% c(&quot;control10&quot;, &quot;stim21pct&quot;)) %&gt;% summarize(total=sum(ncells)) %&gt;% pull(total)
-    de.summary.coarse[cell, 5] &lt;- pseudo_fine_quality_de$meta %&gt;% filter(combined.annotation.fine.harmony==cell) %&gt;% dplyr::filter(treatment %in% c(&quot;control10&quot;, &quot;stim1pct&quot;)) %&gt;% pull(vireo.individual) %&gt;% unique() %&gt;% length()
-    de.summary.coarse[cell, 6] &lt;- pseudo_fine_quality_de$meta %&gt;% filter(combined.annotation.fine.harmony==cell) %&gt;% dplyr::filter(treatment %in% c(&quot;control10&quot;, &quot;stim21pct&quot;)) %&gt;% pull(vireo.individual) %&gt;% unique() %&gt;% length()
+    de.summary.coarse[cell, 3] &lt;- pseudo_coarse_quality_de$meta %&gt;% filter(combined.annotation.coarse.harmony==cell) %&gt;% dplyr::filter(treatment %in% c(&quot;control10&quot;, &quot;stim1pct&quot;)) %&gt;% summarize(total=sum(ncells)) %&gt;% pull(total)
+    de.summary.coarse[cell, 4] &lt;- pseudo_coarse_quality_de$meta %&gt;% filter(combined.annotation.coarse.harmony==cell) %&gt;% dplyr::filter(treatment %in% c(&quot;control10&quot;, &quot;stim21pct&quot;)) %&gt;% summarize(total=sum(ncells)) %&gt;% pull(total)
+    de.summary.coarse[cell, 5] &lt;- pseudo_coarse_quality_de$meta %&gt;% filter(combined.annotation.coarse.harmony==cell) %&gt;% dplyr::filter(treatment %in% c(&quot;control10&quot;, &quot;stim1pct&quot;)) %&gt;% pull(vireo.individual) %&gt;% unique() %&gt;% length()
+    de.summary.coarse[cell, 6] &lt;- pseudo_coarse_quality_de$meta %&gt;% filter(combined.annotation.coarse.harmony==cell) %&gt;% dplyr::filter(treatment %in% c(&quot;control10&quot;, &quot;stim21pct&quot;)) %&gt;% pull(vireo.individual) %&gt;% unique() %&gt;% length()
     de.summary.coarse[cell, 7] &lt;- (topTable(de_results_combinedcoarse_filtered[[cell]], coef=&quot;treatmentstim1pct&quot;, number = Inf) %&gt;% filter(adj.P.Val &lt; 0.05) %&gt;% filter(abs(logFC)&gt;0.58) %&gt;% nrow() )
   de.summary.coarse[cell, 8] &lt;- (topTable(de_results_combinedcoarse_filtered[[cell]], coef=&quot;treatmentstim21pct&quot;, number = Inf) %&gt;% filter(adj.P.Val &lt; 0.05) %&gt;% filter(abs(logFC)&gt;0.58) %&gt;% nrow())
   de.summary.coarse[cell, 9] &lt;- topTable(de_results_combinedcoarse_filtered[[cell]], coef=&quot;treatmentstim1pct&quot;, number = Inf) %&gt;% nrow()
@@ -1004,68 +1025,120 @@ de.summary.coarse %&gt;% kable(caption = &quot;DE summary Coarse reharmonized cl
 <tbody>
 <tr class="odd">
 <td align="left">Glut</td>
-<td align="right">3496</td>
-<td align="right">5572</td>
-<td align="right">19064</td>
-<td align="right">21018</td>
+<td align="right">3527</td>
+<td align="right">5702</td>
+<td align="right">20529</td>
+<td align="right">22286</td>
+<td align="right">21</td>
 <td align="right">20</td>
-<td align="right">19</td>
-<td align="right">395</td>
-<td align="right">510</td>
-<td align="right">15166</td>
-<td align="right">15166</td>
+<td align="right">405</td>
+<td align="right">484</td>
+<td align="right">15106</td>
+<td align="right">15106</td>
 </tr>
 <tr class="even">
 <td align="left">NeuronOther</td>
-<td align="right">3673</td>
-<td align="right">4655</td>
-<td align="right">11252</td>
-<td align="right">11098</td>
+<td align="right">3633</td>
+<td align="right">4558</td>
+<td align="right">11652</td>
+<td align="right">11373</td>
 <td align="right">16</td>
 <td align="right">19</td>
-<td align="right">372</td>
-<td align="right">324</td>
-<td align="right">12402</td>
-<td align="right">12402</td>
+<td align="right">387</td>
+<td align="right">327</td>
+<td align="right">12584</td>
+<td align="right">12584</td>
 </tr>
 <tr class="odd">
 <td align="left">IP</td>
-<td align="right">4423</td>
-<td align="right">5865</td>
-<td align="right">6390</td>
-<td align="right">6940</td>
+<td align="right">4366</td>
+<td align="right">5796</td>
+<td align="right">9992</td>
+<td align="right">11610</td>
+<td align="right">20</td>
 <td align="right">19</td>
-<td align="right">18</td>
-<td align="right">344</td>
-<td align="right">420</td>
-<td align="right">11462</td>
-<td align="right">11462</td>
+<td align="right">353</td>
+<td align="right">460</td>
+<td align="right">11553</td>
+<td align="right">11553</td>
 </tr>
 <tr class="even">
 <td align="left">RG</td>
-<td align="right">6831</td>
-<td align="right">7598</td>
-<td align="right">16898</td>
-<td align="right">15808</td>
+<td align="right">6761</td>
+<td align="right">7896</td>
+<td align="right">27763</td>
+<td align="right">27422</td>
 <td align="right">21</td>
 <td align="right">21</td>
-<td align="right">654</td>
-<td align="right">548</td>
-<td align="right">14749</td>
-<td align="right">14749</td>
+<td align="right">598</td>
+<td align="right">536</td>
+<td align="right">14742</td>
+<td align="right">14742</td>
 </tr>
 <tr class="odd">
 <td align="left">Inh</td>
-<td align="right">3292</td>
-<td align="right">4870</td>
-<td align="right">6187</td>
-<td align="right">6441</td>
-<td align="right">18</td>
-<td align="right">18</td>
-<td align="right">280</td>
-<td align="right">327</td>
-<td align="right">11651</td>
-<td align="right">11651</td>
+<td align="right">3302</td>
+<td align="right">4798</td>
+<td align="right">10749</td>
+<td align="right">10993</td>
+<td align="right">19</td>
+<td align="right">19</td>
+<td align="right">304</td>
+<td align="right">348</td>
+<td align="right">11988</td>
+<td align="right">11988</td>
+</tr>
+<tr class="even">
+<td align="left">Glia</td>
+<td align="right">3275</td>
+<td align="right">4837</td>
+<td align="right">7188</td>
+<td align="right">7933</td>
+<td align="right">19</td>
+<td align="right">19</td>
+<td align="right">406</td>
+<td align="right">423</td>
+<td align="right">11562</td>
+<td align="right">11562</td>
+</tr>
+<tr class="odd">
+<td align="left">Immature</td>
+<td align="right">5221</td>
+<td align="right">5408</td>
+<td align="right">18376</td>
+<td align="right">16927</td>
+<td align="right">21</td>
+<td align="right">20</td>
+<td align="right">757</td>
+<td align="right">606</td>
+<td align="right">12419</td>
+<td align="right">12419</td>
+</tr>
+<tr class="even">
+<td align="left">Choroid</td>
+<td align="right">468</td>
+<td align="right">667</td>
+<td align="right">1424</td>
+<td align="right">1461</td>
+<td align="right">11</td>
+<td align="right">11</td>
+<td align="right">326</td>
+<td align="right">316</td>
+<td align="right">8862</td>
+<td align="right">8862</td>
+</tr>
+<tr class="odd">
+<td align="left">Cajal</td>
+<td align="right">59</td>
+<td align="right">192</td>
+<td align="right">665</td>
+<td align="right">713</td>
+<td align="right">6</td>
+<td align="right">6</td>
+<td align="right">59</td>
+<td align="right">132</td>
+<td align="right">7286</td>
+<td align="right">7286</td>
 </tr>
 <tr class="even">
 <td align="left">VLMC</td>
@@ -1079,58 +1152,6 @@ de.summary.coarse %&gt;% kable(caption = &quot;DE summary Coarse reharmonized cl
 <td align="right">571</td>
 <td align="right">10171</td>
 <td align="right">10171</td>
-</tr>
-<tr class="odd">
-<td align="left">Glia</td>
-<td align="right">3546</td>
-<td align="right">5123</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">407</td>
-<td align="right">454</td>
-<td align="right">11900</td>
-<td align="right">11900</td>
-</tr>
-<tr class="even">
-<td align="left">Immature</td>
-<td align="right">5131</td>
-<td align="right">5412</td>
-<td align="right">18376</td>
-<td align="right">16927</td>
-<td align="right">21</td>
-<td align="right">20</td>
-<td align="right">740</td>
-<td align="right">598</td>
-<td align="right">12483</td>
-<td align="right">12483</td>
-</tr>
-<tr class="odd">
-<td align="left">Choroid</td>
-<td align="right">664</td>
-<td align="right">980</td>
-<td align="right">1424</td>
-<td align="right">1461</td>
-<td align="right">11</td>
-<td align="right">11</td>
-<td align="right">396</td>
-<td align="right">358</td>
-<td align="right">9285</td>
-<td align="right">9285</td>
-</tr>
-<tr class="even">
-<td align="left">Cajal</td>
-<td align="right">91</td>
-<td align="right">275</td>
-<td align="right">665</td>
-<td align="right">713</td>
-<td align="right">6</td>
-<td align="right">6</td>
-<td align="right">84</td>
-<td align="right">198</td>
-<td align="right">7687</td>
-<td align="right">7687</td>
 </tr>
 </tbody>
 </table>
@@ -1149,6 +1170,43 @@ genes.</p>
   theme(legend.position = &quot;none&quot;) + 
     scale_y_continuous(name = &quot;Fraction DE Genes&quot;, sec.axis = sec_axis(~ . *30000, name=&quot;Genes tested&quot;)) </code></pre>
 <p><img src="figure/figure2.Rmd/unnamed-chunk-22-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-22-1">
+Past versions of unnamed-chunk-22-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-22-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bumans/organoid_oxygen_eqtl/blob/f0eaf05032fddf90549dcb3c3274e965ceb16048/docs/figure/figure2.Rmd/unnamed-chunk-22-1.png" target="_blank">f0eaf05</a>
+</td>
+<td>
+Ben Umans
+</td>
+<td>
+2024-09-05
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>ggplot(de.summary.coarse, mapping = aes(x=reorder(celltype, hyperoxia/hyperoxia_testedgenes), y=hyperoxia/hyperoxia_testedgenes, fill=celltype)) +  geom_bar(stat = &quot;identity&quot;, alpha=0.5) + ggtitle(&quot;DE summary, fine clusters, hyperoxia&quot;)  + theme_light() + 
   geom_bar(aes(y=hyperoxia_mineffect/hyperoxia_testedgenes), stat = &quot;identity&quot;, alpha=1) +
   ylab(&quot;Fraction of genes differentially expressed&quot;) + 
@@ -1159,20 +1217,57 @@ genes.</p>
   theme(legend.position = &quot;none&quot;) + 
     scale_y_continuous(name = &quot;Fraction DE Genes&quot;, sec.axis = sec_axis(~ . *30000, name=&quot;Genes tested&quot;)) </code></pre>
 <p><img src="figure/figure2.Rmd/unnamed-chunk-22-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-22-2">
+Past versions of unnamed-chunk-22-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-22-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bumans/organoid_oxygen_eqtl/blob/f0eaf05032fddf90549dcb3c3274e965ceb16048/docs/figure/figure2.Rmd/unnamed-chunk-22-2.png" target="_blank">f0eaf05</a>
+</td>
+<td>
+Ben Umans
+</td>
+<td>
+2024-09-05
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>The number of hypoxia DE genes aggregated across cell types is given
 by:</p>
 <pre class="r"><code>sapply(c(&quot;Glut&quot;, &quot;NeuronOther&quot; ,&quot;IP&quot; ,&quot;RG&quot;, &quot;Inh&quot;, &quot;Glia&quot;, &quot;Immature&quot;, &quot;Choroid&quot;,  &quot;Cajal&quot;, &quot;VLMC&quot;), function(i) topTable(de_results_combinedcoarse_filtered[[i]], coef = &quot;treatmentstim1pct&quot;, number = Inf, p.value = 0.05)  %&gt;% rownames_to_column(var = &quot;gene&quot;) %&gt;% pull(gene)) %&gt;% unlist() %&gt;% unname() %&gt;% unique() %&gt;% length()</code></pre>
-<pre><code>[1] 10578</code></pre>
+<pre><code>[1] 10466</code></pre>
 <p>Or, restricting to &gt;1.5-fold change:</p>
 <pre class="r"><code>sapply(c(&quot;Glut&quot;, &quot;NeuronOther&quot; ,&quot;IP&quot; ,&quot;RG&quot;, &quot;Inh&quot;, &quot;Glia&quot;, &quot;Immature&quot;, &quot;Choroid&quot;,  &quot;Cajal&quot;, &quot;VLMC&quot;), function(i) topTable(de_results_combinedcoarse_filtered[[i]], coef = &quot;treatmentstim1pct&quot;, number = Inf, p.value = 0.05) %&gt;% filter(abs(logFC)&gt;0.58) %&gt;% rownames_to_column(var = &quot;gene&quot;) %&gt;% pull(gene)) %&gt;% unlist() %&gt;% unname() %&gt;% unique() %&gt;% length()</code></pre>
-<pre><code>[1] 2120</code></pre>
+<pre><code>[1] 2068</code></pre>
 <p>For hyperoxia, this is given by: The number of hypoxia DE genes
 aggregated across cell types is given by:</p>
 <pre class="r"><code>sapply(c(&quot;Glut&quot;, &quot;NeuronOther&quot; ,&quot;IP&quot; ,&quot;RG&quot;, &quot;Inh&quot;, &quot;Glia&quot;, &quot;Immature&quot;, &quot;Choroid&quot;,  &quot;Cajal&quot;, &quot;VLMC&quot;), function(i) topTable(de_results_combinedcoarse_filtered[[i]], coef = &quot;treatmentstim21pct&quot;, number = Inf, p.value = 0.05)  %&gt;% rownames_to_column(var = &quot;gene&quot;) %&gt;% pull(gene)) %&gt;% unlist() %&gt;% unname() %&gt;% unique() %&gt;% length()</code></pre>
-<pre><code>[1] 10700</code></pre>
+<pre><code>[1] 10754</code></pre>
 <p>Or, restricting to &gt;1.5-fold change:</p>
 <pre class="r"><code>sapply(c(&quot;Glut&quot;, &quot;NeuronOther&quot; ,&quot;IP&quot; ,&quot;RG&quot;, &quot;Inh&quot;, &quot;Glia&quot;, &quot;Immature&quot;, &quot;Choroid&quot;,  &quot;Cajal&quot;, &quot;VLMC&quot;), function(i) topTable(de_results_combinedcoarse_filtered[[i]], coef = &quot;treatmentstim21pct&quot;, number = Inf, p.value = 0.05) %&gt;% filter(abs(logFC)&gt;0.58) %&gt;% rownames_to_column(var = &quot;gene&quot;) %&gt;% pull(gene)) %&gt;% unlist() %&gt;% unname() %&gt;% unique() %&gt;% length()</code></pre>
-<pre><code>[1] 2097</code></pre>
+<pre><code>[1] 2053</code></pre>
 <p>Ignoring cell type information yields a different number of DE
 genes:</p>
 <pre class="r"><code>results_all &lt;- readRDS(file = &quot;/project2/gilad/umans/oxygen_eqtl/output/de_results_pseudoall_filtered_20231107.RDS&quot;)
@@ -1202,6 +1297,43 @@ detecting small effect sizes:</p>
   xlab(&quot;Number of cells in comparison&quot;) +
   ylab(&quot;Number of DE genes&quot;)</code></pre>
 <p><img src="figure/figure2.Rmd/unnamed-chunk-29-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-29-1">
+Past versions of unnamed-chunk-29-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-29-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bumans/organoid_oxygen_eqtl/blob/f0eaf05032fddf90549dcb3c3274e965ceb16048/docs/figure/figure2.Rmd/unnamed-chunk-29-1.png" target="_blank">f0eaf05</a>
+</td>
+<td>
+Ben Umans
+</td>
+<td>
+2024-09-05
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>ggplot(de.summary.fine, mapping = aes(x=nindiv_hypoxia, y=hypoxia, label=celltype)) + 
   geom_point(aes(size=nindiv_hypoxia, color=celltype)) + 
   geom_text_repel() + 
@@ -1213,6 +1345,43 @@ detecting small effect sizes:</p>
   xlab(&quot;Number of individuals in comparison&quot;) +
   ylab(&quot;Number of DE genes&quot;)</code></pre>
 <p><img src="figure/figure2.Rmd/unnamed-chunk-29-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-29-2">
+Past versions of unnamed-chunk-29-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-29-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bumans/organoid_oxygen_eqtl/blob/f0eaf05032fddf90549dcb3c3274e965ceb16048/docs/figure/figure2.Rmd/unnamed-chunk-29-2.png" target="_blank">f0eaf05</a>
+</td>
+<td>
+Ben Umans
+</td>
+<td>
+2024-09-05
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>ggplot(de.summary.fine, mapping = aes(x=nindiv_hypoxia, y=hypoxia/hypoxia_testedgenes, label=celltype)) + 
   geom_point(aes(size=nindiv_hypoxia, color=celltype)) + 
   geom_text_repel() + 
@@ -1224,6 +1393,43 @@ detecting small effect sizes:</p>
   xlab(&quot;Number of individuals in comparison&quot;) +
   ylab(&quot;Fraction of genes DE&quot;)</code></pre>
 <p><img src="figure/figure2.Rmd/unnamed-chunk-29-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-29-3">
+Past versions of unnamed-chunk-29-3.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-29-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bumans/organoid_oxygen_eqtl/blob/f0eaf05032fddf90549dcb3c3274e965ceb16048/docs/figure/figure2.Rmd/unnamed-chunk-29-3.png" target="_blank">f0eaf05</a>
+</td>
+<td>
+Ben Umans
+</td>
+<td>
+2024-09-05
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>ggplot(de.summary.fine, mapping = aes(x=nindiv_hypoxia, y=hypoxia_mineffect, label=celltype)) + 
   geom_point(aes(size=nindiv_hypoxia, color=celltype)) + 
   geom_text_repel() + 
@@ -1235,6 +1441,43 @@ detecting small effect sizes:</p>
   xlab(&quot;Number of individuals in comparison&quot;) +
   ylab(&quot;Number of DE genes&quot;)</code></pre>
 <p><img src="figure/figure2.Rmd/unnamed-chunk-29-4.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-29-4">
+Past versions of unnamed-chunk-29-4.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-29-4" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bumans/organoid_oxygen_eqtl/blob/f0eaf05032fddf90549dcb3c3274e965ceb16048/docs/figure/figure2.Rmd/unnamed-chunk-29-4.png" target="_blank">f0eaf05</a>
+</td>
+<td>
+Ben Umans
+</td>
+<td>
+2024-09-05
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>ggplot(de.summary.fine, mapping = aes(x=nindiv_hypoxia, y=hypoxia_mineffect/hypoxia_testedgenes, label=celltype)) + 
   geom_point(aes(size=nindiv_hypoxia, color=celltype)) + 
   geom_text_repel() + 
@@ -1246,12 +1489,70 @@ detecting small effect sizes:</p>
   xlab(&quot;Number of individuals in comparison&quot;) +
   ylab(&quot;Fraction of genes DE&quot;)</code></pre>
 <p><img src="figure/figure2.Rmd/unnamed-chunk-29-5.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-29-5">
+Past versions of unnamed-chunk-29-5.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-29-5" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bumans/organoid_oxygen_eqtl/blob/f0eaf05032fddf90549dcb3c3274e965ceb16048/docs/figure/figure2.Rmd/unnamed-chunk-29-5.png" target="_blank">f0eaf05</a>
+</td>
+<td>
+Ben Umans
+</td>
+<td>
+2024-09-05
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>Number of individuals, rather than number of cells per pseudobulk
 sample, is the important factor contributing to power here. We
 separately found that including cell numbers as a covariation in the DE
 model has no effect on the relationship shown above, nor do differences
 in transcriptome size between cell types (constraining all comparisons
 to a common transcriptome preserved this relationship).</p>
+<p>We can look at a variance partition plot (from dream package) to get
+an approximate sense of the relative contribution of cell type identity,
+cell line, treatment, and collection batch to overall data variation. We
+expect that cell type makes the largest contribution here.</p>
+<pre class="r"><code>vardata &lt;- DGEList(counts = pseudo_fine_quality_de$counts, samples = pseudo_fine_quality_de$meta)
+keepgenes &lt;- filterByExpr(y = vardata, min.count = 5, 
+                           min.prop=0.4, 
+                           min.total.count = 10)
+
+print(paste0(&quot;Testing &quot;, sum(keepgenes), &quot; genes&quot;))
+vardata &lt;- vardata[keepgenes,]
+vardata &lt;- calcNormFactors(vardata, method = &quot;TMM&quot;)
+
+formula_all &lt;- ~ (1|combined.annotation.fine.harmony) +  (1|treatment) + (1|vireo.individual) + (1|batch) 
+voomed.varpart.all &lt;- voomWithDreamWeights(vardata, formula_all, vardata$samples, plot=TRUE, BPPARAM = param)
+
+vp &lt;- fitExtractVarPartModel(voomed.varpart.all, formula_all, vardata$samples, BPPARAM = param)
+saveRDS(vp, &quot;/project2/gilad/umans/oxygen_eqtl/output/vp.RDS&quot;)</code></pre>
+<pre class="r"><code>vp &lt;- readRDS(&quot;/project2/gilad/umans/oxygen_eqtl/output/vp.RDS&quot;)
+plotVarPart(sortCols(vp), size=0.1)</code></pre>
+<p><img src="figure/figure2.Rmd/unnamed-chunk-31-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 <div id="mash-for-de-results" class="section level2">
 <h2>mash for DE results</h2>
@@ -1262,27 +1563,9 @@ href="https://stephenslab.github.io/mashr/index.html">mash</a> to
 estimate posterior effect sizes and significance metrics.</p>
 <pre class="r"><code>library(mashr)
 library(udr)
-library(flashier)</code></pre>
-<pre><code>Loading required package: ebnm</code></pre>
-<pre><code>Loading required package: magrittr</code></pre>
-<pre><code>
-Attaching package: &#39;magrittr&#39;</code></pre>
-<pre><code>The following object is masked from &#39;package:purrr&#39;:
+library(flashier)
 
-    set_names</code></pre>
-<pre><code>The following object is masked from &#39;package:tidyr&#39;:
-
-    extract</code></pre>
-<pre><code>Registered S3 methods overwritten by &#39;flashier&#39;:
-  method      from  
-  plot.flash  flashr
-  print.flash flashr</code></pre>
-<pre><code>
-Attaching package: &#39;flashier&#39;</code></pre>
-<pre><code>The following objects are masked from &#39;package:flashr&#39;:
-
-    flash, flash_backfit</code></pre>
-<pre class="r"><code>## Function to estimate residual covariance for udr
+## Function to estimate residual covariance for udr
 estimate_null_cov_simple = function(data, z_thresh=2, est_cor = TRUE){
   z = data$Bhat/data$Shat
   max_absz = apply(abs(z),1, max)
@@ -1530,7 +1813,7 @@ two conditions as those that are (a) significant in at least one of the
 conditions and (b) differ in magnitude by less than a factor of 2.5,
 with the same sign.</p>
 <p>The matrix of sharing by these criteria is obtained from:</p>
-<pre class="r"><code>m_posterior &lt;- readRDS(file=&quot;output/mash_de/mashposterior_dataset9_fine_reharmonized_z3.RDS&quot;)
+<pre class="r"><code>m_posterior &lt;- readRDS(file=&quot;/project2/gilad/umans/oxygen_eqtl/output/mash_de/mashposterior_dataset9_fine_reharmonized_z3.RDS&quot;)
 
 shared.size = matrix(NA,nrow = ncol(m_posterior$lfsr),ncol=ncol(m_posterior$lfsr))
 colnames(shared.size) &lt;- rownames(shared.size) &lt;-colnames(m_posterior$lfsr)
@@ -1621,7 +1904,7 @@ pheatmap(shared.size, col = colorRampPalette(rev(brewer.pal(11, &quot;Spectral&q
          annotation_row = labels,
          annotation_colors = annoCol, cluster_rows = FALSE, cluster_cols = FALSE
          )</code></pre>
-<p><img src="figure/figure2.Rmd/unnamed-chunk-36-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/figure2.Rmd/unnamed-chunk-38-1.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code># for logFC-constrained
 labels &lt;- data.frame(celltype=str_extract(rownames(shared.size.constrained), pattern = &quot;[:alpha:]+&quot;),
                      treatment=str_extract(rownames(shared.size.constrained), pattern = &quot;[:digit:]+&quot;))
@@ -1641,7 +1924,7 @@ pheatmap(shared.size.constrained, col = colorRampPalette(rev(brewer.pal(11, &quo
          annotation_row = labels,
          annotation_colors = annoCol, cluster_rows = FALSE, cluster_cols = FALSE
          )</code></pre>
-<p><img src="figure/figure2.Rmd/unnamed-chunk-36-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/figure2.Rmd/unnamed-chunk-38-2.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>labels &lt;- data.frame(celltype=str_extract(rownames(shared.size.intersection), pattern = &quot;[:alpha:]+&quot;),
                      treatment=str_extract(rownames(shared.size.intersection), pattern = &quot;[:digit:]+&quot;))
 rownames(labels) &lt;- rownames(shared.size.intersection)
@@ -1662,7 +1945,7 @@ pheatmap(shared.size.intersection, col = colorRampPalette(rev(brewer.pal(11, &qu
          annotation_row = labels,
          annotation_colors = annoCol, cluster_rows = FALSE, cluster_cols = FALSE
          )</code></pre>
-<p><img src="figure/figure2.Rmd/unnamed-chunk-37-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/figure2.Rmd/unnamed-chunk-39-1.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code># for logFC-constrained
 labels &lt;- data.frame(celltype=str_extract(rownames(shared.size.constrained.intersection), pattern = &quot;[:alpha:]+&quot;),
                      treatment=str_extract(rownames(shared.size.constrained.intersection), pattern = &quot;[:digit:]+&quot;))
@@ -1682,7 +1965,7 @@ pheatmap(shared.size.constrained.intersection, col = colorRampPalette(rev(brewer
          annotation_row = labels,
          annotation_colors = annoCol, cluster_rows = FALSE, cluster_cols = FALSE
          )</code></pre>
-<p><img src="figure/figure2.Rmd/unnamed-chunk-37-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/figure2.Rmd/unnamed-chunk-39-2.png" width="672" style="display: block; margin: auto;" /></p>
 <p>How many genes are DE in at least one cell type (FDR&lt;0.05, effect
 size&gt;1.5-fold) after mash?</p>
 <pre class="r"><code>sapply(c(&quot;GlutNTS&quot;, &quot;Glut&quot;, &quot;NeuronOther&quot; ,&quot;IP&quot; ,&quot;RG&quot;, &quot;Inh&quot;, &quot;GliaProg&quot;, &quot;Immature&quot;,&quot;CorticalHem&quot;, &quot;IPcycling&quot;,   &quot;RGcycling&quot;, &quot;Choroid&quot;,  &quot;Cajal&quot;, &quot;InhGNRH&quot;, &quot;InhThalamic&quot;, &quot;InhMidbrain&quot;, &quot;InhSST&quot;,&quot;VLMC&quot;), function(cell) names(which(abs(m_posterior$PosteriorMean[which(m_posterior$lfsr[,paste0(cell, &quot;1&quot;)] &lt; 0.05), paste0(cell, &quot;1&quot;)])&gt;0.58))) %&gt;% unlist() %&gt;% unname() %&gt;% unique() %&gt;% length()</code></pre>
@@ -1902,7 +2185,7 @@ two conditions as those that are (a) significant in at least one of the
 conditions and (b) differ in magnitude by less than a factor of 2.5,
 with the same sign.</p>
 <p>The matrix of sharing by these criteria is obtained from:</p>
-<pre class="r"><code>m_posterior &lt;- readRDS(file=&quot;output/mash_de/mashposterior_dataset9_coarse_reharmonized_z3.RDS&quot;)
+<pre class="r"><code>m_posterior &lt;- readRDS(file=&quot;/project2/gilad/umans/oxygen_eqtl/output/mash_de/mashposterior_dataset9_coarse_reharmonized_z3.RDS&quot;)
 
 shared.size = matrix(NA,nrow = ncol(m_posterior$lfsr),ncol=ncol(m_posterior$lfsr))
 colnames(shared.size) &lt;- rownames(shared.size) &lt;-colnames(m_posterior$lfsr)
@@ -1958,7 +2241,7 @@ pheatmap(shared.size, col = colorRampPalette(rev(brewer.pal(11, &quot;Spectral&q
          annotation_row = labels,
          annotation_colors = annoCol, cluster_rows = FALSE, cluster_cols = FALSE
 )</code></pre>
-<p><img src="figure/figure2.Rmd/unnamed-chunk-45-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/figure2.Rmd/unnamed-chunk-47-1.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code># for logFC-constrained
 labels &lt;- data.frame(celltype=str_extract(rownames(shared.size.constrained), pattern = &quot;[:alpha:]+&quot;),
                      treatment=str_extract(rownames(shared.size.constrained), pattern = &quot;[:digit:]+&quot;))
@@ -1977,14 +2260,14 @@ pheatmap(shared.size.constrained, col = colorRampPalette(rev(brewer.pal(11, &quo
          annotation_row = labels,
          annotation_colors = annoCol, cluster_rows = FALSE, cluster_cols = FALSE
 )</code></pre>
-<p><img src="figure/figure2.Rmd/unnamed-chunk-45-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/figure2.Rmd/unnamed-chunk-47-2.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 </div>
 <div id="gene-set-enrichment" class="section level2">
 <h2>Gene set enrichment</h2>
 <p>We used fgsea to compare differential expression results to annotated
 gene sets from MsigDB.</p>
-<pre class="r"><code>m_posterior &lt;- readRDS(file=&quot;output/mash_de/mashposterior_dataset9_fine_reharmonized_z3.RDS&quot;)</code></pre>
+<pre class="r"><code>m_posterior &lt;- readRDS(file=&quot;/project2/gilad/umans/oxygen_eqtl/output/mash_de/mashposterior_dataset9_fine_reharmonized_z3.RDS&quot;)</code></pre>
 <pre class="r"><code>library(fgsea)
 pathways_all &lt;- gmtPathways(&#39;/project/gilad/umans/references/msigdb/h.all.v2023.1.Hs.symbols.gmt&#39;) 
 # obtained from https://www.gsea-msigdb.org/gsea/msigdb/collections.jsp</code></pre>
@@ -2361,12 +2644,12 @@ pheatmap(combined_fgsea_all, col = colorRampPalette(rev(brewer.pal(11, &quot;Spe
          annotation_col = labels,
          annotation_colors = annoCol, cluster_cols = FALSE
          )</code></pre>
-<p><img src="figure/figure2.Rmd/unnamed-chunk-50-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/figure2.Rmd/unnamed-chunk-52-1.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>rm(combined_fgsea_all, m_posterior)</code></pre>
 <div id="gene-set-enrichment-coarse-cell-classification"
 class="section level3">
 <h3>Gene set enrichment, coarse cell classification:</h3>
-<pre class="r"><code>m_posterior &lt;- readRDS(file=&quot;output/mash_de/mashposterior_dataset9_coarse_reharmonized_z3.RDS&quot;)
+<pre class="r"><code>m_posterior &lt;- readRDS(file=&quot;/project2/gilad/umans/oxygen_eqtl/output/mash_de/mashposterior_dataset9_coarse_reharmonized_z3.RDS&quot;)
 m_posterior$t &lt;- m_posterior$PosteriorMean/m_posterior$PosteriorSD</code></pre>
 <p>Next, perform fgsea on each cell type/condition (ie, each column of
 this matrix).</p>
@@ -2594,9 +2877,113 @@ pheatmap(combined_fgsea_all, col = colorRampPalette(rev(brewer.pal(11, &quot;Spe
          annotation_col = labels,
          annotation_colors = annoCol, cluster_cols = FALSE
 )</code></pre>
-<p><img src="figure/figure2.Rmd/unnamed-chunk-53-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/figure2.Rmd/unnamed-chunk-55-1.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>rm(combined_fgsea_all, m_posterior)</code></pre>
 </div>
+</div>
+<div id="compare-de-genes-to-previously-published-findings"
+class="section level2">
+<h2>Compare DE genes to previously published findings</h2>
+<p>Here, I compare our results to the DE genes identified in <a
+href="https://www.nature.com/articles/s41591-019-0436-0">Paşca et
+al.</a>.</p>
+<pre class="r"><code>m_posterior_fine &lt;- readRDS(file=&quot;/project2/gilad/umans/oxygen_eqtl/output/mash_de/mashposterior_dataset9_fine_reharmonized_z3.RDS&quot;)</code></pre>
+<p>Pasca lab reported all genes with FDR&lt;0.05 and logFC&gt;0.58 in
+their supplement.</p>
+<pre class="r"><code>pasca24 &lt;- read_csv(file = &quot;/project2/gilad/umans/oxygen_eqtl/data/external/Pasca_24hr.csv&quot;)</code></pre>
+<pre><code>Rows: 943 Columns: 7
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: &quot;,&quot;
+chr (2): GeneID, GeneAnnotation
+dbl (5): logFC, logCPM, F, PValue, FDR
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>pasca48 &lt;- read_csv(file = &quot;/project2/gilad/umans/oxygen_eqtl/data/external/Pasca_48hr.csv&quot;)</code></pre>
+<pre><code>Rows: 1520 Columns: 7
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: &quot;,&quot;
+chr (2): GeneID, GeneAnnotation
+dbl (5): logFC, logCPM, F, PValue, FDR
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>length(unique(c(pasca24$GeneAnnotation, pasca48$GeneAnnotation)))</code></pre>
+<pre><code>[1] 1754</code></pre>
+<p>This comes out to 1754 DE genes.</p>
+<p>Now, we add these result into the mash posterior matrices in order to
+similarly calculate the similarity of the Pasca results to our hypoxia
+and hyperoxia DE genes.</p>
+<pre class="r"><code>m_posterior_comparison &lt;- m_posterior_fine
+m_posterior_comparison$PosteriorMean &lt;- data.frame(m_posterior_comparison$PosteriorMean ) %&gt;% 
+  rownames_to_column(var = &quot;GeneAnnotation&quot;) %&gt;% 
+  left_join(x=., y = (pasca24 %&gt;% select(GeneAnnotation, Pasca124=logFC)), by=join_by(&quot;GeneAnnotation&quot;)) %&gt;% 
+  # replace_na(list(Pasca124=0)) %&gt;%
+  left_join(x=., y = (pasca48 %&gt;% select(GeneAnnotation, Pasca148=logFC)), by=join_by(&quot;GeneAnnotation&quot;)) %&gt;% 
+  # replace_na(list(Pasca124=0)) %&gt;%
+  column_to_rownames(var = &quot;GeneAnnotation&quot;) %&gt;% as.matrix()
+
+m_posterior_comparison$lfsr &lt;- data.frame(m_posterior_comparison$lfsr ) %&gt;% 
+  rownames_to_column(var = &quot;GeneAnnotation&quot;) %&gt;% 
+  left_join(x=., y = (pasca24 %&gt;% select(GeneAnnotation, Pasca124=FDR)), by=join_by(&quot;GeneAnnotation&quot;)) %&gt;% 
+  # replace_na(list(Pasca124=0)) %&gt;%
+  left_join(x=., y = (pasca48 %&gt;% select(GeneAnnotation, Pasca148=FDR)), by=join_by(&quot;GeneAnnotation&quot;)) %&gt;% 
+  # replace_na(list(Pasca124=0)) %&gt;%
+  column_to_rownames(var = &quot;GeneAnnotation&quot;) %&gt;% as.matrix()
+
+
+shared.effect = matrix(NA,nrow = ncol(m_posterior_comparison$lfsr),ncol=ncol(m_posterior_comparison$lfsr))
+colnames(shared.effect) &lt;- rownames(shared.effect) &lt;- colnames(m_posterior_comparison$lfsr)
+
+for (i in 1:ncol(m_posterior_comparison$PosteriorMean)) {
+  for (j in 1:ncol(m_posterior_comparison$PosteriorMean)) {
+    sig.row=which(m_posterior_comparison$lfsr[,i] &lt; 0.05)
+    sig.col=which(m_posterior_comparison$lfsr[,j] &lt; 0.05)
+    size.row=which(abs(m_posterior_comparison$PosteriorMean[,i]) &gt; 0.58)
+    size.col=which(abs(m_posterior_comparison$PosteriorMean[,j]) &gt; 0.58)
+    a=intersect(intersect(sig.row,sig.col), union(size.row, size.col)) # at least one effect is significant
+    # # constrain to those with at least one posterior mean logFC&gt;0.58
+    shared.effect[i,j] &lt;- cor(m_posterior_comparison$PosteriorMean[a,i], m_posterior_comparison$PosteriorMean[a,j], use = &quot;pairwise.complete.obs&quot;)
+    
+  }
+}</code></pre>
+<pre class="r"><code>labels &lt;- data.frame(celltype=str_extract(rownames(shared.effect), pattern = &quot;[:alpha:]+&quot;),
+                     treatment=str_extract(rownames(shared.effect), pattern = &quot;[:digit:]+&quot;))
+rownames(labels) &lt;- rownames(shared.effect)
+
+celltypeCol &lt;- c(manual_palette_fine, Pasca=&quot;purple&quot;)
+
+treatmentCol &lt;- c(&quot;red&quot;, &quot;blue&quot;, &quot;lightblue&quot;, &quot;darkblue&quot;)
+# names(celltypeCol) &lt;- unique(labels$celltype)
+names(treatmentCol) &lt;- unique(labels$treatment)
+annoCol &lt;- list(celltype = celltypeCol,
+                treatment = treatmentCol)
+
+# now use pheatmap to annotate
+pheatmap(shared.effect, col = viridis(50),
+         border_color = NA,
+         show_colnames = TRUE,
+         treeheight_row = 0, treeheight_col = 0,
+         annotation_row = labels,
+         annotation_colors = annoCol
+         )</code></pre>
+<p><img src="figure/figure2.Rmd/unnamed-chunk-59-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>pheatmap(shared.effect[c(1:18, 37:38), c(1:18, 37:38)], col = colorRampPalette(rev(brewer.pal(11, &quot;Spectral&quot;)))(50),
+         border_color = NA,
+         show_colnames = TRUE,
+         treeheight_row = 0, treeheight_col = 0,
+         annotation_row = labels, legend_breaks = c(-0.5, 0, 0.5, 1), drop_levels = FALSE, breaks =seq(from=-0.5, to=1, length.out=51), 
+         annotation_colors = annoCol, cellwidth = 6, cellheight = 6, fontsize = 6, angle_col = 45
+         )</code></pre>
+<p><img src="figure/figure2.Rmd/unnamed-chunk-59-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>pheatmap(shared.effect[c(19:38), c(19:38)], col = colorRampPalette(rev(brewer.pal(11, &quot;Spectral&quot;)))(50),
+         border_color = NA,
+         show_colnames = TRUE,
+         treeheight_row = 0, treeheight_col = 0,
+         annotation_row = labels, legend_breaks = c(-0.5, 0, 0.5, 1), drop_levels = FALSE, breaks =seq(from=-0.5, to=1, length.out=51), 
+         annotation_colors = annoCol,  cellwidth = 6, cellheight = 6, fontsize = 6, angle_col = 45
+         )</code></pre>
+<p><img src="figure/figure2.Rmd/unnamed-chunk-59-3.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 <div id="stressed-cell-annotation" class="section level2">
 <h2>Stressed cell annotation</h2>
@@ -2626,7 +3013,7 @@ hyperoxia-responsive, or both, in any treatment condition, although we
 expect that hypoxia exposure should increase the proportion of
 hypoxia-responsive cells and decrease hyperoxia-responsive cells, and
 vice-versa.</p>
-<pre class="r"><code>m_posterior &lt;- readRDS(file=&quot;output/mash_de/mashposterior_dataset9_fine_reharmonized_z3.RDS&quot;)
+<pre class="r"><code>m_posterior &lt;- readRDS(file=&quot;/project2/gilad/umans/oxygen_eqtl/output/mash_de/mashposterior_dataset9_fine_reharmonized_z3.RDS&quot;)
 
 m_posterior_hypoxia&lt;- list()
 m_posterior_hypoxia$lfsr &lt;- m_posterior$lfsr[,c(&quot;RGcycling1&quot;, &quot;InhThalamic1&quot;, &quot;InhSST1&quot;,  &quot;InhGNRH1&quot;, &quot;IPcycling1&quot;, &quot;GlutNTS1&quot;, &quot;GliaProg1&quot;, &quot;CorticalHem1&quot;, &quot;Inh1&quot;, &quot;Cajal1&quot;, &quot;Choroid1&quot;, &quot;VLMC1&quot;, &quot;NeuronOther1&quot;, &quot;Immature1&quot;, &quot;IP1&quot;, &quot;RG1&quot;, &quot;Glut1&quot;)]
@@ -2751,8 +3138,8 @@ saveRDS(meta_export_default, file = &quot;post_gruffi_metadata_default_mash_reha
 <p>Next, attach the hypoxia and hyperoxia response annotations from
 Gruffi to the working Seurat object and classify cells as
 responsive/unresponsive. Now do the same with the mash scores</p>
-<pre class="r"><code>hypoxia_stressed_mash &lt;- readRDS(file = &quot;output/post_gruffi_metadata_hypoxia_mash_reharmonized_remashed.RDS&quot;) %&gt;% select(hypoxia_stressed_mash = `is.Stressed`)
-hyperoxia_stressed_mash &lt;- readRDS(file = &quot;output/post_gruffi_metadata_hyperox_mash_reharmonized_remashed.RDS&quot;) %&gt;% select(hyperoxia_stressed_mash= `is.Stressed`)</code></pre>
+<pre class="r"><code>hypoxia_stressed_mash &lt;- readRDS(file = &quot;/project2/gilad/umans/oxygen_eqtl/output/post_gruffi_metadata_hypoxia_mash_reharmonized_remashed.RDS&quot;) %&gt;% select(hypoxia_stressed_mash = `is.Stressed`)
+hyperoxia_stressed_mash &lt;- readRDS(file = &quot;/project2/gilad/umans/oxygen_eqtl/output/post_gruffi_metadata_hyperox_mash_reharmonized_remashed.RDS&quot;) %&gt;% select(hyperoxia_stressed_mash= `is.Stressed`)</code></pre>
 <pre class="r"><code>harmony.batchandindividual.sct &lt;- AddMetaData(harmony.batchandindividual.sct, metadata = hypoxia_stressed_mash)
 harmony.batchandindividual.sct &lt;- AddMetaData(harmony.batchandindividual.sct, metadata = hyperoxia_stressed_mash)
 # and, add a combined column called &quot;gruffi_label&quot; that incorporates both hypoxia and hyperoxia stress scores
@@ -2760,7 +3147,7 @@ harmony.batchandindividual.sct$gruffi_label_mash &lt;- harmony.batchandindividua
 <p>For the default Gruffi gene sets, I will do this only for the hypoxia
 condition, as we previously determined that the scores are largely
 unresponsive to hyperoxic treatment:</p>
-<pre class="r"><code>hypoxia_stressed &lt;- readRDS(file = &quot;output/post_gruffi_metadata_default_mash_reharmonized.RDS&quot;) %&gt;% select(hypoxia_stressed = `is.Stressed`)
+<pre class="r"><code>hypoxia_stressed &lt;- readRDS(file = &quot;/project2/gilad/umans/oxygen_eqtl/output/post_gruffi_metadata_default_mash_reharmonized.RDS&quot;) %&gt;% select(hypoxia_stressed = `is.Stressed`)
 
 harmony.batchandindividual.sct &lt;- AddMetaData(harmony.batchandindividual.sct, metadata = hypoxia_stressed)
 # and, add a combined column called &quot;gruffi_label&quot; that incorporates both hypoxia and hyperoxia stress scores
@@ -2794,7 +3181,44 @@ stressed_table %&gt;% dplyr::select(Var1, Var2, Var3, fraction) %&gt;%
   xlab(&quot;Cell type&quot;) +  
   scale_color_manual(values = c(&quot;unstressed&quot;= &quot;#abd9e9&quot;, &quot;hypoxia_stressed&quot; = &quot;#d7191c&quot;, &quot;hyperoxia_stressed&quot;= &quot;#fdae61&quot;, &quot;double_stressed&quot; = &quot;purple&quot;),  name=&quot;Stress classification&quot;) + 
   theme_light()</code></pre>
-<p><img src="figure/figure2.Rmd/unnamed-chunk-66-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/figure2.Rmd/unnamed-chunk-72-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-72-1">
+Past versions of unnamed-chunk-72-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-72-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bumans/organoid_oxygen_eqtl/blob/f0eaf05032fddf90549dcb3c3274e965ceb16048/docs/figure/figure2.Rmd/unnamed-chunk-72-1.png" target="_blank">f0eaf05</a>
+</td>
+<td>
+Ben Umans
+</td>
+<td>
+2024-09-05
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>stressed_table %&gt;% dplyr::select(Var1, Var2, Var3, fraction) %&gt;% 
   pivot_wider(names_from = Var3, values_from = fraction) %&gt;% 
   mutate(control10 =  na_if(x = control10, y = 0)) %&gt;% 
@@ -2809,7 +3233,44 @@ stressed_table %&gt;% dplyr::select(Var1, Var2, Var3, fraction) %&gt;%
   xlab(&quot;Cell type&quot;)+  
   scale_color_manual(values = c(&quot;unstressed&quot;= &quot;#abd9e9&quot;, &quot;hypoxia_stressed&quot; = &quot;#d7191c&quot;, &quot;hyperoxia_stressed&quot;= &quot;#fdae61&quot;, &quot;double_stressed&quot; = &quot;purple&quot;), name=&quot;Stress classification&quot;) +
   theme_light()</code></pre>
-<p><img src="figure/figure2.Rmd/unnamed-chunk-66-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/figure2.Rmd/unnamed-chunk-72-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-72-2">
+Past versions of unnamed-chunk-72-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-72-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bumans/organoid_oxygen_eqtl/blob/f0eaf05032fddf90549dcb3c3274e965ceb16048/docs/figure/figure2.Rmd/unnamed-chunk-72-2.png" target="_blank">f0eaf05</a>
+</td>
+<td>
+Ben Umans
+</td>
+<td>
+2024-09-05
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>Now using the fine classification:</p>
 <pre class="r"><code>stressed_table &lt;- as.data.frame(table(harmony.batchandindividual.sct$gruffi_label_mash, harmony.batchandindividual.sct$combined.annotation.fine.harmony, harmony.batchandindividual.sct$treatment)) %&gt;%
   mutate(Freq = Freq+1) %&gt;%
@@ -2832,7 +3293,44 @@ stressed_table %&gt;% dplyr::select(Var1, Var2, Var3, fraction) %&gt;%
   xlab(&quot;Cell type&quot;) +  
   scale_color_manual(values = c(&quot;unstressed&quot;= &quot;#abd9e9&quot;, &quot;hypoxia_stressed&quot; = &quot;#d7191c&quot;, &quot;hyperoxia_stressed&quot;= &quot;#fdae61&quot;, &quot;double_stressed&quot; = &quot;purple&quot;), name=&quot;Stress classification&quot;) + 
   theme_light()</code></pre>
-<p><img src="figure/figure2.Rmd/unnamed-chunk-67-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/figure2.Rmd/unnamed-chunk-73-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-73-1">
+Past versions of unnamed-chunk-73-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-73-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bumans/organoid_oxygen_eqtl/blob/f0eaf05032fddf90549dcb3c3274e965ceb16048/docs/figure/figure2.Rmd/unnamed-chunk-73-1.png" target="_blank">f0eaf05</a>
+</td>
+<td>
+Ben Umans
+</td>
+<td>
+2024-09-05
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>stressed_table %&gt;% dplyr::select(Var1, Var2, Var3, fraction) %&gt;% 
   pivot_wider(names_from = Var3, values_from = fraction) %&gt;% 
   mutate(control10 =  na_if(x = control10, y = 0)) %&gt;%
@@ -2847,7 +3345,44 @@ stressed_table %&gt;% dplyr::select(Var1, Var2, Var3, fraction) %&gt;%
   xlab(&quot;Cell type&quot;) +
   scale_color_manual(values = c(&quot;unstressed&quot;= &quot;#abd9e9&quot;, &quot;hypoxia_stressed&quot; = &quot;#d7191c&quot;, &quot;hyperoxia_stressed&quot;= &quot;#fdae61&quot;, &quot;double_stressed&quot; = &quot;purple&quot;), name=&quot;Stress classification&quot;) +
   theme_light()</code></pre>
-<p><img src="figure/figure2.Rmd/unnamed-chunk-67-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/figure2.Rmd/unnamed-chunk-73-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-73-2">
+Past versions of unnamed-chunk-73-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-73-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bumans/organoid_oxygen_eqtl/blob/f0eaf05032fddf90549dcb3c3274e965ceb16048/docs/figure/figure2.Rmd/unnamed-chunk-73-2.png" target="_blank">f0eaf05</a>
+</td>
+<td>
+Ben Umans
+</td>
+<td>
+2024-09-05
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>Plot the default Gruffi scores:</p>
 <pre class="r"><code>stressed_table &lt;- as.data.frame(table(harmony.batchandindividual.sct$gruffi_label, harmony.batchandindividual.sct$combined.annotation.coarse.harmony, harmony.batchandindividual.sct$treatment)) %&gt;%
   mutate(Freq = Freq+1) %&gt;% 
@@ -2868,7 +3403,7 @@ stressed_table %&gt;% dplyr::select(Var1, Var2, Var3, fraction) %&gt;%
   xlab(&quot;Cell type&quot;) + 
   scale_color_manual(values = c(&quot;unstressed&quot;= &quot;#abd9e9&quot;, &quot;hypoxia_stressed&quot; = &quot;#d7191c&quot;), name=&quot;Stress classification&quot;) +
   theme_light()</code></pre>
-<p><img src="figure/figure2.Rmd/unnamed-chunk-68-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/figure2.Rmd/unnamed-chunk-74-1.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>stressed_table &lt;- as.data.frame(table(harmony.batchandindividual.sct$gruffi_label, harmony.batchandindividual.sct$combined.annotation.fine.harmony, harmony.batchandindividual.sct$treatment)) %&gt;%
   group_by(Var3, Var2) %&gt;%
   mutate(totals=sum(Freq)) %&gt;%
@@ -2889,7 +3424,7 @@ stressed_table %&gt;%
   xlab(&quot;Cell type&quot;)+ 
   scale_color_manual(values = c(&quot;unstressed&quot;= &quot;#abd9e9&quot;, &quot;hypoxia_stressed&quot; = &quot;#d7191c&quot;), name=&quot;Stress classification&quot;) +
   theme_light()</code></pre>
-<p><img src="figure/figure2.Rmd/unnamed-chunk-68-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/figure2.Rmd/unnamed-chunk-74-2.png" width="672" style="display: block; margin: auto;" /></p>
 <p>Look at the individual variability in hypoxia scores by individual in
 the coarse groupings:</p>
 <pre class="r"><code>stressed_table &lt;- as.data.frame(table(harmony.batchandindividual.sct$gruffi_label_mash, harmony.batchandindividual.sct$combined.annotation.coarse.harmony, harmony.batchandindividual.sct$treatment, harmony.batchandindividual.sct$vireo.individual)) %&gt;% 
@@ -2915,7 +3450,7 @@ stressed_table %&gt;%
   xlab(&quot;Cell type&quot;) +
   scale_color_manual(values = c(&quot;unstressed&quot;= &quot;#abd9e9&quot;, &quot;hypoxia_stressed&quot; = &quot;#d7191c&quot;, &quot;hyperoxia_stressed&quot;= &quot;#fdae61&quot;, &quot;double_stressed&quot; = &quot;purple&quot;)) + 
   theme_light() + scale_y_break(c(80, 120),  ticklabels = c(124))</code></pre>
-<p><img src="figure/figure2.Rmd/unnamed-chunk-69-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/figure2.Rmd/unnamed-chunk-75-1.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>  # scale_y_break(c(60, 185),  ticklabels = c(186))
 
 
@@ -2936,7 +3471,7 @@ stressed_table %&gt;%
   scale_color_manual(values = c(&quot;unstressed&quot;= &quot;#abd9e9&quot;, &quot;hypoxia_stressed&quot; = &quot;#d7191c&quot;, &quot;hyperoxia_stressed&quot;= &quot;#fdae61&quot;, &quot;double_stressed&quot; = &quot;purple&quot;)) + 
   theme_light()</code></pre>
 <pre><code>Warning: Removed 1 rows containing missing values (`geom_point()`).</code></pre>
-<p><img src="figure/figure2.Rmd/unnamed-chunk-69-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/figure2.Rmd/unnamed-chunk-75-2.png" width="672" style="display: block; margin: auto;" /></p>
 <div id="cell-type-markers-in-responsive-cells" class="section level3">
 <h3>Cell type markers in responsive cells</h3>
 <p>Treatment-responsive cells do not represent distinct cell types. As
@@ -2950,7 +3485,7 @@ ip_subset &lt;- subset(harmony.batchandindividual.sct, subset = combined.annotat
 ip_subset$gruffi_label_mash &lt;- factor(ip_subset$gruffi_label_mash, levels = c(&quot;unstressed&quot;, &quot;hypoxia_stressed&quot;, &quot;hyperoxia_stressed&quot;, &quot;double_stressed&quot;))
 
 VlnPlot(ip_subset, features = &quot;EOMES&quot;, group.by = &quot;gruffi_label_mash&quot;, y.max=3, cols=colors) + NoLegend()</code></pre>
-<p><img src="figure/figure2.Rmd/unnamed-chunk-70-1.png" width="672" style="display: block; margin: auto;" />
+<p><img src="figure/figure2.Rmd/unnamed-chunk-76-1.png" width="672" style="display: block; margin: auto;" />
 For radial glia:</p>
 <pre class="r"><code>rg_subset &lt;- subset(harmony.batchandindividual.sct, subset = combined.annotation.coarse.harmony==&quot;RG&quot; &amp; gruffi_label != &quot;double_stressed&quot;  &amp; gruffi_label_mash != &quot;double_stressed&quot;)
 
@@ -2959,21 +3494,21 @@ rg_subset$gruffi_label_mash &lt;- factor(rg_subset$gruffi_label_mash, levels = c
 VlnPlot(rg_subset, features = &quot;LIFR&quot;, group.by = &quot;gruffi_label_mash&quot;, y.max=3, cols=colors) + NoLegend()</code></pre>
 <pre><code>Warning: Removed 1 rows containing non-finite values (`stat_ydensity()`).</code></pre>
 <pre><code>Warning: Removed 1 rows containing missing values (`geom_point()`).</code></pre>
-<p><img src="figure/figure2.Rmd/unnamed-chunk-71-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/figure2.Rmd/unnamed-chunk-77-1.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>VlnPlot(rg_subset, features = &quot;SLC1A3&quot;, group.by = &quot;gruffi_label_mash&quot;, cols=colors) + NoLegend()</code></pre>
-<p><img src="figure/figure2.Rmd/unnamed-chunk-71-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/figure2.Rmd/unnamed-chunk-77-2.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>VlnPlot(rg_subset, features = &quot;PDGFD&quot;, group.by = &quot;gruffi_label_mash&quot;, y.max=3, cols=colors) + NoLegend()</code></pre>
 <pre><code>Warning: Removed 1 rows containing non-finite values (`stat_ydensity()`).
 Removed 1 rows containing missing values (`geom_point()`).</code></pre>
-<p><img src="figure/figure2.Rmd/unnamed-chunk-71-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/figure2.Rmd/unnamed-chunk-77-3.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>VlnPlot(rg_subset, features = &quot;GLI3&quot;, group.by = &quot;gruffi_label_mash&quot;, y.max=3, cols=colors) + NoLegend()</code></pre>
 <pre><code>Warning: Removed 1 rows containing non-finite values (`stat_ydensity()`).
 Removed 1 rows containing missing values (`geom_point()`).</code></pre>
-<p><img src="figure/figure2.Rmd/unnamed-chunk-71-4.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/figure2.Rmd/unnamed-chunk-77-4.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>VlnPlot(rg_subset, features = &quot;PAX6&quot;, group.by = &quot;gruffi_label_mash&quot;, y.max=3, cols=colors) + NoLegend()</code></pre>
-<p><img src="figure/figure2.Rmd/unnamed-chunk-71-5.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/figure2.Rmd/unnamed-chunk-77-5.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>VlnPlot(rg_subset, features = &quot;SOX2&quot;, group.by = &quot;gruffi_label_mash&quot;, y.max=3, cols=colors) + NoLegend()</code></pre>
-<p><img src="figure/figure2.Rmd/unnamed-chunk-71-6.png" width="672" style="display: block; margin: auto;" />
+<p><img src="figure/figure2.Rmd/unnamed-chunk-77-6.png" width="672" style="display: block; margin: auto;" />
 For dividing cells:</p>
 <pre class="r"><code>cycling_subset &lt;- subset(harmony.batchandindividual.sct, subset = combined.annotation.fine.harmony==&quot;RGcycling&quot; &amp; gruffi_label != &quot;double_stressed&quot;  &amp; gruffi_label_mash != &quot;double_stressed&quot;)
 cycling_subset$gruffi_label_mash &lt;- factor(cycling_subset$gruffi_label_mash, levels = c(&quot;unstressed&quot;, &quot;hypoxia_stressed&quot;, &quot;hyperoxia_stressed&quot;, &quot;double_stressed&quot;))
@@ -2981,11 +3516,11 @@ cycling_subset$gruffi_label_mash &lt;- factor(cycling_subset$gruffi_label_mash, 
 VlnPlot(cycling_subset, features = &quot;TOP2A&quot;, group.by = &quot;gruffi_label_mash&quot;, y.max=4, cols=colors) + NoLegend()</code></pre>
 <pre><code>Warning: Removed 1 rows containing non-finite values (`stat_ydensity()`).</code></pre>
 <pre><code>Warning: Removed 1 rows containing missing values (`geom_point()`).</code></pre>
-<p><img src="figure/figure2.Rmd/unnamed-chunk-72-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/figure2.Rmd/unnamed-chunk-78-1.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>VlnPlot(cycling_subset, features = &quot;CENPF&quot;, group.by = &quot;gruffi_label_mash&quot;, y.max=4, cols=colors) + NoLegend()</code></pre>
-<p><img src="figure/figure2.Rmd/unnamed-chunk-72-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/figure2.Rmd/unnamed-chunk-78-2.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>VlnPlot(cycling_subset, features = &quot;MKI67&quot;, group.by = &quot;gruffi_label_mash&quot;, y.max=3, cols=colors) + NoLegend()</code></pre>
-<p><img src="figure/figure2.Rmd/unnamed-chunk-72-3.png" width="672" style="display: block; margin: auto;" />
+<p><img src="figure/figure2.Rmd/unnamed-chunk-78-3.png" width="672" style="display: block; margin: auto;" />
 Finally, immature neurons:</p>
 <pre class="r"><code>immature_subset &lt;- subset(harmony.batchandindividual.sct, subset = combined.annotation.coarse.harmony==&quot;Immature&quot; &amp; gruffi_label != &quot;double_stressed&quot;  &amp; gruffi_label_mash != &quot;double_stressed&quot;)
 immature_subset$gruffi_label_mash &lt;- factor(immature_subset$gruffi_label_mash, levels = c(&quot;unstressed&quot;, &quot;hypoxia_stressed&quot;, &quot;hyperoxia_stressed&quot;, &quot;double_stressed&quot;))
@@ -2993,13 +3528,13 @@ immature_subset$gruffi_label_mash &lt;- factor(immature_subset$gruffi_label_mash
 VlnPlot(immature_subset, features = &quot;BCL11B&quot;, group.by = &quot;gruffi_label_mash&quot;, y.max=3, cols=colors) + NoLegend()</code></pre>
 <pre><code>Warning: Removed 1 rows containing non-finite values (`stat_ydensity()`).</code></pre>
 <pre><code>Warning: Removed 1 rows containing missing values (`geom_point()`).</code></pre>
-<p><img src="figure/figure2.Rmd/unnamed-chunk-73-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/figure2.Rmd/unnamed-chunk-79-1.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>VlnPlot(immature_subset, features = &quot;MAP2&quot;, group.by = &quot;gruffi_label_mash&quot;, y.max=3, cols=colors) + NoLegend()</code></pre>
 <pre><code>Warning: Removed 61 rows containing non-finite values (`stat_ydensity()`).</code></pre>
 <pre><code>Warning: Removed 61 rows containing missing values (`geom_point()`).</code></pre>
-<p><img src="figure/figure2.Rmd/unnamed-chunk-73-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/figure2.Rmd/unnamed-chunk-79-2.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>VlnPlot(immature_subset, features = &quot;SLA&quot;, group.by = &quot;gruffi_label_mash&quot;, y.max=3, cols=colors) + NoLegend()</code></pre>
-<p><img src="figure/figure2.Rmd/unnamed-chunk-73-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/figure2.Rmd/unnamed-chunk-79-3.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 </div>
 <div id="de-with-gruffi-flagged-cells-censored" class="section level2">
@@ -3027,8 +3562,8 @@ control10  stim1pct stim21pct
 <p>This censors about 9% of the control cells, 31% of the hypoxia cells,
 and 7% of the hyperoxia cells, about 16% of the total dataset.</p>
 <pre class="r"><code>pseudo_fine_quality_censored &lt;- generate.pseudobulk(subset_seurat_censored, labels = c(&quot;combined.annotation.fine.harmony&quot;, &quot;treatment&quot;, &quot;vireo.individual&quot;, &quot;batch&quot;))
-saveRDS(pseudo_fine_quality_censored, file = &quot;output/pseudo_fine_quality_filtered_de_censored_20240802.RDS&quot;)</code></pre>
-<pre class="r"><code>pseudo_fine_quality_censored &lt;- readRDS(file = &quot;output/pseudo_fine_quality_filtered_de_censored_20240802.RDS&quot;)
+saveRDS(pseudo_fine_quality_censored, file = &quot;/project2/gilad/umans/oxygen_eqtl/output/pseudo_fine_quality_filtered_de_censored_20240802.RDS&quot;)</code></pre>
+<pre class="r"><code>pseudo_fine_quality_censored &lt;- readRDS(file = &quot;/project2/gilad/umans/oxygen_eqtl/output/pseudo_fine_quality_filtered_de_censored_20240802.RDS&quot;)
 pseudo_fine_quality_de_censored &lt;- filter.pseudobulk(pseudo_fine_quality_censored, threshold = 20)</code></pre>
 <pre class="r"><code>pseudo_fine_quality_de_censored$counts &lt;- pseudo_fine_quality_de_censored$counts[,-c(which(pseudo_fine_quality_de_censored$meta$combined.annotation.fine.harmony==&quot;Oligo&quot;))]
 pseudo_fine_quality_de_censored$meta &lt;- pseudo_fine_quality_de_censored$meta %&gt;% filter(combined.annotation.fine.harmony != &quot;Oligo&quot;)
@@ -3070,7 +3605,7 @@ subset_seurat_censored_random &lt;- subset(subset_seurat, subset = selection == 
 
 pseudo_fine_quality_censored_random &lt;- generate.pseudobulk(subset_seurat_censored_random, labels = c(&quot;combined.annotation.fine.harmony&quot;, &quot;treatment&quot;, &quot;vireo.individual&quot;, &quot;batch&quot;))
 saveRDS(pseudo_fine_quality_censored_random, file = &quot;output/pseudo_fine_quality_filtered_de_randomly_censored_20240802.RDS&quot;)</code></pre>
-<pre class="r"><code>pseudo_fine_quality_censored_random &lt;- readRDS(file = &quot;output/pseudo_fine_quality_filtered_de_randomly_censored_20240802.RDS&quot;)
+<pre class="r"><code>pseudo_fine_quality_censored_random &lt;- readRDS(file = &quot;/project2/gilad/umans/oxygen_eqtl/output/pseudo_fine_quality_filtered_de_randomly_censored_20240802.RDS&quot;)
 pseudo_fine_quality_de_censored_random &lt;- filter.pseudobulk(pseudo_fine_quality_censored_random, threshold = 20)</code></pre>
 <pre class="r"><code>pseudo_fine_quality_de_censored_random$counts &lt;- pseudo_fine_quality_de_censored_random$counts[,-c(which(pseudo_fine_quality_de_censored_random$meta$combined.annotation.fine.harmony==&quot;Oligo&quot;))]
 pseudo_fine_quality_de_censored_random$meta &lt;- pseudo_fine_quality_de_censored_random$meta %&gt;% filter(combined.annotation.fine.harmony != &quot;Oligo&quot;)
@@ -3119,7 +3654,7 @@ de.summary.fine.censored.change.random &lt;- de.summary.fine.censored.change.ran
   xlab(&quot;Censored fraction&quot;) + 
   ylab(&quot;1-(stress-censored DE genes/randomly censored DE genes)&quot;) + geom_abline(slope = 1, intercept = 0, linetype=2) +
   ggtitle(&quot;hypoxia &gt;1.5fold&quot;)</code></pre>
-<p><img src="figure/figure2.Rmd/unnamed-chunk-87-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/figure2.Rmd/unnamed-chunk-93-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 <div id="cell-positions-within-organoids" class="section level2">
 <h2>Cell positions within organoids</h2>
@@ -3128,12 +3663,12 @@ positive for stained markers (thresholds were identified iteratively by
 comparisons using QuPath), and combine results from different staining
 sets.</p>
 <p>For samples stained for HOPX/KI67/S100b:</p>
-<pre class="r"><code>annotations_hopx &lt;- read_delim(file =  &quot;Active Processing/HOPX_MKI67_S100B/QuPath_output/Stardist_measurements_HOPX_MKI67_S100B_annotations.csv&quot;) %&gt;% 
+<pre class="r"><code>annotations_hopx &lt;- read_delim(file =  &quot;HOPX_MKI67_S100B/QuPath_output/Stardist_measurements_HOPX_MKI67_S100B_annotations.csv&quot;) %&gt;% 
   filter(Name != &quot;Other&quot;) %&gt;% 
   dplyr::select(Image, `Object ID`, Name, `Area µm^2`, `Perimeter µm`)
-hopx1 &lt;- read_delim(file =  &quot;Active Processing/HOPX_MKI67_S100B/QuPath_output/Stardist_measurements_HOPX_MKI67_S100B_detections1.csv&quot;)
-hopx2 &lt;- read_delim(file =  &quot;Active Processing/HOPX_MKI67_S100B/QuPath_output/Stardist_measurements_HOPX_MKI67_S100B_detections2.csv&quot;)
-hopx3 &lt;- read_delim(file =  &quot;Active Processing/HOPX_MKI67_S100B/QuPath_output/Stardist_measurements_HOPX_MKI67_S100B_detections3.csv&quot;)
+hopx1 &lt;- read_delim(file =  &quot;HOPX_MKI67_S100B/QuPath_output/Stardist_measurements_HOPX_MKI67_S100B_detections1.csv&quot;)
+hopx2 &lt;- read_delim(file =  &quot;HOPX_MKI67_S100B/QuPath_output/Stardist_measurements_HOPX_MKI67_S100B_detections2.csv&quot;)
+hopx3 &lt;- read_delim(file =  &quot;HOPX_MKI67_S100B/QuPath_output/Stardist_measurements_HOPX_MKI67_S100B_detections3.csv&quot;)
 
 detections_hopx &lt;- bind_rows(hopx1, hopx2, hopx3) %&gt;% left_join(annotations_hopx, by=c(&quot;Parent&quot; = &quot;Name&quot;))
 rm(hopx1, hopx2, hopx3)
@@ -3152,13 +3687,13 @@ detections_hopx_plotting$cell_type &lt;-apply(df, 1, function(x) paste(names(df)
 
 rm(df)</code></pre>
 <p>For samples stained for EOMES/CTIP2/SATB2:</p>
-<pre class="r"><code>annotations_eomes &lt;- read_delim(file =  &quot;Active Processing/EOMES_CTIP2_SATB2/QuPath_output/Stardist_measurements_EOMES_CTIP2_SATB2_annotations.csv&quot;) %&gt;% 
+<pre class="r"><code>annotations_eomes &lt;- read_delim(file =  &quot;EOMES_CTIP2_SATB2/QuPath_output/Stardist_measurements_EOMES_CTIP2_SATB2_annotations.csv&quot;) %&gt;% 
   filter(Name != &quot;Other&quot;) %&gt;% 
   dplyr::select(Image, `Object ID`, Name, `Area µm^2`, `Perimeter µm`)
 
-eomes1 &lt;- read_delim(file =  &quot;Active Processing/EOMES_CTIP2_SATB2/QuPath_output/Stardist_measurements_EOMES_CTIP2_SATB2_detections1.csv&quot;) 
-eomes2 &lt;- read_delim(file =  &quot;Active Processing/EOMES_CTIP2_SATB2/QuPath_output/Stardist_measurements_EOMES_CTIP2_SATB2_detections2.csv&quot;) 
-eomes3 &lt;- read_delim(file =  &quot;Active Processing/EOMES_CTIP2_SATB2/QuPath_output/Stardist_measurements_EOMES_CTIP2_SATB2_detections3.csv&quot;) 
+eomes1 &lt;- read_delim(file =  &quot;EOMES_CTIP2_SATB2/QuPath_output/Stardist_measurements_EOMES_CTIP2_SATB2_detections1.csv&quot;) 
+eomes2 &lt;- read_delim(file =  &quot;EOMES_CTIP2_SATB2/QuPath_output/Stardist_measurements_EOMES_CTIP2_SATB2_detections2.csv&quot;) 
+eomes3 &lt;- read_delim(file =  &quot;EOMES_CTIP2_SATB2/QuPath_output/Stardist_measurements_EOMES_CTIP2_SATB2_detections3.csv&quot;) 
 
 detections_eomes &lt;- bind_rows(eomes1, eomes2, eomes3) %&gt;% left_join(annotations_eomes, by=c(&quot;Parent&quot; = &quot;Name&quot;))
 
@@ -3177,12 +3712,12 @@ detections_eomes_plotting$cell_type &lt;-apply(df, 1, function(x) paste(names(df
 
 rm(df)</code></pre>
 <p>For samples stained for RELN/GABA/CTIP2:</p>
-<pre class="r"><code>annotations_reln &lt;- read_delim(file =  &quot;Active Processing/RELN_GABA_CTIP2/QuPath_output/Stardist_measurements_RELN_GABA_CTIP2_annotations.csv&quot;) %&gt;% 
+<pre class="r"><code>annotations_reln &lt;- read_delim(file =  &quot;RELN_GABA_CTIP2/QuPath_output/Stardist_measurements_RELN_GABA_CTIP2_annotations.csv&quot;) %&gt;% 
   filter(Name != &quot;Other&quot;) %&gt;% 
   dplyr::select(Image, `Object ID`, Name, `Area µm^2`, `Perimeter µm`)
 
-reln1 &lt;- read_delim(file =  &quot;Active Processing/RELN_GABA_CTIP2/QuPath_output/Stardist_measurements_RELN_GABA_CTIP2_detections1.csv&quot;) 
-reln2 &lt;- read_delim(file =  &quot;Active Processing/RELN_GABA_CTIP2/QuPath_output/Stardist_measurements_RELN_GABA_CTIP2_detections2.csv&quot;) 
+reln1 &lt;- read_delim(file =  &quot;RELN_GABA_CTIP2/QuPath_output/Stardist_measurements_RELN_GABA_CTIP2_detections1.csv&quot;) 
+reln2 &lt;- read_delim(file =  &quot;RELN_GABA_CTIP2/QuPath_output/Stardist_measurements_RELN_GABA_CTIP2_detections2.csv&quot;) 
 
 detections_reln &lt;- bind_rows(reln1, reln2) %&gt;% left_join(annotations_reln, by=c(&quot;Parent&quot; = &quot;Name&quot;))
 
@@ -3203,14 +3738,14 @@ detections_reln_plotting_singlesection &lt;- detections_reln_plotting %&gt;% gro
   filter(`Area µm^2`==max(`Area µm^2`)) %&gt;% ungroup()
 rm(df)</code></pre>
 <p>For samples stained for SOX2/NES/S100B:</p>
-<pre class="r"><code>annotations_sox &lt;- read_delim(file =  &quot;Active Processing/SOX2_NES_S100B/QuPath_output/Stardist_measurements_SOX2_NES_S100B_annotations.csv&quot;) %&gt;% 
+<pre class="r"><code>annotations_sox &lt;- read_delim(file =  &quot;SOX2_NES_S100B/QuPath_output/Stardist_measurements_SOX2_NES_S100B_annotations.csv&quot;) %&gt;% 
   filter(Name != &quot;Other&quot;) %&gt;% 
   dplyr::select(Image, `Object ID`, Name, `Area µm^2`, `Perimeter µm`)
 
-sox1 &lt;- read_delim(file =  &quot;Active Processing/SOX2_NES_S100B/QuPath_output/Stardist_measurements_SOX2_NES_S100B_detections1.csv&quot;) 
-sox2 &lt;- read_delim(file =  &quot;Active Processing/SOX2_NES_S100B/QuPath_output/Stardist_measurements_SOX2_NES_S100B_detections2.csv&quot;) 
-sox3 &lt;- read_delim(file =  &quot;Active Processing/SOX2_NES_S100B/QuPath_output/Stardist_measurements_SOX2_NES_S100B_detections3.csv&quot;) 
-sox4 &lt;- read_delim(file =  &quot;Active Processing/SOX2_NES_S100B/QuPath_output/Stardist_measurements_SOX2_NES_S100B_detections4.csv&quot;) 
+sox1 &lt;- read_delim(file =  &quot;SOX2_NES_S100B/QuPath_output/Stardist_measurements_SOX2_NES_S100B_detections1.csv&quot;) 
+sox2 &lt;- read_delim(file =  &quot;SOX2_NES_S100B/QuPath_output/Stardist_measurements_SOX2_NES_S100B_detections2.csv&quot;) 
+sox3 &lt;- read_delim(file =  &quot;SOX2_NES_S100B/QuPath_output/Stardist_measurements_SOX2_NES_S100B_detections3.csv&quot;) 
+sox4 &lt;- read_delim(file =  &quot;SOX2_NES_S100B/QuPath_output/Stardist_measurements_SOX2_NES_S100B_detections4.csv&quot;) 
 
 detections_sox &lt;- bind_rows(sox1, sox2, sox3, sox4) %&gt;% left_join(annotations_sox, by=c(&quot;Parent&quot; = &quot;Name&quot;))
 
@@ -3233,12 +3768,12 @@ detections_sox_plotting_singlesection &lt;- detections_sox_plotting %&gt;% group
 
 rm(df)</code></pre>
 <p>For samples stained for GFAP:</p>
-<pre class="r"><code>annotations_gfap &lt;- read_delim(file =  &quot;Active Processing/MGP_GFAP/QuPath_output/Stardist_measurements_MGP_GFAP_annotations.csv&quot;) %&gt;% 
+<pre class="r"><code>annotations_gfap &lt;- read_delim(file =  &quot;MGP_GFAP/QuPath_output/Stardist_measurements_MGP_GFAP_annotations.csv&quot;) %&gt;% 
   filter(Name != &quot;Other&quot;) %&gt;% 
   dplyr::select(Image, `Object ID`, Name, `Area µm^2`, `Perimeter µm`)
 
-gfap1 &lt;- read_delim(file =  &quot;Active Processing/MGP_GFAP/QuPath_output/Stardist_measurements_MGP_GFAP_detections1.csv&quot;) 
-gfap2 &lt;- read_delim(file =  &quot;Active Processing/MGP_GFAP/QuPath_output/Stardist_measurements_MGP_GFAP_detections2.csv&quot;) 
+gfap1 &lt;- read_delim(file =  &quot;MGP_GFAP/QuPath_output/Stardist_measurements_MGP_GFAP_detections1.csv&quot;) 
+gfap2 &lt;- read_delim(file =  &quot;MGP_GFAP/QuPath_output/Stardist_measurements_MGP_GFAP_detections2.csv&quot;) 
 
 detections_gfap &lt;- bind_rows(gfap1, gfap2) %&gt;% left_join(annotations_gfap, by=c(&quot;Parent&quot; = &quot;Name&quot;))
 
@@ -3293,7 +3828,7 @@ combined_plotting_singlesection &lt;- combined_plotting_singlesection %&gt;% mut
   str_detect(Parent, &quot;GFAP&quot;) &amp; cell_type==&quot;GFAP&quot; ~ &quot;Glia&quot;, #again, while this marker is not perfect in many in vivo contexts, the correspondence is clear in our RNAseq data
   .default=&quot;unlabeled&quot;))</code></pre>
 <p>For plotting purposes, load the processed data object:</p>
-<pre class="r"><code>combined_plotting_singlesection &lt;- readRDS(file = &quot;output/combined_plotting_singlesection_upload.RDS&quot;)</code></pre>
+<pre class="r"><code>combined_plotting_singlesection &lt;- readRDS(file = &quot;/project2/gilad/umans/oxygen_eqtl/output/combined_plotting_singlesection_upload.RDS&quot;)</code></pre>
 <p>Next, plot the distributions of cell types here. Note that, as this
 is intended as a comparison for responsive cell types as annotated in
 our single-cell RNAseq data, we exclude cells (e.g., “other
@@ -3337,7 +3872,7 @@ Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
 generated.</code></pre>
 <pre><code>Warning: Removed 18710 rows containing missing values (`stat_boxplot()`).</code></pre>
 <pre><code>Warning: Removed 18710 rows containing non-finite values (`stat_summary()`).</code></pre>
-<p><img src="figure/figure2.Rmd/unnamed-chunk-96-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/figure2.Rmd/unnamed-chunk-102-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>There are, of course, differences between cell types when all
 aggregated together. To compare the differences between individuals to
 the differences between cell types, we can use ANOVA, using the mean
@@ -3454,7 +3989,7 @@ ggplot(temp, aes(x=distance_means, y=order, label=celltype)) + geom_point() + ge
   the data.
 ℹ Did you forget to specify a `group` aesthetic or to convert a numerical
   variable into a factor?</code></pre>
-<p><img src="figure/figure2.Rmd/unnamed-chunk-99-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/figure2.Rmd/unnamed-chunk-105-1.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>ggplot(temp, aes(x=distance_medians, y=order, label=celltype)) + geom_point() + geom_text_repel() + geom_smooth(method=&quot;lm&quot;) + theme_light() + ylab(&quot;Hypoxia response magnitude&quot;)</code></pre>
 <pre><code>`geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
 <pre><code>Warning: The following aesthetics were dropped during statistical transformation: label
@@ -3462,7 +3997,7 @@ ggplot(temp, aes(x=distance_means, y=order, label=celltype)) + geom_point() + ge
   the data.
 ℹ Did you forget to specify a `group` aesthetic or to convert a numerical
   variable into a factor?</code></pre>
-<p><img src="figure/figure2.Rmd/unnamed-chunk-99-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/figure2.Rmd/unnamed-chunk-105-2.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>summary(lm(order ~ distance_means, data = temp))</code></pre>
 <pre><code>
 Call:
@@ -3536,12 +4071,12 @@ other attached packages:
 [10] flashr_0.6-8             knitr_1.45               ggrepel_0.9.4           
 [13] pheatmap_1.0.12          udr_0.3-153              mashr_0.2.79            
 [16] ashr_2.2-63              ggbreak_0.1.2            RColorBrewer_1.1-3      
-[19] pals_1.8                 forcats_0.5.1            stringr_1.5.0           
-[22] dplyr_1.1.4              purrr_1.0.2              readr_2.1.4             
-[25] tidyr_1.3.0              tibble_3.2.1             tidyverse_1.3.1         
-[28] SeuratObject_4.1.4       Seurat_4.4.0             variancePartition_1.28.9
-[31] BiocParallel_1.32.6      ggplot2_3.4.4            edgeR_3.40.2            
-[34] limma_3.54.2             workflowr_1.7.0         
+[19] pals_1.8                 lubridate_1.9.3          forcats_1.0.0           
+[22] stringr_1.5.0            dplyr_1.1.4              purrr_1.0.2             
+[25] readr_2.1.4              tidyr_1.3.0              tibble_3.2.1            
+[28] tidyverse_2.0.0          SeuratObject_4.1.4       Seurat_4.4.0            
+[31] variancePartition_1.28.9 BiocParallel_1.32.6      ggplot2_3.4.4           
+[34] edgeR_3.40.2             limma_3.54.2             workflowr_1.7.0         
 
 loaded via a namespace (and not attached):
   [1] estimability_1.3       scattermore_1.2        coda_0.19-4           
@@ -3550,61 +4085,58 @@ loaded via a namespace (and not attached):
  [10] BiocGenerics_0.44.0    TH.data_1.1-1          callr_3.7.3           
  [13] RhpcBLASctl_0.23-42    cowplot_1.1.1          RANN_2.6.1            
  [16] future_1.33.1          bit_4.0.5              tzdb_0.4.0            
- [19] horseshoe_0.2.0        spatstat.data_3.0-3    xml2_1.3.3            
- [22] lubridate_1.9.3        httpuv_1.6.5           assertthat_0.2.1      
- [25] xfun_0.41              hms_1.1.3              jquerylib_0.1.4       
- [28] evaluate_0.23          promises_1.2.0.1       fansi_1.0.5           
- [31] progress_1.2.2         caTools_1.18.2         dbplyr_2.4.0          
- [34] readxl_1.4.0           igraph_1.5.1           DBI_1.1.3             
- [37] htmlwidgets_1.6.2      spatstat.geom_3.2-7    deconvolveR_1.2-1     
- [40] ellipsis_0.3.2         backports_1.4.1        aod_1.3.2             
- [43] deldir_1.0-6           vctrs_0.6.4            Biobase_2.58.0        
- [46] ROCR_1.0-11            abind_1.4-5            cachem_1.0.8          
- [49] withr_2.5.2            progressr_0.14.0       vroom_1.6.4           
- [52] sctransform_0.4.1      prettyunits_1.1.1      goftest_1.2-3         
- [55] softImpute_1.4-1       cluster_2.1.3          pacman_0.5.1          
- [58] lazyeval_0.2.2         crayon_1.5.2           spatstat.explore_3.0-6
- [61] pkgconfig_2.0.3        labeling_0.4.3         nlme_3.1-157          
- [64] rlang_1.1.3            globals_0.16.2         lifecycle_1.0.4       
- [67] miniUI_0.1.1.1         sandwich_3.0-1         modelr_0.1.8          
- [70] dichromat_2.0-0.1      invgamma_1.1           cellranger_1.1.0      
- [73] rprojroot_2.0.3        polyclip_1.10-0        matrixStats_1.1.0     
- [76] lmtest_0.9-40          aplot_0.2.3            carData_3.0-5         
- [79] boot_1.3-28            zoo_1.8-12             reprex_2.0.1          
- [82] whisker_0.4.1          ggridges_0.5.3         processx_3.8.2        
- [85] png_0.1-8              viridisLite_0.4.2      bitops_1.0-7          
- [88] getPass_0.2-2          KernSmooth_2.23-20     SQUAREM_2021.1        
- [91] parallelly_1.37.0      spatstat.random_3.1-3  remaCor_0.0.16        
- [94] gridGraphics_0.5-1     rmeta_3.0              scales_1.2.1          
- [97] memoise_2.0.1          plyr_1.8.9             ica_1.0-3             
-[100] gplots_3.1.3           compiler_4.2.0         fitdistrplus_1.1-8    
-[103] cli_3.6.1              lmerTest_3.1-3         listenv_0.9.1         
-[106] patchwork_1.1.3        pbapply_1.5-0          ps_1.7.5              
-[109] mgcv_1.8-40            MASS_7.3-56            tidyselect_1.2.0      
-[112] stringi_1.8.1          highr_0.9              yaml_2.3.5            
-[115] locfit_1.5-9.8         grid_4.2.0             sass_0.4.7            
-[118] fastmatch_1.1-3        tools_4.2.0            timechange_0.2.0      
-[121] future.apply_1.11.1    parallel_4.2.0         rstudioapi_0.13       
-[124] foreach_1.5.2          git2r_0.30.1           gridExtra_2.3         
-[127] trust_0.1-8            EnvStats_2.8.1         farver_2.1.1          
-[130] Rtsne_0.16             digest_0.6.34          shiny_1.7.5.1         
-[133] Rcpp_1.0.12            car_3.1-2              broom_1.0.5           
-[136] later_1.3.0            RcppAnnoy_0.0.19       httr_1.4.7            
-[139] Rdpack_2.6             colorspace_2.1-0       rvest_1.0.2           
-[142] fs_1.6.3               tensor_1.5             reticulate_1.34.0     
-[145] truncnorm_1.0-9        splines_4.2.0          uwot_0.1.16           
-[148] yulab.utils_0.1.0      spatstat.utils_3.0-4   sp_2.1-3              
-[151] mapproj_1.2.11         ggplotify_0.1.2        plotly_4.10.0         
-[154] xtable_1.8-4           jsonlite_1.8.7         nloptr_2.0.3          
-[157] ggfun_0.1.5            R6_2.5.1               pillar_1.9.0          
-[160] htmltools_0.5.7        mime_0.12              glue_1.6.2            
-[163] fastmap_1.1.1          minqa_1.2.6            codetools_0.2-18      
-[166] maps_3.4.0             mvtnorm_1.2-3          utf8_1.2.4            
-[169] lattice_0.20-45        bslib_0.5.1            spatstat.sparse_3.0-3 
-[172] numDeriv_2016.8-1.1    pbkrtest_0.5.2         leiden_0.4.2          
-[175] gtools_3.9.4           survival_3.3-1         rmarkdown_2.26        
-[178] munsell_0.5.0          iterators_1.0.14       haven_2.5.0           
-[181] reshape2_1.4.4         gtable_0.3.4           rbibutils_2.2.16      </code></pre>
+ [19] horseshoe_0.2.0        spatstat.data_3.0-3    httpuv_1.6.5          
+ [22] assertthat_0.2.1       xfun_0.41              hms_1.1.3             
+ [25] jquerylib_0.1.4        evaluate_0.23          promises_1.2.0.1      
+ [28] fansi_1.0.5            progress_1.2.2         caTools_1.18.2        
+ [31] igraph_1.5.1           htmlwidgets_1.6.2      spatstat.geom_3.2-7   
+ [34] deconvolveR_1.2-1      ellipsis_0.3.2         backports_1.4.1       
+ [37] aod_1.3.2              deldir_1.0-6           vctrs_0.6.4           
+ [40] Biobase_2.58.0         ROCR_1.0-11            abind_1.4-5           
+ [43] cachem_1.0.8           withr_2.5.2            progressr_0.14.0      
+ [46] vroom_1.6.4            sctransform_0.4.1      prettyunits_1.1.1     
+ [49] goftest_1.2-3          softImpute_1.4-1       cluster_2.1.3         
+ [52] pacman_0.5.1           lazyeval_0.2.2         crayon_1.5.2          
+ [55] spatstat.explore_3.0-6 pkgconfig_2.0.3        labeling_0.4.3        
+ [58] nlme_3.1-157           rlang_1.1.3            globals_0.16.2        
+ [61] lifecycle_1.0.4        miniUI_0.1.1.1         sandwich_3.0-1        
+ [64] dichromat_2.0-0.1      invgamma_1.1           rprojroot_2.0.3       
+ [67] polyclip_1.10-0        matrixStats_1.1.0      lmtest_0.9-40         
+ [70] aplot_0.2.3            carData_3.0-5          boot_1.3-28           
+ [73] zoo_1.8-12             whisker_0.4.1          ggridges_0.5.3        
+ [76] processx_3.8.2         png_0.1-8              viridisLite_0.4.2     
+ [79] bitops_1.0-7           getPass_0.2-2          KernSmooth_2.23-20    
+ [82] SQUAREM_2021.1         parallelly_1.37.0      spatstat.random_3.1-3 
+ [85] remaCor_0.0.16         gridGraphics_0.5-1     rmeta_3.0             
+ [88] scales_1.2.1           memoise_2.0.1          plyr_1.8.9            
+ [91] ica_1.0-3              gplots_3.1.3           compiler_4.2.0        
+ [94] fitdistrplus_1.1-8     cli_3.6.1              lmerTest_3.1-3        
+ [97] listenv_0.9.1          patchwork_1.1.3        pbapply_1.5-0         
+[100] ps_1.7.5               mgcv_1.8-40            MASS_7.3-56           
+[103] tidyselect_1.2.0       stringi_1.8.1          highr_0.9             
+[106] yaml_2.3.5             locfit_1.5-9.8         grid_4.2.0            
+[109] sass_0.4.7             fastmatch_1.1-3        tools_4.2.0           
+[112] timechange_0.2.0       future.apply_1.11.1    parallel_4.2.0        
+[115] rstudioapi_0.17.1      foreach_1.5.2          git2r_0.30.1          
+[118] gridExtra_2.3          trust_0.1-8            EnvStats_2.8.1        
+[121] farver_2.1.1           Rtsne_0.16             digest_0.6.34         
+[124] shiny_1.7.5.1          Rcpp_1.0.12            car_3.1-2             
+[127] broom_1.0.5            later_1.3.0            RcppAnnoy_0.0.19      
+[130] httr_1.4.7             Rdpack_2.6             colorspace_2.1-0      
+[133] fs_1.6.3               tensor_1.5             reticulate_1.34.0     
+[136] truncnorm_1.0-9        splines_4.2.0          uwot_0.1.16           
+[139] yulab.utils_0.1.0      spatstat.utils_3.0-4   sp_2.1-3              
+[142] mapproj_1.2.11         ggplotify_0.1.2        plotly_4.10.0         
+[145] xtable_1.8-4           jsonlite_1.8.7         nloptr_2.0.3          
+[148] ggfun_0.1.5            R6_2.5.1               pillar_1.9.0          
+[151] htmltools_0.5.7        mime_0.12              glue_1.6.2            
+[154] fastmap_1.1.1          minqa_1.2.6            codetools_0.2-18      
+[157] maps_3.4.0             mvtnorm_1.2-3          utf8_1.2.4            
+[160] lattice_0.20-45        bslib_0.5.1            spatstat.sparse_3.0-3 
+[163] numDeriv_2016.8-1.1    pbkrtest_0.5.2         leiden_0.4.2          
+[166] gtools_3.9.4           survival_3.3-1         rmarkdown_2.26        
+[169] munsell_0.5.0          iterators_1.0.14       reshape2_1.4.4        
+[172] gtable_0.3.4           rbibutils_2.2.16      </code></pre>
 </div>
 </div>
 
