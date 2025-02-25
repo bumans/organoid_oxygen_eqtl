@@ -1605,6 +1605,14 @@ mash_by_condition_output %>%
 ```
 4 eGenes detected in our pseudobulk analysis as hypoxia-specific which are also found in the topic analysis, leaving 214 undetected.
 
+Moreover generally, 150 topic 7 eGenes are not eGenes at all in our pseudobulk analysis.
+```{r}
+length(setdiff(k7_egenes, mash_by_condition_output %>% 
+  filter(sig_anywhere) %>% 
+  pull(gene) %>% unique() ))
+```
+
+
 
 ```{r}
 pseudocell_exp_loc <- "/project2/gilad/umans/oxygen_eqtl/output/topics_pseudocell_counts_nocontrol21_normalized.tsv"
