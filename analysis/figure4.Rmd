@@ -54,6 +54,7 @@ In cases where the GWAS reported a gene for a given SNP, use the reported gene. 
 gwas_formatted <- gwas_formatted %>%  
   mutate(`REPORTED.GENE.S.`=if_else(str_detect(`REPORTED.GENE.S.`, pattern = "NR"), NA, `REPORTED.GENE.S.`)) %>% 
   mutate(`REPORTED.GENE.S.`=if_else(str_detect(`REPORTED.GENE.S.`, pattern = "intergenic"), NA, `REPORTED.GENE.S.`)) %>% 
+  mutate(`REPORTED.GENE.S.`=if_else(str_detect(`REPORTED.GENE.S.`, pattern = "-"), NA, `REPORTED.GENE.S.`)) %>% 
   mutate(`REPORTED.GENE.S.`= na_if(`REPORTED.GENE.S.`, "")) %>% 
   mutate(nearest_gene= case_when(!is.na(`REPORTED.GENE.S.`) ~ `REPORTED.GENE.S.`,
                                  UPSTREAM_GENE_DISTANCE<DOWNSTREAM_GENE_DISTANCE ~ upstream_gene, 
@@ -99,10 +100,10 @@ gtex_cortex_signif <- unique(c(gtex_cortex_signif, gtex_frontalcortex_signif))
 
 And import the eQTL results.
 ```{r}
-mash_by_condition_output <- readRDS(file = "output/combined_mash-by-condition_EE_fine_reharmonized_032024.rds") %>% ungroup() 
+mash_by_condition_output <- readRDS(file = "/project2/gilad/umans/oxygen_eqtl/output/combined_mash-by-condition_EE_fine_reharmonized_newmash_032024.rds") %>% ungroup() 
 ```
 
-### Compare to fine-clustered eQTL results
+## Compare to fine-clustered eQTL results
 
 I classified eGenes from the organoid dataset by whether they were significant under normoxia and whether they are responsive to manipulating oxygen.  These two binary classifications result in 4 groups:  (1) shared effects in all conditions, detectable under normoxia; (2) dynamic and detectable under normoxia; (3) dynamic and _not_ detectable under normoxia; and (4) shared effects under all conditions but not detectable under normoxia.  Implicitly, group 4 effects needed additional treatment conditions to detect them not because they're responsive to treatment but because of the additional power we get.  
 
@@ -111,29 +112,55 @@ Here, I plot the number of eGenes of each these four classes that are the neares
 ```{r}
 mash_by_condition_output %>% 
   filter(sig_anywhere) %>% 
-  mutate(class=case_when(control10_lfsr < 0.05 & allsharing ~ "class1",
-                         control10_lfsr < 0.05 &  !allsharing ~ "class2",
-                         sig_anywhere & control10_lfsr > 0.05 & !allsharing ~ "class3",
+  mutate(class=case_when(control10_lfsr < 0.1 & allsharing ~ "class1",
+                         control10_lfsr < 0.1 &  !allsharing ~ "class2",
+                         sig_anywhere & control10_lfsr > 0.1 & !allsharing ~ "class3",
                          sig_anywhere & allsharing ~ "class4")) %>% 
   group_by(source, class) %>% 
   summarise(egene_gwas = sum(gene %in% (unlist(gwas_gene_lists) %>% unique()))) %>% 
-  ggplot(aes(x=factor(class, levels = c("class1", "class4", "class2", "class3")), y=egene_gwas)) + geom_boxplot(outlier.shape = NA, aes(color=class)) + 
+  ggplot(aes(x=factor(class, levels = c("class1", "class4", "class2", "class3")), y=egene_gwas)) + geom_boxplot(outlier.shape = NA, aes(color=class), linewidth=0.4) + 
   xlab("eGene class (see note)") + 
   ylab("Number of eGenes in GWAS") + 
   theme_light() + 
-  geom_point(aes(group=source, color=source), position = position_jitter(width = 0.2, height = 0)) +
+  geom_point(aes(group=source, color=source), position = position_jitter(width = 0.2, height = 0), size=0.5) +
   scale_color_manual(values=c(manual_palette_fine, class_colors)) +
   xlab("eGene class (see note)") + 
   theme(legend.position="none")
 ```
+
+
+What if we looked at fraction of the eGenes in that category instead of total numbers?
+```{r}
+mash_by_condition_output %>% 
+  filter(sig_anywhere) %>% 
+  mutate(class=case_when(control10_lfsr < 0.1 & allsharing ~ "class1",
+                         control10_lfsr < 0.1 &  !allsharing ~ "class2",
+                         sig_anywhere & control10_lfsr > 0.1 & !allsharing ~ "class3",
+                         sig_anywhere & allsharing ~ "class4")) %>% 
+  group_by(source, class) %>% 
+  summarise(egene_gwas = sum(gene %in% (unlist(gwas_gene_lists) %>% unique())),
+            egene_in_gwas_fraction = (sum(gene %in% (unlist(gwas_gene_lists) %>% unique())))/n()) %>% 
+  ggplot(aes(x=factor(class, levels = c("class1", "class4", "class2", "class3")), y=egene_in_gwas_fraction)) + geom_boxplot(outlier.shape = NA, aes(color=class), linewidth=0.4) + 
+  xlab("eGene class (see note)") + 
+  ylab("Number of eGenes in GWAS") + 
+  theme_light() + 
+  geom_point(aes(group=source, color=source), position = position_jitter(width = 0.2, height = 0), size=0.5) +
+  scale_color_manual(values=c(manual_palette_fine, class_colors)) +
+  xlab("eGene class (see note)") + 
+  theme(legend.position="none")
+
+```
+Basically the same proportion of each category.
+
+
 Here, I show the numbers plotted above and perform a Wilcoxon test comparing the dynamic/not-detected-in-normoxia ("class3") GWAS-associated eGenes with the non-dynamic/detected-in-normoxia ("class1") GWAS-associated eGenes.
 
 ```{r}
 mash_by_condition_output %>% 
   filter(sig_anywhere) %>% 
-  mutate(class=case_when(control10_lfsr < 0.05 & allsharing ~ "class1",
-                         control10_lfsr < 0.05 &  !allsharing ~ "class2",
-                         sig_anywhere & control10_lfsr > 0.05 & !allsharing ~ "class3",
+  mutate(class=case_when(control10_lfsr < 0.1 & allsharing ~ "class1",
+                         control10_lfsr < 0.1 &  !allsharing ~ "class2",
+                         sig_anywhere & control10_lfsr > 0.1 & !allsharing ~ "class3",
                          sig_anywhere & allsharing ~ "class4")) %>% 
    group_by(source, class) %>% 
   summarise(egene_gwas = sum(gene %in% (unlist(gwas_gene_lists) %>% unique()))) %>% 
@@ -142,35 +169,72 @@ mash_by_condition_output %>%
 ```
 
 ```{r}
+mash_by_condition_output %>% 
+  filter(sig_anywhere) %>% 
+  mutate(class=case_when(control10_lfsr < 0.1 & allsharing ~ "class1",
+                         control10_lfsr < 0.1 &  !allsharing ~ "class2",
+                         sig_anywhere & control10_lfsr > 0.1 & !allsharing ~ "class3",
+                         sig_anywhere & allsharing ~ "class4")) %>% 
+  group_by( class) %>% 
+  summarise(egene_in_gwas_fraction = (sum(gene %in% (unlist(gwas_gene_lists) %>% unique())))/n())
+```
+
+Of course, there's a greater number of eQTLs in GWAS among the "standard" eQTLs, because there are more of them:
+```{r}
 wilcox.test(mash_by_condition_output %>% 
   filter(sig_anywhere) %>% 
-  mutate(class=case_when(control10_lfsr < 0.05 & allsharing ~ "class1",
-                         control10_lfsr < 0.05 &  !allsharing ~ "class2",
-                         sig_anywhere & control10_lfsr > 0.05 & !allsharing ~ "class3",
+  mutate(class=case_when(control10_lfsr < 0.1 & allsharing ~ "class1",
+                         control10_lfsr < 0.1 &  !allsharing ~ "class2",
+                         sig_anywhere & control10_lfsr > 0.1 & !allsharing ~ "class3",
                          sig_anywhere & allsharing ~ "class4")) %>% 
-   group_by(source, class) %>% 
+    complete(source, class) %>% 
+   group_by(source, class, .drop=FALSE) %>% 
   summarise(egene_gwas = sum(gene %in% (unlist(gwas_gene_lists) %>% unique()))) %>% 
   pivot_wider(names_from = class, values_from = egene_gwas) %>% pull(class1),
   mash_by_condition_output %>% 
   filter(sig_anywhere) %>% 
-  mutate(class=case_when(control10_lfsr < 0.05 & allsharing ~ "class1",
-                         control10_lfsr < 0.05 &  !allsharing ~ "class2",
-                         sig_anywhere & control10_lfsr > 0.05 & !allsharing ~ "class3",
+  mutate(class=case_when(control10_lfsr < 0.1 & allsharing ~ "class1",
+                         control10_lfsr < 0.1 &  !allsharing ~ "class2",
+                         sig_anywhere & control10_lfsr > 0.1 & !allsharing ~ "class3",
                          sig_anywhere & allsharing ~ "class4")) %>% 
-   group_by(source, class) %>% 
+    complete(source, class) %>% 
+   group_by(source, class, .drop=FALSE) %>% 
   summarise(egene_gwas = sum(gene %in% (unlist(gwas_gene_lists) %>% unique()))) %>% 
-  pivot_wider(names_from = class, values_from = egene_gwas) %>% pull(class3),
-  paired = TRUE)
-
+  pivot_wider(names_from = class, values_from = egene_gwas) %>% pull(class3), paired = TRUE)
 ```
+
+But the proportion (i.e., the yield) is the same:
+```{r}
+wilcox.test(mash_by_condition_output %>% 
+  filter(sig_anywhere) %>% 
+  mutate(class=case_when(control10_lfsr < 0.1 & allsharing ~ "class1",
+                         control10_lfsr < 0.1 &  !allsharing ~ "class2",
+                         sig_anywhere & control10_lfsr > 0.1 & !allsharing ~ "class3",
+                         sig_anywhere & allsharing ~ "class4")) %>% 
+    complete(source, class) %>% 
+   group_by(source, class, .drop=FALSE) %>% 
+  summarise(egene_in_gwas_fraction = (sum(gene %in% (unlist(gwas_gene_lists) %>% unique())))/n()) %>% 
+  pivot_wider(names_from = class, values_from = egene_in_gwas_fraction) %>% pull(class1),
+  mash_by_condition_output %>% 
+  filter(sig_anywhere) %>% 
+  mutate(class=case_when(control10_lfsr < 0.1 & allsharing ~ "class1",
+                         control10_lfsr < 0.1 &  !allsharing ~ "class2",
+                         sig_anywhere & control10_lfsr > 0.1 & !allsharing ~ "class3",
+                         sig_anywhere & allsharing ~ "class4")) %>% 
+    complete(source, class) %>% 
+   group_by(source, class, .drop=FALSE) %>% 
+  summarise(egene_in_gwas_fraction = (sum(gene %in% (unlist(gwas_gene_lists) %>% unique())))/n()) %>% 
+  pivot_wider(names_from = class, values_from = egene_in_gwas_fraction) %>% pull(class3), paired = TRUE)
+```
+
 
 Overall (ie, not per-cell type):
 ```{r}
 mash_by_condition_output %>% 
   filter(sig_anywhere) %>% 
-  mutate(class=case_when(control10_lfsr < 0.05 & allsharing ~ "class1",
-                         control10_lfsr < 0.05 &  !allsharing ~ "class2",
-                         sig_anywhere & control10_lfsr > 0.05 & !allsharing ~ "class3",
+  mutate(class=case_when(control10_lfsr < 0.1 & allsharing ~ "class1",
+                         control10_lfsr < 0.1 &  !allsharing ~ "class2",
+                         sig_anywhere & control10_lfsr > 0.1 & !allsharing ~ "class3",
                          sig_anywhere & allsharing ~ "class4")) %>% 
   select(gene, class) %>% 
   distinct() %>% 
@@ -184,9 +248,9 @@ The same numbers can be calculated excluding genes that have already been identi
 mash_by_condition_output %>% 
   filter(sig_anywhere) %>% 
   filter(gene %not_in% gtex_cortex_signif) %>% 
-  mutate(class=case_when(control10_lfsr < 0.05 & allsharing ~ "class1",
-                         control10_lfsr < 0.05 &  !allsharing ~ "class2",
-                         sig_anywhere & control10_lfsr > 0.05 & !allsharing ~ "class3",
+  mutate(class=case_when(control10_lfsr < 0.1 & allsharing ~ "class1",
+                         control10_lfsr < 0.1 &  !allsharing ~ "class2",
+                         sig_anywhere & control10_lfsr > 0.1 & !allsharing ~ "class3",
                          sig_anywhere & allsharing ~ "class4")) %>% 
    group_by(source, class) %>% 
   summarise(egene_gwas = sum(gene %in% (unlist(gwas_gene_lists) %>% unique()))) %>% 
@@ -199,9 +263,9 @@ Overall (ie, not per-cell type):
 mash_by_condition_output %>% 
   filter(sig_anywhere) %>% 
   filter(gene %not_in% gtex_cortex_signif) %>% 
-  mutate(class=case_when(control10_lfsr < 0.05 & allsharing ~ "class1",
-                         control10_lfsr < 0.05 &  !allsharing ~ "class2",
-                         sig_anywhere & control10_lfsr > 0.05 & !allsharing ~ "class3",
+  mutate(class=case_when(control10_lfsr < 0.1 & allsharing ~ "class1",
+                         control10_lfsr < 0.1 &  !allsharing ~ "class2",
+                         sig_anywhere & control10_lfsr > 0.1 & !allsharing ~ "class3",
                          sig_anywhere & allsharing ~ "class4")) %>% 
   select(gene, class) %>% 
   distinct() %>% 
@@ -223,7 +287,8 @@ wilcox.test(mash_by_condition_output %>%
                         sharing_contexts==2 ~ "standard", 
                         sharing_contexts==0 ~ "dynamic"
                         )) %>% 
-   group_by(source, class) %>% 
+    complete(source, class) %>% 
+   group_by(source, class, .drop=FALSE) %>% 
   summarise(egene_gwas = sum(gene %in% (unlist(gwas_gene_lists) %>% unique()))) %>% 
    filter(class %in% c("dynamic")) %>% pull(egene_gwas), 
   mash_by_condition_output %>% 
@@ -235,9 +300,10 @@ wilcox.test(mash_by_condition_output %>%
                         sharing_contexts==2 ~ "standard", 
                         sharing_contexts==0 ~ "dynamic"
                         )) %>% 
-   group_by(source, class) %>% 
+    complete(source, class) %>% 
+   group_by(source, class, .drop=FALSE) %>% 
   summarise(egene_gwas = sum(gene %in% (unlist(gwas_gene_lists) %>% unique()))) %>% 
-   filter(class %in% c("standard")) %>% pull(egene_gwas), paired = TRUE, alternative = "two.sided")
+   filter(class %in% c("standard")) %>% pull(egene_gwas), paired=TRUE, alternative = "two.sided")
 ```
 
 
@@ -248,35 +314,36 @@ wilcox.test(mash_by_condition_output %>%
 
 ### Compare to coarse-clustered results
 ```{r}
-mash_by_condition_output_coarse <- readRDS(file = "output/combined_mash-by-condition_EE_coarse_reharmonized_032024.rds") %>% ungroup() %>% filter(source != "all")
+mash_by_condition_output_coarse <- readRDS(file = "/project2/gilad/umans/oxygen_eqtl/output/combined_mash-by-condition_EE_coarse_reharmonized_newmash_032024.rds") %>% ungroup()
 ```
 Again, I plot the number of eGenes of each these four classes that are the nearest genes to a significant GWAS variant in each cell type.
 ```{r}
 mash_by_condition_output_coarse %>% 
   filter(sig_anywhere) %>% 
-  mutate(class=case_when(control10_lfsr < 0.05 & allsharing ~ "class1",
-                         control10_lfsr < 0.05 &  !allsharing ~ "class2",
-                         sig_anywhere & control10_lfsr > 0.05 & !allsharing ~ "class3",
+  mutate(class=case_when(control10_lfsr < 0.1 & allsharing ~ "class1",
+                         control10_lfsr < 0.1 &  !allsharing ~ "class2",
+                         sig_anywhere & control10_lfsr > 0.1 & !allsharing ~ "class3",
                          sig_anywhere & allsharing ~ "class4")) %>% 
   group_by(source, class) %>% 
   summarise(egene_gwas = sum(gene %in% (unlist(gwas_gene_lists) %>% unique()))) %>% 
-  ggplot(aes(x=factor(class, levels = c("class1", "class4", "class2", "class3")), y=egene_gwas)) + geom_boxplot(outlier.shape = NA, aes(color=class)) + 
+  ggplot(aes(x=factor(class, levels = c("class1", "class4", "class2", "class3")), y=egene_gwas)) + geom_boxplot(outlier.shape = NA, aes(color=class), linewidth=0.4) + 
   xlab("eGene class (see note)") + 
   ylab("Number of eGenes in GWAS") + 
   theme_light() + 
-  geom_point(aes(group=source, color=source), position = position_jitter(width = 0.2, height = 0)) +
+  geom_point(aes(group=source, color=source), position = position_jitter(width = 0.2, height = 0), size=0.5) +
   scale_color_manual(values=c(manual_palette_coarse, class_colors)) +
   xlab("eGene class (see note)") + 
   theme(legend.position="none")
+
 ```
 
 Here, I show the numbers plotted above and perform a Wilcoxon test comparing the dynamic/not-detected-in-normoxia ("class3") GWAS-associated eGenes with the non-dynamic/detected-in-normoxia ("class1") GWAS-associated eGenes.
 ```{r}
 mash_by_condition_output_coarse %>% 
   filter(sig_anywhere) %>% 
-  mutate(class=case_when(control10_lfsr < 0.05 & allsharing ~ "class1",
-                         control10_lfsr < 0.05 &  !allsharing ~ "class2",
-                         sig_anywhere & control10_lfsr > 0.05 & !allsharing ~ "class3",
+  mutate(class=case_when(control10_lfsr < 0.1 & allsharing ~ "class1",
+                         control10_lfsr < 0.1 &  !allsharing ~ "class2",
+                         sig_anywhere & control10_lfsr > 0.1 & !allsharing ~ "class3",
                          sig_anywhere & allsharing ~ "class4")) %>% 
   group_by(source, class) %>% 
   summarise(egene_gwas = sum(gene %in% (unlist(gwas_gene_lists) %>% unique()))) %>% 
@@ -286,23 +353,25 @@ mash_by_condition_output_coarse %>%
 
 wilcox.test(mash_by_condition_output_coarse %>% 
   filter(sig_anywhere) %>% 
-  mutate(class=case_when(control10_lfsr < 0.05 & allsharing ~ "class1",
-                         control10_lfsr < 0.05 &  !allsharing ~ "class2",
-                         sig_anywhere & control10_lfsr > 0.05 & !allsharing ~ "class3",
+  mutate(class=case_when(control10_lfsr < 0.1 & allsharing ~ "class1",
+                         control10_lfsr < 0.1 &  !allsharing ~ "class2",
+                         sig_anywhere & control10_lfsr > 0.1 & !allsharing ~ "class3",
                          sig_anywhere & allsharing ~ "class4")) %>% 
-   group_by(source, class) %>% 
+    complete(source, class) %>% 
+   group_by(source, class, .drop=FALSE) %>% 
   summarise(egene_gwas = sum(gene %in% (unlist(gwas_gene_lists) %>% unique()))) %>% 
   pivot_wider(names_from = class, values_from = egene_gwas) %>% pull(class1),
   mash_by_condition_output_coarse %>% 
   filter(sig_anywhere) %>% 
-  mutate(class=case_when(control10_lfsr < 0.05 & allsharing ~ "class1",
-                         control10_lfsr < 0.05 &  !allsharing ~ "class2",
-                         sig_anywhere & control10_lfsr > 0.05 & !allsharing ~ "class3",
+  mutate(class=case_when(control10_lfsr < 0.1 & allsharing ~ "class1",
+                         control10_lfsr < 0.1 &  !allsharing ~ "class2",
+                         sig_anywhere & control10_lfsr > 0.1 & !allsharing ~ "class3",
                          sig_anywhere & allsharing ~ "class4")) %>% 
-   group_by(source, class) %>% 
+    complete(source, class) %>% 
+   group_by(source, class, .drop=FALSE) %>% 
   summarise(egene_gwas = sum(gene %in% (unlist(gwas_gene_lists) %>% unique()))) %>% 
-  pivot_wider(names_from = class, values_from = egene_gwas) %>% pull(class3),
-  paired = TRUE)
+  pivot_wider(names_from = class, values_from = egene_gwas) %>% pull(class3), paired = TRUE)
+
 ```
 Note that, in the coarsely-clustered data, more GWAS-associated eGenes appear non-dynamic (ie, have equivalent responses across oxygen conditions) and fewer appear context-specific.  
 
@@ -311,15 +380,41 @@ The same numbers can be calculated excluding genes that have already been identi
 mash_by_condition_output_coarse %>% 
   filter(sig_anywhere) %>% 
   filter(gene %not_in% gtex_cortex_signif) %>% 
-  mutate(class=case_when(control10_lfsr < 0.05 & allsharing ~ "class1",
-                         control10_lfsr < 0.05 &  !allsharing ~ "class2",
-                         sig_anywhere & control10_lfsr > 0.05 & !allsharing ~ "class3",
+  mutate(class=case_when(control10_lfsr < 0.1 & allsharing ~ "class1",
+                         control10_lfsr < 0.1 &  !allsharing ~ "class2",
+                         sig_anywhere & control10_lfsr > 0.1 & !allsharing ~ "class3",
                          sig_anywhere & allsharing ~ "class4")) %>% 
   group_by(source, class) %>% 
   summarise(egene_gwas = sum(gene %in% (unlist(gwas_gene_lists) %>% unique()))) %>% 
   group_by(class) %>% 
   summarize(median(egene_gwas))
 ```
+
+
+What if we looked at fraction of the eGenes in that category instead of total numbers?
+```{r}
+mash_by_condition_output_coarse %>% 
+  filter(sig_anywhere) %>% 
+  mutate(class=case_when(control10_lfsr < 0.1 & allsharing ~ "class1",
+                         control10_lfsr < 0.1 &  !allsharing ~ "class2",
+                         sig_anywhere & control10_lfsr > 0.1 & !allsharing ~ "class3",
+                         sig_anywhere & allsharing ~ "class4")) %>% 
+  group_by(source, class) %>% 
+  summarise(egene_gwas = sum(gene %in% (unlist(gwas_gene_lists) %>% unique())),
+            egene_in_gwas_fraction = (sum(gene %in% (unlist(gwas_gene_lists) %>% unique())))/n()) %>% 
+  ggplot(aes(x=factor(class, levels = c("class1", "class4", "class2", "class3")), y=egene_in_gwas_fraction)) + geom_boxplot(outlier.shape = NA, aes(color=class), linewidth=0.4) + 
+  xlab("eGene class (see note)") + 
+  ylab("Number of eGenes in GWAS") + 
+  theme_light() + 
+  geom_point(aes(group=source, color=source), position = position_jitter(width = 0.2, height = 0), size=0.5) +
+  scale_color_manual(values=c(manual_palette_fine, class_colors)) +
+  xlab("eGene class (see note)") + 
+  theme(legend.position="none")
+
+```
+Basically the same proportion of each category.
+
+
 
 To test whether the "dynamic" vs "standard" eGenes (defined solely by comparisons of effect size) are more likely to be present in GWAS gene lists, we group and test them as we did for comparison to GTEx.  Note this yields a similar conclusion as above, where we broke eGenes down by whether they were dynamic and detectable at baseline.
 ```{r}
@@ -332,7 +427,8 @@ wilcox.test(mash_by_condition_output_coarse %>%
                         sharing_contexts==2 ~ "standard", 
                         sharing_contexts==0 ~ "dynamic"
                         )) %>% 
-   group_by(source, class) %>% 
+    complete(source, class) %>% 
+   group_by(source, class, .drop=FALSE) %>% 
   summarise(egene_gwas = sum(gene %in% (unlist(gwas_gene_lists) %>% unique()))) %>% filter(class %in% c("dynamic")) %>% pull(egene_gwas), 
   mash_by_condition_output_coarse %>% 
   filter(sig_anywhere) %>% 
@@ -343,8 +439,9 @@ wilcox.test(mash_by_condition_output_coarse %>%
                         sharing_contexts==2 ~ "standard", 
                         sharing_contexts==0 ~ "dynamic"
                         )) %>% 
-   group_by(source, class) %>% 
-  summarise(egene_gwas = sum(gene %in% (unlist(gwas_gene_lists) %>% unique()))) %>% filter(class %in% c("standard")) %>% pull(egene_gwas), paired = TRUE, alternative = "two.sided")
+    complete(source, class) %>% 
+   group_by(source, class, .drop=FALSE) %>% 
+  summarise(egene_gwas = sum(gene %in% (unlist(gwas_gene_lists) %>% unique()))) %>% filter(class %in% c("standard")) %>% pull(egene_gwas),  paired=TRUE, alternative = "two.sided")
 ```
 
 ## Topic-interacting eQTL results
@@ -386,22 +483,46 @@ If we exclude the genes in GTEx cortex samples:
 length(intersect(setdiff(k7_egenes, gtex_cortex_signif), (unlist(gwas_gene_lists) %>% unique())))
 ```
 
+How many are not included in our pseudobulk-identified set of hypoxia-specific eGenes?
+```{r}
+hypoxia_egenes <- mash_by_condition_output %>% 
+  filter(sig_anywhere) %>% 
+ mutate(class=case_when(allsharing ~ "allsharing",
+                        hypoxia_normoxia_shared & sharing_contexts==1 ~ "hyperoxia_specific",
+                        hyperoxia_normoxia_shared & sharing_contexts==1 ~ "hypoxia_specific",
+                        hypoxia_hyperoxia_shared & sharing_contexts==1 ~ "normoxia_specific",
+                        sharing_contexts==2 ~ "partial_shared", 
+                        sharing_contexts==0 ~ "alldiff"
+                        )) %>% 
+  filter(class=="hypoxia_specific") %>%
+  pull(gene) %>% 
+  unique()
+
+any_egenes <- mash_by_condition_output %>% 
+  filter(sig_anywhere) %>% 
+  pull(gene) %>% 
+  unique()
+
+length(setdiff(k7_egenes, hypoxia_egenes))
+
+length(setdiff(k7_egenes, any_egenes))
+```
 
 
 ## Process rare variant results
 Here, I import datasets downloaded from SCHEMA, BipEx, Epi25, DDD, and SFARI Genes.
 ```{r}
-schema <- read.table(file = "data/external/SCHEMA_gene_results.txt", header = TRUE, sep = "\t", stringsAsFactors = FALSE)
+schema <- read.table(file = "/project2/gilad/umans/oxygen_eqtl/data/external/SCHEMA_gene_results.txt", header = TRUE, sep = "\t", stringsAsFactors = FALSE)
 # convert to gene symbols
-bipex <- read.table(file = "data/external/BipEx_gene_results_new.tsv", header = TRUE, sep = "\t", stringsAsFactors = FALSE)
+bipex <- read.table(file = "/project2/gilad/umans/oxygen_eqtl/data/external/BipEx_gene_results_new.tsv", header = TRUE, sep = "\t", stringsAsFactors = FALSE)
 # convert to gene symbols
-epi25 <- read.table(file = "data/external/Epi25_gene_results.tsv", header = TRUE, sep = "\t", stringsAsFactors = FALSE)
+epi25 <- read.table(file = "/project2/gilad/umans/oxygen_eqtl/data/external/Epi25_gene_results.tsv", header = TRUE, sep = "\t", stringsAsFactors = FALSE)
 # convert to gene symbols
-ddd <- read.csv(file = "data/external/DDD_gene_results.csv", header = TRUE, stringsAsFactors = FALSE)
-sfari <- read.csv(file = "data/external/SFARI-Gene_genes.csv", header = TRUE,  stringsAsFactors = FALSE)
+ddd <- read.csv(file = "/project2/gilad/umans/oxygen_eqtl/data/external/DDD_gene_results.csv", header = TRUE, stringsAsFactors = FALSE)
+sfari <- read.csv(file = "/project2/gilad/umans/oxygen_eqtl/data/external/SFARI-Gene_genes.csv", header = TRUE,  stringsAsFactors = FALSE)
 ```
 Change the ensembl gene names in the SCHEMA, BipEx, and Epi25 sets:
-```{r}
+```{r, message=FALSE}
 library(GenomicRanges)
 gene.gr <- readRDS('/project/gilad/umans/brainchromatin/data_files/rds/AllGenes_GenomicRanges.RDS')
 
@@ -484,9 +605,9 @@ Now, just like above for GWAS genes, compare each eGene class to rare variant ge
 ```{r}
 mash_by_condition_output %>% 
   filter(sig_anywhere) %>% 
-  mutate(class=case_when(control10_lfsr < 0.05 & allsharing ~ "class1",
-                         control10_lfsr < 0.05 &  !allsharing ~ "class2",
-                         sig_anywhere & control10_lfsr > 0.05 & !allsharing ~ "class3",
+  mutate(class=case_when(control10_lfsr < 0.1 & allsharing ~ "class1",
+                         control10_lfsr < 0.1 &  !allsharing ~ "class2",
+                         sig_anywhere & control10_lfsr > 0.1 & !allsharing ~ "class3",
                          sig_anywhere & allsharing ~ "class4")) %>%
    group_by(source, class) %>% 
   summarise(egene_rare = sum(gene %in% (unlist(rare_gene_frame$gene) %>% unique()))) %>% 
@@ -499,26 +620,36 @@ mash_by_condition_output %>%
   xlab("eGene class (see note)") + 
   theme(legend.position="none")
 
-
 # additionally, compare to GWAS results as above, but first restricting to rare variant-associated genes.  
 mash_by_condition_output %>% 
   filter(sig_anywhere) %>% 
   filter(gene %in% rare_gene_frame$gene) %>% 
-  mutate(class=case_when(control10_lfsr < 0.05 & allsharing ~ "class1",
-                         control10_lfsr < 0.05 &  !allsharing ~ "class2",
-                         sig_anywhere & control10_lfsr > 0.05 & !allsharing ~ "class3",
+  mutate(class=case_when(control10_lfsr < 0.1 & allsharing ~ "class1",
+                         control10_lfsr < 0.1 &  !allsharing ~ "class2",
+                         sig_anywhere & control10_lfsr > 0.1 & !allsharing ~ "class3",
                          sig_anywhere & allsharing ~ "class4")) %>%
   group_by(source, class) %>% 
   summarise(egene_rare = sum(gene %in% (unlist(gwas_gene_lists) %>% unique()))) %>% 
   ggplot(aes(x=factor(class, levels = c("class1", "class4", "class2", "class3")), y=egene_rare)) + 
-  geom_boxplot(outlier.shape = NA, aes(color=class)) +  
+  geom_boxplot(outlier.shape = NA, aes(color=class), linewidth=0.4) +  
   xlab("eGene class (see note") + 
   ylab("Rare variant genes with GWAS eQTLs") + 
   theme_light() + 
   scale_color_manual(values=c(manual_palette_fine, class_colors)) + 
   theme(legend.position="none") +
-  geom_point(aes(group=source, color=source), position = position_jitter(width = 0.2, height = 0))
+  geom_point(aes(group=source, color=source), position = position_jitter(width = 0.2, height = 0), size=0.5)
 ```
+
+The total number of rare variant genes with an eQTL is:
+```{r}
+mash_by_condition_output %>% 
+  filter(sig_anywhere) %>% 
+  filter(gene %in% rare_gene_frame$gene) %>% 
+  pull(gene) %>% 
+  unique() %>% 
+  length()
+```
+
 The total number of rare variant genes with an eQTL that correspond to one of our GWAS traits is:
 ```{r}
 mash_by_condition_output %>% 
@@ -535,12 +666,13 @@ Rare variant genes that are eGenes in our dataset allow us to ask about the phen
 
 ```{r}
 inner_join(x=mash_by_condition_output %>% 
-filter(sig_anywhere) %>% 
+# filter(sig_anywhere) %>%
+  filter(control10_lfsr < 0.2 | stim1pct_lfsr < 0.2 | stim21pct_lfsr < 0.2 ) %>% 
   filter(gene %in% rare_gene_frame$gene) %>% 
-  mutate(class=case_when(control10_lfsr < 0.05 & allsharing ~ "class1",
-                         control10_lfsr < 0.05 &  !allsharing ~ "class2",
-                         sig_anywhere & control10_lfsr > 0.05 & !allsharing ~ "class3",
-                         sig_anywhere & allsharing ~ "class4")) %>% 
+  mutate(class=case_when(control10_lfsr < 0.2 & allsharing ~ "class1",
+                         control10_lfsr < 0.2 &  !allsharing ~ "class2",
+                         control10_lfsr > 0.2 & !allsharing ~ "class3",
+                         allsharing ~ "class4")) %>% 
   separate(gene_snp, into = c("genename", "snp"), sep = "_") %>% 
     mutate(snp_short = str_sub(snp, end = -5)) %>% 
     select(gene, snp, snp_short, source, control10_lfsr:stim21pct_beta, class), 
@@ -549,7 +681,6 @@ filter(sig_anywhere) %>%
   by=join_by(snp_short==snp), relationship = "many-to-many")  %>% 
   mutate(across(ends_with("lfsr"), signif)) %>% 
   mutate(across(ends_with("beta"), signif)) %>% 
-  # drop_na() %>% 
   select(gene, source, class, snp, nearest_gene, STUDY.ACCESSION, trait) %>% 
   left_join(x=., y=rare_gene_frame, by=join_by(gene==gene), relationship = "many-to-many") 
 ```
@@ -558,9 +689,9 @@ Finally, we can look specifically for cases in which our data link a GWAS SNP to
 ```{r}
 full_join(x=mash_by_condition_output %>% 
 filter(sig_anywhere) %>% 
-  mutate(class=case_when(control10_lfsr < 0.05 & allsharing ~ "class1",
-                         control10_lfsr < 0.05 &  !allsharing ~ "class2",
-                         sig_anywhere & control10_lfsr > 0.05 & !allsharing ~ "class3",
+  mutate(class=case_when(control10_lfsr < 0.1 & allsharing ~ "class1",
+                         control10_lfsr < 0.1 &  !allsharing ~ "class2",
+                         sig_anywhere & control10_lfsr > 0.1 & !allsharing ~ "class3",
                          sig_anywhere & allsharing ~ "class4")) %>% 
   separate(gene_snp, into = c("genename", "snp"), sep = "_") %>% 
     mutate(snp = str_sub(snp, end = -5)) %>% 
@@ -573,102 +704,124 @@ filter(sig_anywhere) %>%
   mutate(across(ends_with("beta"), signif)) %>% 
   filter(gene != nearest_gene) %>%
   select(gene) %>% 
-  distinct() %>% # remove this to get the number of associations (some pleiotoropic genes will be duplicated)
+  # distinct() %>% # remove this to get the number of associations (some pleiotoropic genes will be duplicated)
   dim()
 # this gets the number of genes with a changed interpretation
 ```
+(7 genes)
+
+```{r}
+full_join(x=mash_by_condition_output_coarse %>% 
+filter(sig_anywhere) %>% 
+  mutate(class=case_when(control10_lfsr < 0.1 & allsharing ~ "class1",
+                         control10_lfsr < 0.1 &  !allsharing ~ "class2",
+                         sig_anywhere & control10_lfsr > 0.1 & !allsharing ~ "class3",
+                         sig_anywhere & allsharing ~ "class4")) %>% 
+  separate(gene_snp, into = c("genename", "snp"), sep = "_") %>% 
+    mutate(snp = str_sub(snp, end = -5)) %>% 
+  filter(snp %in% unique(gwas_snps)) %>% 
+    select(gene, snp, source, control10_lfsr:stim21pct_beta, class), 
+  y=gwas_formatted %>% filter(trait %in% filtered_traits) %>% filter(n>15) %>% filter(n<500) %>%
+  filter(PVALUE_MLOG>7.3) %>% unite("snp", CHR_ID:CHR_POS, sep = ":") %>% select(nearest_gene, REPORTED.GENE.S., trait, n, snp, STUDY.ACCESSION, PVALUE_MLOG) , 
+  by=join_by(snp==snp), relationship = "many-to-many")  %>% 
+  mutate(across(ends_with("lfsr"), signif)) %>% 
+  mutate(across(ends_with("beta"), signif)) %>% 
+  filter(gene != nearest_gene) %>%
+  select(gene) %>% 
+  # distinct() %>% # remove this to get the number of associations (some pleiotoropic genes will be duplicated)
+  dim()
+# this gets the number of genes with a changed interpretation
+```
+(9 genes)
 
 
 ## Plot example eGenes
 Here, I plot a couple of example eGenes identified above as cases of changed or updated interpretation of a GWAS SNP's regulatory target based on our data.  
-```{r}
-genotypes <- read_table("data/MatrixEQTL/snps/YRI_genotypes_maf10hwee-6_full/chr1_for_matrixeqtl.snps") %>% pivot_longer(cols=starts_with("NA"), names_to = "individual", values_to = "snp") 
+```{r, message=FALSE}
+genotypes <- read_table("/project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/snps/YRI_genotypes_maf10hwee-6_full/chr1_for_matrixeqtl.snps") %>% pivot_longer(cols=starts_with("NA"), names_to = "individual", values_to = "snp") 
 for (i in 2:22){
-  genotypes <- rbind(genotypes, read_table(paste0("data/MatrixEQTL/snps/YRI_genotypes_maf10hwee-6_full/chr",i,"_for_matrixeqtl.snps", sep="")) %>% pivot_longer(cols=starts_with("NA"), names_to = "individual", values_to = "snp"))
+  genotypes <- rbind(genotypes, read_table(paste0("/project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/snps/YRI_genotypes_maf10hwee-6_full/chr",i,"_for_matrixeqtl.snps", sep="")) %>% pivot_longer(cols=starts_with("NA"), names_to = "individual", values_to = "snp"))
 }
 
 genotypes <- genotypes %>% mutate(ID = str_sub(ID, end = -5)) 
 
-pseudo_data <- readRDS(file = "output/pseudo_fine_quality_filtered_nomap_qtl_20240305.RDS")
+pseudo_data <- readRDS(file = "/project2/gilad/umans/oxygen_eqtl/output/pseudo_fine_quality_filtered_nomap_qtl_20240305.RDS")
 pseudo_data <- filter.pseudobulk(pseudo_data, threshold = 20)
 ```
 
-As a first example, the SNP located at 17:75826364 (rs2008012), which is associated with a white matter structural phenotype (uncinate fasciculus thickness).  The nearest gene to this SNP is UNK.
-```{r}
-p1 <- make_boxplot(celltype = "Immature", condition = "control10", testsnp = "17:75826364", testgene = "H3F3B") + geom_boxplot(alpha=0) + theme_classic() + theme(legend.position="none") + ylab("")
-p2 <- make_boxplot(celltype = "Immature", condition = "stim1pct", testsnp = "17:75826364", testgene = "H3F3B") + geom_boxplot(alpha=0) + theme_classic() + theme(legend.position="none") + ylab("")
-p3 <- make_boxplot(celltype = "Immature", condition = "stim21pct", testsnp = "17:75826364", testgene = "H3F3B") + geom_boxplot(alpha=0) + theme_classic() + theme(legend.position="none") + ylab("")
+As a first example, the SNP located at 17:75826364 (rs2008012), which is associated with a white matter structural phenotype (uncinate fasciculus thickness).  The nearest gene to this SNP is UNK.  Note that this QTL is not significant by our lfsr threshold of 0.1 (lfsr 0.26).
+```{r, message=FALSE}
+p1 <- make_boxplot(celltype = "Immature", condition = "control10", testsnp = "17:75826364", testgene = "H3F3B") + geom_boxplot(alpha=0, linewidth=0.4) + theme_light() + theme(legend.position="none") + ylab("") +  theme(axis.text.x=element_text(size=6), axis.text.y=element_blank(), plot.background = element_blank(), panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+p2 <- make_boxplot(celltype = "Immature", condition = "stim1pct", testsnp = "17:75826364", testgene = "H3F3B") + geom_boxplot(alpha=0, linewidth=0.4) + theme_light() + theme(legend.position="none") + ylab("")+  theme(axis.text.x=element_text(size=6), axis.text.y=element_blank(), plot.background = element_blank(), panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+p3 <- make_boxplot(celltype = "Immature", condition = "stim21pct", testsnp = "17:75826364", testgene = "H3F3B") + geom_boxplot(alpha=0, linewidth=0.4) + theme_light() + theme(legend.position="none") + ylab("")+  theme(axis.text.x=element_text(size=6), axis.text.y=element_blank(), plot.background = element_blank(), panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+
+
 grid.arrange(p1, p2, p3, nrow=1)
+
 ```
 
 ```{r}
-p1 <- make_boxplot(celltype = "IPcycling", condition = "control10", testsnp = "17:75826364", testgene = "H3F3B") + geom_boxplot(alpha=0) + theme_classic() + theme(legend.position="none") + ylab("")
-p2 <- make_boxplot(celltype = "IPcycling", condition = "stim1pct", testsnp = "17:75826364", testgene = "H3F3B") + geom_boxplot(alpha=0) + theme_classic() + theme(legend.position="none") + ylab("")
-p3 <- make_boxplot(celltype = "IPcycling", condition = "stim21pct", testsnp = "17:75826364", testgene = "H3F3B") + geom_boxplot(alpha=0) + theme_classic() + theme(legend.position="none") + ylab("")
+p1 <- make_boxplot(celltype = "IPcycling", condition = "control10", testsnp = "17:75826364", testgene = "H3F3B") + geom_boxplot(alpha=0, linewidth=0.4) + theme_classic() + theme(legend.position="none") + ylab("")+  theme(axis.text.x=element_text(size=6), axis.text.y=element_blank(), plot.background = element_blank(), panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.title.y = element_blank())
+p2 <- make_boxplot(celltype = "IPcycling", condition = "stim1pct", testsnp = "17:75826364", testgene = "H3F3B") + geom_boxplot(alpha=0, linewidth=0.4) + theme_classic() + theme(legend.position="none") + ylab("")+  theme(axis.text.x=element_text(size=6), axis.text.y=element_blank(), plot.background = element_blank(), panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.title.y = element_blank())
+p3 <- make_boxplot(celltype = "IPcycling", condition = "stim21pct", testsnp = "17:75826364", testgene = "H3F3B") + geom_boxplot(alpha=0, linewidth=0.4) + theme_classic() + theme(legend.position="none") + ylab("")+  theme(axis.text.x=element_text(size=6), axis.text.y=element_blank(), plot.background = element_blank(), panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.title.y = element_blank())
+ 
 grid.arrange(p1, p2, p3, nrow=1)
+
 ```
 
-```{r}
-p1 <- make_boxplot(celltype = "RG", condition = "control10", testsnp = "22:41062780", testgene = "EP300") + geom_boxplot(alpha=0) + theme_classic() + theme(legend.position="none") + ylab("")
-p2 <- make_boxplot(celltype = "RG", condition = "stim1pct", testsnp = "22:41062780", testgene = "EP300") + geom_boxplot(alpha=0) + theme_classic() + theme(legend.position="none") + ylab("")
-p3 <- make_boxplot(celltype = "RG", condition = "stim21pct", testsnp = "22:41062780", testgene = "EP300") + geom_boxplot(alpha=0) + theme_classic() + theme(legend.position="none") + ylab("")
-grid.arrange(p1, p2, p3, nrow=1)
-```
-
-
-
-```{r}
-library(Gviz)
-library(TxDb.Hsapiens.UCSC.hg38.refGene)
-snptrack <- AnnotationTrack(start = 75826364, width = 1, chromosome = 17, genome = "hg38", name = "rs2008012")
-gtrack <- GenomeAxisTrack()
-
-getOption("Gviz.scheme")
-scheme <- getScheme()
-scheme$GeneRegionTrack$fill <- "blue"
-scheme$GeneRegionTrack$col <- NULL
-scheme$GeneRegionTrack$transcriptAnnotation <- NULL  #"symbol"
-addScheme(scheme, "myScheme")
-options(Gviz.scheme = "myScheme")
-
-
-grtrack <- GeneRegionTrack(TxDb.Hsapiens.UCSC.hg38.refGene, genome = "hg38", chromosome = 17, 
-                           name = "Gene Model",
-                           start = 75770000, end = 75880000)
-
-plotTracks(list(gtrack, grtrack, snptrack), collapseTranscripts = "longest", from = 75775000, to = 75880000)
-```
-As a second example, consider a SNP located at 22:39579302 (rs5757736), which is associated with cognitive/educational traits (with all those caveats...) as well as schizophrenia risk.  The nearest gene to this SNP is CACNA1I.  In our dataset, it is also associated with expression of RPS19BP1 under hypoxia in immature neurons.
-```{r}
-p1 <- make_boxplot(celltype = "Immature", condition = "stim1pct", testsnp = "22:39579302", testgene = "RPS19BP1") + geom_boxplot(alpha=0) + theme_classic() + theme(legend.position="none") + ylab("")
-p2 <- make_boxplot(celltype = "Immature", condition = "stim21pct", testsnp = "22:39579302", testgene = "RPS19BP1") + geom_boxplot(alpha=0) + theme_classic() + theme(legend.position="none")+ ylab("")
-p3 <- make_boxplot(celltype = "Immature", condition = "control10", testsnp = "22:39579302", testgene = "RPS19BP1") + geom_boxplot(alpha=0) + theme_classic() + theme(legend.position="none")+ ylab("")
+For the gene PPIA (cyclophilin A).  Here, lfsr<0.2.
+```{r, message=FALSE}
+p1 <- make_boxplot(celltype = "NeuronOther", condition = "stim1pct", testsnp = "7:44768492", testgene = "PPIA") + geom_boxplot(alpha=0) + theme_classic() + theme(legend.position="none") + ylab("")
+p2 <- make_boxplot(celltype = "NeuronOther", condition = "stim21pct", testsnp = "7:44768492", testgene = "PPIA") + geom_boxplot(alpha=0) + theme_classic() + theme(legend.position="none")+ ylab("")
+p3 <- make_boxplot(celltype = "NeuronOther", condition = "control10", testsnp = "7:44768492", testgene = "PPIA") + geom_boxplot(alpha=0) + theme_classic() + theme(legend.position="none")+ ylab("")
 grid.arrange(p3, p1, p2, nrow=1)
-
 ```
 
+The following example genes do have significant effects in at least one condition (lfsr<0.1):
+```{r, message=FALSE}
+p1 <- make_boxplot(celltype = "Immature", condition = "stim1pct", testsnp = "14:103551768", testgene = "CKB") + geom_boxplot(alpha=0) + theme_classic() + theme(legend.position="none") + ylab("")
+p2 <- make_boxplot(celltype = "Immature", condition = "stim21pct", testsnp = "14:103551768", testgene = "CKB") + geom_boxplot(alpha=0) + theme_classic() + theme(legend.position="none")+ ylab("")
+p3 <- make_boxplot(celltype = "Immature", condition = "control10", testsnp = "14:103551768", testgene = "CKB") + geom_boxplot(alpha=0) + theme_classic() + theme(legend.position="none")+ ylab("")
+grid.arrange(p3, p1, p2, nrow=1)
+```
 
+COA8, a cytochrome c oxidase interacting factor:
+```{r, message=FALSE}
+p1 <- make_boxplot(celltype = "InhThalamic", condition = "control10", testsnp = "14:103551768", testgene = "COA8") + geom_boxplot(alpha=0, linewidth=0.4) + theme_light() + theme(legend.position="none") + ylab("") +  theme(axis.text.x=element_text(size=6), axis.text.y=element_text(size=6), plot.background = element_blank(), panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.title.y = element_blank())
+p2 <- make_boxplot(celltype = "InhThalamic", condition = "stim1pct", testsnp = "14:103551768", testgene = "COA8") + geom_boxplot(alpha=0, linewidth=0.4) + theme_light() + theme(legend.position="none") + ylab("")+  theme(axis.text.x=element_text(size=6), axis.text.y=element_text(size=6), plot.background = element_blank(), panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.title.y = element_blank())
+p3 <- make_boxplot(celltype = "InhThalamic", condition = "stim21pct", testsnp = "14:103551768", testgene = "COA8") + geom_boxplot(alpha=0, linewidth=0.4) + theme_light() + theme(legend.position="none") + ylab("")+  theme(axis.text.x=element_text(size=6), axis.text.y=element_text(size=6), plot.background = element_blank(), panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.title.y = element_blank())
 
+grid.arrange(p1, p2, p3, nrow=1)
+```
+
+The gene RPS26, which has a significant QTL effect in multiple cell types.  This SNP is associated with cognitive phenotypes.
 ```{r}
-library(Gviz)
-
-snptrack <- AnnotationTrack(start = 39579302, width = 1, chromosome = 22, genome = "hg38", name = "rs5757736")
-gtrack <- GenomeAxisTrack()
-
-
-getOption("Gviz.scheme")
-scheme <- getScheme()
-scheme$GeneRegionTrack$fill <- "blue"
-scheme$GeneRegionTrack$col <- NULL
-scheme$GeneRegionTrack$transcriptAnnotation <- NULL  #"symbol"
-addScheme(scheme, "myScheme")
-options(Gviz.scheme = "myScheme")
-
-
-grtrack <- GeneRegionTrack(TxDb.Hsapiens.UCSC.hg38.refGene, genome = "hg38", chromosome = 22, 
-                           name = "Gene Model",
-                           start = 39433403, end = 39729699)
-
-plotTracks(list(gtrack, grtrack, snptrack), collapseTranscripts = "longest", from = 39433403, to = 39729699)
+p1 <- make_boxplot(celltype = "NeuronOther", condition = "stim1pct", testsnp = "12:56007301", testgene = "RPS26") + geom_boxplot(alpha=0) + theme_classic() + theme(legend.position="none") + ylab("")
+p2 <- make_boxplot(celltype = "NeuronOther", condition = "stim21pct", testsnp = "12:56007301", testgene = "RPS26") + geom_boxplot(alpha=0) + theme_classic() + theme(legend.position="none")+ ylab("")
+p3 <- make_boxplot(celltype = "NeuronOther", condition = "control10", testsnp = "12:56007301", testgene = "RPS26") + geom_boxplot(alpha=0) + theme_classic() + theme(legend.position="none")+ ylab("")
+grid.arrange(p3, p1, p2, nrow=1)
 ```
+
+```{r, message=FALSE}
+p1 <- make_boxplot(celltype = "RGcycling", condition = "stim1pct", testsnp = "12:56007301", testgene = "RPS26") + geom_boxplot(alpha=0) + theme_classic() + theme(legend.position="none") + ylab("")
+p2 <- make_boxplot(celltype = "RGcycling", condition = "stim21pct", testsnp = "12:56007301", testgene = "RPS26") + geom_boxplot(alpha=0) + theme_classic() + theme(legend.position="none")+ ylab("")
+p3 <- make_boxplot(celltype = "RGcycling", condition = "control10", testsnp = "12:56007301", testgene = "RPS26") + geom_boxplot(alpha=0) + theme_classic() + theme(legend.position="none")+ ylab("")
+grid.arrange(p3, p1, p2, nrow=1)
+```
+
+```{r, message=FALSE}
+p1 <- make_boxplot(celltype = "GliaProg", condition = "stim1pct", testsnp = "12:56007301", testgene = "RPS26") + geom_boxplot(alpha=0) + theme_classic() + theme(legend.position="none") + ylab("")
+p2 <- make_boxplot(celltype = "GliaProg", condition = "stim21pct", testsnp = "12:56007301", testgene = "RPS26") + geom_boxplot(alpha=0) + theme_classic() + theme(legend.position="none")+ ylab("")
+p3 <- make_boxplot(celltype = "GliaProg", condition = "control10", testsnp = "12:56007301", testgene = "RPS26") + geom_boxplot(alpha=0) + theme_classic() + theme(legend.position="none")+ ylab("")
+grid.arrange(p3, p1, p2, nrow=1)
+```
+
+And PLRG1, an important and pleiotropic regulator, which has a significant eQTL effect only under normoxia that is suppressed under oxygen stress.  This SNP is strongly associated with stroke risk (GCST005838, GCST005843).
+```{r, message=FALSE}
+p1 <- make_boxplot(celltype = "CorticalHem", condition = "stim1pct", testsnp = "4:154580036", testgene = "PLRG1") + geom_boxplot(alpha=0) + theme_classic() + theme(legend.position="none") + ylab("")
+p2 <- make_boxplot(celltype = "CorticalHem", condition = "stim21pct", testsnp = "4:154580036", testgene = "PLRG1") + geom_boxplot(alpha=0) + theme_classic() + theme(legend.position="none")+ ylab("")
+p3 <- make_boxplot(celltype = "CorticalHem", condition = "control10", testsnp = "4:154580036", testgene = "PLRG1") + geom_boxplot(alpha=0) + theme_classic() + theme(legend.position="none")+ ylab("")
+grid.arrange(p3, p1, p2, nrow=1)
+```
+
 

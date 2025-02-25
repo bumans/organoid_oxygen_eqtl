@@ -8,4 +8,17 @@ editor_options:
   chunk_output_type: console
 ---
 
-Welcome to my research website.
+
+The is a [workflowr](https://workflowr.github.io/workflowr/index.html) site outlining analyses performed on a single-cell RNA-seq dataset from human brain organoids under different oxygen stress treatment conditions.  The goals of this work were to characterize cell type diversity in brain organoids derived from a panel of iPSC lines, identify differentially expressed genes in different developmental brain cell types in response to acute changes in oxygen, identify expression quantitative trait loci (eQTLs) in different cell types and environmental conditions, and evaluate the disease relevance of these eQTLs in the context of human complex trait genetics.  
+
+Details of data collection are provided in the accompanying manuscript.  Briefly, dorsal brain organoids were grown from 21 parental cell lines drawn from the [YRI iPSC panel](https://pubmed.ncbi.nlm.nih.gov/29208628/).  Organoids were assayed in two large batches, one of which included 16 lines and the other of which included 7 (2 lines replicated across batches).  In each batch, organoids were adapted to 10% oxygen for 1 week prior to data collection.  Then, pools of 5-6 organoids were either kept at 10% oxygen or moved to 1% or 21% incubators for 24 hours prior to dissociation and 10x collection.  For additional comparison, organoids from a subset of cell lines were kept at 21% oxygen continuously (control 21% condition) in order to evaluate cell type composition changes induced by 1 week of 10% oxygen exposure.  Organoids were dissociated to single cells by papain digestion and processed using the 10x Genomics HT 3' gene expression kit.
+
+Snakemake rules used to implement the `cellranger` pipeline and demultiplex samples using `vireo` are included in the `code/` folder of this Github page.  
+
+Steps used to import `cellranger` output and construct a Seurat data object, annotate cells, and assess cell type proportions and abundances can be found [here](figure1.html).
+
+Steps used to identify differentially expressed genes from pseudobulk data, classify treatment-responsive cells, and plot cell data from immunostained organoid sections can be found [here](figure2.html).
+
+Steps used to map eQTLs using pseudobulk data, fit a topic model, and map topic-interacting eQTLs can be found [here](figure3.html).
+
+Steps used to compare eQTLs to results from human GWAS and rare variant studies can be found [here](figure4.html).
