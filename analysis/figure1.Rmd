@@ -424,7 +424,7 @@ saveRDS(harmony.batchandindividual.sct, file = "output/harmony_organoid_dataset.
 ```
 
 ```{r}
-harmony.batchandindividual.sct <- readRDS(file = "output/harmony_organoid_dataset.rds")
+harmony.batchandindividual.sct <- readRDS(file = "/project2/gilad/umans/oxygen_eqtl/output/harmony_organoid_dataset.rds")
 ```
 
 ## Annotate cell types
@@ -902,8 +902,8 @@ pseudo_fine_quality <- generate.pseudobulk(subset_seurat, labels = c("combined.a
 ```
 
 ```{r}
-pseudo_fine_quality <- readRDS(file = "output/pseudo_fine_quality_filtered_de_20240305.RDS")
-pseudo_coarse_quality <- readRDS(file = "output/pseudo_coarse_quality_filtered_de_20240305.RDS")
+pseudo_fine_quality <- readRDS(file = "/project2/gilad/umans/oxygen_eqtl/output/pseudo_fine_quality_filtered_de_20240305.RDS")
+pseudo_coarse_quality <- readRDS(file = "/project2/gilad/umans/oxygen_eqtl/output/pseudo_coarse_quality_filtered_de_20240305.RDS")
 ```
 
 

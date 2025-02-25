@@ -31,7 +31,7 @@ source("analysis/shared_functions_style_items.R")
 
 Subset data to high quality cells from normoxia, hypoxia, and hyperoxia conditions.  
 ```{r}
-harmony.batchandindividual.sct <- readRDS(file = "output/harmony_organoid_dataset.rds")
+harmony.batchandindividual.sct <- readRDS(file = "/project2/gilad/umans/oxygen_eqtl/output/harmony_organoid_dataset.rds")
 
 subset_seurat <- subset(harmony.batchandindividual.sct, subset = vireo.prob.singlet > 0.95 & nCount_RNA<20000 & nCount_RNA>2500 & treatment != "control21" )
 ```
@@ -45,8 +45,8 @@ pseudo_all_quality <- generate.pseudobulk(subset_seurat, labels = c("treatment",
 ```
 
 ```{r}
-pseudo_fine_quality <- readRDS(file = "output/pseudo_fine_quality_filtered_de_20240305.RDS")
-pseudo_coarse_quality <- readRDS(file = "output/pseudo_coarse_quality_filtered_de_20240305.RDS")
+pseudo_fine_quality <- readRDS(file = "/project2/gilad/umans/oxygen_eqtl/output/pseudo_fine_quality_filtered_de_20240305.RDS")
+pseudo_coarse_quality <- readRDS(file = "/project2/gilad/umans/oxygen_eqtl/output/pseudo_coarse_quality_filtered_de_20240305.RDS")
 ```
 
 We previously determined that filtering to a minimum of 20 cells per pseudobulk sample minimizes excess sample variation associated with cell numbers.
@@ -284,10 +284,10 @@ rownames(de.summary.coarse) <- names(de_results_combinedcoarse_filtered)
 for (cell in names(de_results_combinedcoarse_filtered)){
   de.summary.coarse[cell, 1] <- sum(topTable(de_results_combinedcoarse_filtered[[cell]], coef="treatmentstim1pct", number = Inf)$adj.P.Val < 0.05)
   de.summary.coarse[cell, 2] <- sum(topTable(de_results_combinedcoarse_filtered[[cell]], coef="treatmentstim21pct", number = Inf)$adj.P.Val < 0.05)
-    de.summary.coarse[cell, 3] <- pseudo_fine_quality_de$meta %>% filter(combined.annotation.fine.harmony==cell) %>% dplyr::filter(treatment %in% c("control10", "stim1pct")) %>% summarize(total=sum(ncells)) %>% pull(total)
-    de.summary.coarse[cell, 4] <- pseudo_fine_quality_de$meta %>% filter(combined.annotation.fine.harmony==cell) %>% dplyr::filter(treatment %in% c("control10", "stim21pct")) %>% summarize(total=sum(ncells)) %>% pull(total)
-    de.summary.coarse[cell, 5] <- pseudo_fine_quality_de$meta %>% filter(combined.annotation.fine.harmony==cell) %>% dplyr::filter(treatment %in% c("control10", "stim1pct")) %>% pull(vireo.individual) %>% unique() %>% length()
-    de.summary.coarse[cell, 6] <- pseudo_fine_quality_de$meta %>% filter(combined.annotation.fine.harmony==cell) %>% dplyr::filter(treatment %in% c("control10", "stim21pct")) %>% pull(vireo.individual) %>% unique() %>% length()
+    de.summary.coarse[cell, 3] <- pseudo_coarse_quality_de$meta %>% filter(combined.annotation.coarse.harmony==cell) %>% dplyr::filter(treatment %in% c("control10", "stim1pct")) %>% summarize(total=sum(ncells)) %>% pull(total)
+    de.summary.coarse[cell, 4] <- pseudo_coarse_quality_de$meta %>% filter(combined.annotation.coarse.harmony==cell) %>% dplyr::filter(treatment %in% c("control10", "stim21pct")) %>% summarize(total=sum(ncells)) %>% pull(total)
+    de.summary.coarse[cell, 5] <- pseudo_coarse_quality_de$meta %>% filter(combined.annotation.coarse.harmony==cell) %>% dplyr::filter(treatment %in% c("control10", "stim1pct")) %>% pull(vireo.individual) %>% unique() %>% length()
+    de.summary.coarse[cell, 6] <- pseudo_coarse_quality_de$meta %>% filter(combined.annotation.coarse.harmony==cell) %>% dplyr::filter(treatment %in% c("control10", "stim21pct")) %>% pull(vireo.individual) %>% unique() %>% length()
     de.summary.coarse[cell, 7] <- (topTable(de_results_combinedcoarse_filtered[[cell]], coef="treatmentstim1pct", number = Inf) %>% filter(adj.P.Val < 0.05) %>% filter(abs(logFC)>0.58) %>% nrow() )
   de.summary.coarse[cell, 8] <- (topTable(de_results_combinedcoarse_filtered[[cell]], coef="treatmentstim21pct", number = Inf) %>% filter(adj.P.Val < 0.05) %>% filter(abs(logFC)>0.58) %>% nrow())
   de.summary.coarse[cell, 9] <- topTable(de_results_combinedcoarse_filtered[[cell]], coef="treatmentstim1pct", number = Inf) %>% nrow()
@@ -422,11 +422,36 @@ ggplot(de.summary.fine, mapping = aes(x=nindiv_hypoxia, y=hypoxia_mineffect/hypo
 Number of individuals, rather than number of cells per pseudobulk sample, is the important factor contributing to power here.  We separately found that including cell numbers as a covariation in the DE model has no effect on the relationship shown above, nor do differences in transcriptome size between cell types (constraining all comparisons to a common transcriptome preserved this relationship).
 
 
+We can look at a variance partition plot (from dream package) to get an approximate sense of the relative contribution of cell type identity, cell line, treatment, and collection batch to overall data variation.  We expect that cell type makes the largest contribution here.
+
+```{r, eval=FALSE}
+vardata <- DGEList(counts = pseudo_fine_quality_de$counts, samples = pseudo_fine_quality_de$meta)
+keepgenes <- filterByExpr(y = vardata, min.count = 5, 
+                           min.prop=0.4, 
+                           min.total.count = 10)
+
+print(paste0("Testing ", sum(keepgenes), " genes"))
+vardata <- vardata[keepgenes,]
+vardata <- calcNormFactors(vardata, method = "TMM")
+
+formula_all <- ~ (1|combined.annotation.fine.harmony) +  (1|treatment) + (1|vireo.individual) + (1|batch) 
+voomed.varpart.all <- voomWithDreamWeights(vardata, formula_all, vardata$samples, plot=TRUE, BPPARAM = param)
+
+vp <- fitExtractVarPartModel(voomed.varpart.all, formula_all, vardata$samples, BPPARAM = param)
+saveRDS(vp, "/project2/gilad/umans/oxygen_eqtl/output/vp.RDS")
+```
+
+```{r}
+vp <- readRDS("/project2/gilad/umans/oxygen_eqtl/output/vp.RDS")
+plotVarPart(sortCols(vp), size=0.1)
+```
+
+
 
 ## mash for DE results
 Because of differential power between cell types, we run the risk of underestimating how many DE effects are shared between different cell types or conditions.  Here, I use [mash](https://stephenslab.github.io/mashr/index.html) to estimate posterior effect sizes and significance metrics.
 
-```{r}
+```{r, message=FALSE}
 library(mashr)
 library(udr)
 library(flashier)
@@ -696,7 +721,7 @@ Using these posterior results, I define "shared" effects between any two conditi
 
 The matrix of sharing by these criteria is obtained from:
 ```{r}
-m_posterior <- readRDS(file="output/mash_de/mashposterior_dataset9_fine_reharmonized_z3.RDS")
+m_posterior <- readRDS(file="/project2/gilad/umans/oxygen_eqtl/output/mash_de/mashposterior_dataset9_fine_reharmonized_z3.RDS")
 
 shared.size = matrix(NA,nrow = ncol(m_posterior$lfsr),ncol=ncol(m_posterior$lfsr))
 colnames(shared.size) <- rownames(shared.size) <-colnames(m_posterior$lfsr)
@@ -1048,7 +1073,7 @@ Using these posterior results, I define "shared" effects between any two conditi
 
 The matrix of sharing by these criteria is obtained from:
 ```{r}
-m_posterior <- readRDS(file="output/mash_de/mashposterior_dataset9_coarse_reharmonized_z3.RDS")
+m_posterior <- readRDS(file="/project2/gilad/umans/oxygen_eqtl/output/mash_de/mashposterior_dataset9_coarse_reharmonized_z3.RDS")
 
 shared.size = matrix(NA,nrow = ncol(m_posterior$lfsr),ncol=ncol(m_posterior$lfsr))
 colnames(shared.size) <- rownames(shared.size) <-colnames(m_posterior$lfsr)
@@ -1131,7 +1156,7 @@ pheatmap(shared.size.constrained, col = colorRampPalette(rev(brewer.pal(11, "Spe
 ## Gene set enrichment
 We used fgsea to compare differential expression results to annotated gene sets from MsigDB.  
 ```{r}
-m_posterior <- readRDS(file="output/mash_de/mashposterior_dataset9_fine_reharmonized_z3.RDS")
+m_posterior <- readRDS(file="/project2/gilad/umans/oxygen_eqtl/output/mash_de/mashposterior_dataset9_fine_reharmonized_z3.RDS")
 ```
 
 ```{r}
@@ -1201,7 +1226,7 @@ rm(combined_fgsea_all, m_posterior)
 
 ### Gene set enrichment, coarse cell classification:
 ```{r}
-m_posterior <- readRDS(file="output/mash_de/mashposterior_dataset9_coarse_reharmonized_z3.RDS")
+m_posterior <- readRDS(file="/project2/gilad/umans/oxygen_eqtl/output/mash_de/mashposterior_dataset9_coarse_reharmonized_z3.RDS")
 m_posterior$t <- m_posterior$PosteriorMean/m_posterior$PosteriorSD
 ```
 
@@ -1260,13 +1285,107 @@ rm(combined_fgsea_all, m_posterior)
 ```
 
 
+## Compare DE genes to previously published findings
+Here, I compare our results to the DE genes identified in [Paşca et al.](https://www.nature.com/articles/s41591-019-0436-0).
+
+```{r}
+m_posterior_fine <- readRDS(file="/project2/gilad/umans/oxygen_eqtl/output/mash_de/mashposterior_dataset9_fine_reharmonized_z3.RDS")
+```
+
+Pasca lab reported all genes with FDR<0.05 and logFC>0.58 in their supplement.  
+```{r}
+pasca24 <- read_csv(file = "/project2/gilad/umans/oxygen_eqtl/data/external/Pasca_24hr.csv")
+pasca48 <- read_csv(file = "/project2/gilad/umans/oxygen_eqtl/data/external/Pasca_48hr.csv")
+
+length(unique(c(pasca24$GeneAnnotation, pasca48$GeneAnnotation)))
+```
+This comes out to 1754 DE genes. 
+
+Now, we add these result into the mash posterior matrices in order to similarly calculate the similarity of the Pasca results to our hypoxia and hyperoxia DE genes.
+```{r}
+m_posterior_comparison <- m_posterior_fine
+m_posterior_comparison$PosteriorMean <- data.frame(m_posterior_comparison$PosteriorMean ) %>% 
+  rownames_to_column(var = "GeneAnnotation") %>% 
+  left_join(x=., y = (pasca24 %>% select(GeneAnnotation, Pasca124=logFC)), by=join_by("GeneAnnotation")) %>% 
+  # replace_na(list(Pasca124=0)) %>%
+  left_join(x=., y = (pasca48 %>% select(GeneAnnotation, Pasca148=logFC)), by=join_by("GeneAnnotation")) %>% 
+  # replace_na(list(Pasca124=0)) %>%
+  column_to_rownames(var = "GeneAnnotation") %>% as.matrix()
+
+m_posterior_comparison$lfsr <- data.frame(m_posterior_comparison$lfsr ) %>% 
+  rownames_to_column(var = "GeneAnnotation") %>% 
+  left_join(x=., y = (pasca24 %>% select(GeneAnnotation, Pasca124=FDR)), by=join_by("GeneAnnotation")) %>% 
+  # replace_na(list(Pasca124=0)) %>%
+  left_join(x=., y = (pasca48 %>% select(GeneAnnotation, Pasca148=FDR)), by=join_by("GeneAnnotation")) %>% 
+  # replace_na(list(Pasca124=0)) %>%
+  column_to_rownames(var = "GeneAnnotation") %>% as.matrix()
+
+
+shared.effect = matrix(NA,nrow = ncol(m_posterior_comparison$lfsr),ncol=ncol(m_posterior_comparison$lfsr))
+colnames(shared.effect) <- rownames(shared.effect) <- colnames(m_posterior_comparison$lfsr)
+
+for (i in 1:ncol(m_posterior_comparison$PosteriorMean)) {
+  for (j in 1:ncol(m_posterior_comparison$PosteriorMean)) {
+    sig.row=which(m_posterior_comparison$lfsr[,i] < 0.05)
+    sig.col=which(m_posterior_comparison$lfsr[,j] < 0.05)
+    size.row=which(abs(m_posterior_comparison$PosteriorMean[,i]) > 0.58)
+    size.col=which(abs(m_posterior_comparison$PosteriorMean[,j]) > 0.58)
+    a=intersect(intersect(sig.row,sig.col), union(size.row, size.col)) # at least one effect is significant
+    # # constrain to those with at least one posterior mean logFC>0.58
+    shared.effect[i,j] <- cor(m_posterior_comparison$PosteriorMean[a,i], m_posterior_comparison$PosteriorMean[a,j], use = "pairwise.complete.obs")
+    
+  }
+}
+
+```
+
+```{r}
+labels <- data.frame(celltype=str_extract(rownames(shared.effect), pattern = "[:alpha:]+"),
+                     treatment=str_extract(rownames(shared.effect), pattern = "[:digit:]+"))
+rownames(labels) <- rownames(shared.effect)
+
+celltypeCol <- c(manual_palette_fine, Pasca="purple")
+
+treatmentCol <- c("red", "blue", "lightblue", "darkblue")
+# names(celltypeCol) <- unique(labels$celltype)
+names(treatmentCol) <- unique(labels$treatment)
+annoCol <- list(celltype = celltypeCol,
+                treatment = treatmentCol)
+
+# now use pheatmap to annotate
+pheatmap(shared.effect, col = viridis(50),
+         border_color = NA,
+         show_colnames = TRUE,
+         treeheight_row = 0, treeheight_col = 0,
+         annotation_row = labels,
+         annotation_colors = annoCol
+         )
+
+pheatmap(shared.effect[c(1:18, 37:38), c(1:18, 37:38)], col = colorRampPalette(rev(brewer.pal(11, "Spectral")))(50),
+         border_color = NA,
+         show_colnames = TRUE,
+         treeheight_row = 0, treeheight_col = 0,
+         annotation_row = labels, legend_breaks = c(-0.5, 0, 0.5, 1), drop_levels = FALSE, breaks =seq(from=-0.5, to=1, length.out=51), 
+         annotation_colors = annoCol, cellwidth = 6, cellheight = 6, fontsize = 6, angle_col = 45
+         )
+
+pheatmap(shared.effect[c(19:38), c(19:38)], col = colorRampPalette(rev(brewer.pal(11, "Spectral")))(50),
+         border_color = NA,
+         show_colnames = TRUE,
+         treeheight_row = 0, treeheight_col = 0,
+         annotation_row = labels, legend_breaks = c(-0.5, 0, 0.5, 1), drop_levels = FALSE, breaks =seq(from=-0.5, to=1, length.out=51), 
+         annotation_colors = annoCol,  cellwidth = 6, cellheight = 6, fontsize = 6, angle_col = 45
+         )
+```
+
+
 ## Stressed cell annotation
 We used the [Gruffi](https://www.embopress.org/doi/full/10.15252/embj.2022111118) software tool to identify highly hypoxia- and hyperoxia-responsive cells in our dataset.  Gruffi works by first clustering single-cell data very finely into "neighborhoods" of similar cells, helping to smooth some of the sparsity of single-cell measurements.  Scores based on chosen gene lists are then calculated and used to set high- and low-pass filters for cell classification.  
 
 In the default Gruffi use case, "stressed" cells are identified by high expression of glycolytic and ER stress-related genes.  However, in our experiment, environmental oxygen was directly modulated, meaning that responsive cells should be identifiable based on genes that change under these conditions.  In our initial analyses, we confirmed that gene module scores obtained from these default gene lists were poorly correlated with the treatment condition of a given cell neighborhood, with the exception of the glycolytic (GO:0006096) gene module and hypoxia exposure.  Instead, we first obtained alternative gene lists based on the estimates of DE sharing provided by mash.  These gene lists were used to identify treatment-responsive cells in both the hyperoxia and hypoxia conditions separately.  Note that although these gene lists are non-overlapping, it is possible for cells to be classified as hypoxia- or hyperoxia-responsive, or both, in  any treatment condition, although we expect that hypoxia exposure should increase the proportion of hypoxia-responsive cells and decrease hyperoxia-responsive cells, and vice-versa.
 
 ```{r}
-m_posterior <- readRDS(file="output/mash_de/mashposterior_dataset9_fine_reharmonized_z3.RDS")
+m_posterior <- readRDS(file="/project2/gilad/umans/oxygen_eqtl/output/mash_de/mashposterior_dataset9_fine_reharmonized_z3.RDS")
 
 m_posterior_hypoxia<- list()
 m_posterior_hypoxia$lfsr <- m_posterior$lfsr[,c("RGcycling1", "InhThalamic1", "InhSST1",  "InhGNRH1", "IPcycling1", "GlutNTS1", "GliaProg1", "CorticalHem1", "Inh1", "Cajal1", "Choroid1", "VLMC1", "NeuronOther1", "Immature1", "IP1", "RG1", "Glut1")]
@@ -1395,8 +1514,8 @@ saveRDS(meta_export_default, file = "post_gruffi_metadata_default_mash_reharmoni
 Next, attach the hypoxia and hyperoxia response annotations from Gruffi to the working Seurat object and classify cells as responsive/unresponsive.
 Now do the same with the mash scores
 ```{r}
-hypoxia_stressed_mash <- readRDS(file = "output/post_gruffi_metadata_hypoxia_mash_reharmonized_remashed.RDS") %>% select(hypoxia_stressed_mash = `is.Stressed`)
-hyperoxia_stressed_mash <- readRDS(file = "output/post_gruffi_metadata_hyperox_mash_reharmonized_remashed.RDS") %>% select(hyperoxia_stressed_mash= `is.Stressed`)
+hypoxia_stressed_mash <- readRDS(file = "/project2/gilad/umans/oxygen_eqtl/output/post_gruffi_metadata_hypoxia_mash_reharmonized_remashed.RDS") %>% select(hypoxia_stressed_mash = `is.Stressed`)
+hyperoxia_stressed_mash <- readRDS(file = "/project2/gilad/umans/oxygen_eqtl/output/post_gruffi_metadata_hyperox_mash_reharmonized_remashed.RDS") %>% select(hyperoxia_stressed_mash= `is.Stressed`)
 ```
 
 ```{r}
@@ -1408,7 +1527,7 @@ harmony.batchandindividual.sct$gruffi_label_mash <- harmony.batchandindividual.s
 
 For the default Gruffi gene sets, I will do this only for the hypoxia condition, as we previously determined that the scores are largely unresponsive to hyperoxic treatment:
 ```{r}
-hypoxia_stressed <- readRDS(file = "output/post_gruffi_metadata_default_mash_reharmonized.RDS") %>% select(hypoxia_stressed = `is.Stressed`)
+hypoxia_stressed <- readRDS(file = "/project2/gilad/umans/oxygen_eqtl/output/post_gruffi_metadata_default_mash_reharmonized.RDS") %>% select(hypoxia_stressed = `is.Stressed`)
 
 harmony.batchandindividual.sct <- AddMetaData(harmony.batchandindividual.sct, metadata = hypoxia_stressed)
 # and, add a combined column called "gruffi_label" that incorporates both hypoxia and hyperoxia stress scores
@@ -1663,11 +1782,11 @@ This censors about 9% of the control cells, 31% of the hypoxia cells, and 7% of 
 
 ```{r, eval=FALSE}
 pseudo_fine_quality_censored <- generate.pseudobulk(subset_seurat_censored, labels = c("combined.annotation.fine.harmony", "treatment", "vireo.individual", "batch"))
-saveRDS(pseudo_fine_quality_censored, file = "output/pseudo_fine_quality_filtered_de_censored_20240802.RDS")
+saveRDS(pseudo_fine_quality_censored, file = "/project2/gilad/umans/oxygen_eqtl/output/pseudo_fine_quality_filtered_de_censored_20240802.RDS")
 ```
 
 ```{r}
-pseudo_fine_quality_censored <- readRDS(file = "output/pseudo_fine_quality_filtered_de_censored_20240802.RDS")
+pseudo_fine_quality_censored <- readRDS(file = "/project2/gilad/umans/oxygen_eqtl/output/pseudo_fine_quality_filtered_de_censored_20240802.RDS")
 pseudo_fine_quality_de_censored <- filter.pseudobulk(pseudo_fine_quality_censored, threshold = 20)
 ```
 
@@ -1719,7 +1838,7 @@ saveRDS(pseudo_fine_quality_censored_random, file = "output/pseudo_fine_quality_
 ```
 
 ```{r}
-pseudo_fine_quality_censored_random <- readRDS(file = "output/pseudo_fine_quality_filtered_de_randomly_censored_20240802.RDS")
+pseudo_fine_quality_censored_random <- readRDS(file = "/project2/gilad/umans/oxygen_eqtl/output/pseudo_fine_quality_filtered_de_randomly_censored_20240802.RDS")
 pseudo_fine_quality_de_censored_random <- filter.pseudobulk(pseudo_fine_quality_censored_random, threshold = 20)
 ```
 
@@ -1788,12 +1907,12 @@ Here, I import measurement information from QuPath, classify cells as positive f
 
 For samples stained for HOPX/KI67/S100b:
 ```{r, eval=FALSE}
-annotations_hopx <- read_delim(file =  "Active Processing/HOPX_MKI67_S100B/QuPath_output/Stardist_measurements_HOPX_MKI67_S100B_annotations.csv") %>% 
+annotations_hopx <- read_delim(file =  "HOPX_MKI67_S100B/QuPath_output/Stardist_measurements_HOPX_MKI67_S100B_annotations.csv") %>% 
   filter(Name != "Other") %>% 
   dplyr::select(Image, `Object ID`, Name, `Area µm^2`, `Perimeter µm`)
-hopx1 <- read_delim(file =  "Active Processing/HOPX_MKI67_S100B/QuPath_output/Stardist_measurements_HOPX_MKI67_S100B_detections1.csv")
-hopx2 <- read_delim(file =  "Active Processing/HOPX_MKI67_S100B/QuPath_output/Stardist_measurements_HOPX_MKI67_S100B_detections2.csv")
-hopx3 <- read_delim(file =  "Active Processing/HOPX_MKI67_S100B/QuPath_output/Stardist_measurements_HOPX_MKI67_S100B_detections3.csv")
+hopx1 <- read_delim(file =  "HOPX_MKI67_S100B/QuPath_output/Stardist_measurements_HOPX_MKI67_S100B_detections1.csv")
+hopx2 <- read_delim(file =  "HOPX_MKI67_S100B/QuPath_output/Stardist_measurements_HOPX_MKI67_S100B_detections2.csv")
+hopx3 <- read_delim(file =  "HOPX_MKI67_S100B/QuPath_output/Stardist_measurements_HOPX_MKI67_S100B_detections3.csv")
 
 detections_hopx <- bind_rows(hopx1, hopx2, hopx3) %>% left_join(annotations_hopx, by=c("Parent" = "Name"))
 rm(hopx1, hopx2, hopx3)
@@ -1815,13 +1934,13 @@ rm(df)
 
 For samples stained for EOMES/CTIP2/SATB2:
 ```{r, eval=FALSE}
-annotations_eomes <- read_delim(file =  "Active Processing/EOMES_CTIP2_SATB2/QuPath_output/Stardist_measurements_EOMES_CTIP2_SATB2_annotations.csv") %>% 
+annotations_eomes <- read_delim(file =  "EOMES_CTIP2_SATB2/QuPath_output/Stardist_measurements_EOMES_CTIP2_SATB2_annotations.csv") %>% 
   filter(Name != "Other") %>% 
   dplyr::select(Image, `Object ID`, Name, `Area µm^2`, `Perimeter µm`)
 
-eomes1 <- read_delim(file =  "Active Processing/EOMES_CTIP2_SATB2/QuPath_output/Stardist_measurements_EOMES_CTIP2_SATB2_detections1.csv") 
-eomes2 <- read_delim(file =  "Active Processing/EOMES_CTIP2_SATB2/QuPath_output/Stardist_measurements_EOMES_CTIP2_SATB2_detections2.csv") 
-eomes3 <- read_delim(file =  "Active Processing/EOMES_CTIP2_SATB2/QuPath_output/Stardist_measurements_EOMES_CTIP2_SATB2_detections3.csv") 
+eomes1 <- read_delim(file =  "EOMES_CTIP2_SATB2/QuPath_output/Stardist_measurements_EOMES_CTIP2_SATB2_detections1.csv") 
+eomes2 <- read_delim(file =  "EOMES_CTIP2_SATB2/QuPath_output/Stardist_measurements_EOMES_CTIP2_SATB2_detections2.csv") 
+eomes3 <- read_delim(file =  "EOMES_CTIP2_SATB2/QuPath_output/Stardist_measurements_EOMES_CTIP2_SATB2_detections3.csv") 
 
 detections_eomes <- bind_rows(eomes1, eomes2, eomes3) %>% left_join(annotations_eomes, by=c("Parent" = "Name"))
 
@@ -1843,12 +1962,12 @@ rm(df)
 
 For samples stained for RELN/GABA/CTIP2:
 ```{r, eval=FALSE}
-annotations_reln <- read_delim(file =  "Active Processing/RELN_GABA_CTIP2/QuPath_output/Stardist_measurements_RELN_GABA_CTIP2_annotations.csv") %>% 
+annotations_reln <- read_delim(file =  "RELN_GABA_CTIP2/QuPath_output/Stardist_measurements_RELN_GABA_CTIP2_annotations.csv") %>% 
   filter(Name != "Other") %>% 
   dplyr::select(Image, `Object ID`, Name, `Area µm^2`, `Perimeter µm`)
 
-reln1 <- read_delim(file =  "Active Processing/RELN_GABA_CTIP2/QuPath_output/Stardist_measurements_RELN_GABA_CTIP2_detections1.csv") 
-reln2 <- read_delim(file =  "Active Processing/RELN_GABA_CTIP2/QuPath_output/Stardist_measurements_RELN_GABA_CTIP2_detections2.csv") 
+reln1 <- read_delim(file =  "RELN_GABA_CTIP2/QuPath_output/Stardist_measurements_RELN_GABA_CTIP2_detections1.csv") 
+reln2 <- read_delim(file =  "RELN_GABA_CTIP2/QuPath_output/Stardist_measurements_RELN_GABA_CTIP2_detections2.csv") 
 
 detections_reln <- bind_rows(reln1, reln2) %>% left_join(annotations_reln, by=c("Parent" = "Name"))
 
@@ -1872,14 +1991,14 @@ rm(df)
 
 For samples stained for SOX2/NES/S100B:
 ```{r, eval=FALSE}
-annotations_sox <- read_delim(file =  "Active Processing/SOX2_NES_S100B/QuPath_output/Stardist_measurements_SOX2_NES_S100B_annotations.csv") %>% 
+annotations_sox <- read_delim(file =  "SOX2_NES_S100B/QuPath_output/Stardist_measurements_SOX2_NES_S100B_annotations.csv") %>% 
   filter(Name != "Other") %>% 
   dplyr::select(Image, `Object ID`, Name, `Area µm^2`, `Perimeter µm`)
 
-sox1 <- read_delim(file =  "Active Processing/SOX2_NES_S100B/QuPath_output/Stardist_measurements_SOX2_NES_S100B_detections1.csv") 
-sox2 <- read_delim(file =  "Active Processing/SOX2_NES_S100B/QuPath_output/Stardist_measurements_SOX2_NES_S100B_detections2.csv") 
-sox3 <- read_delim(file =  "Active Processing/SOX2_NES_S100B/QuPath_output/Stardist_measurements_SOX2_NES_S100B_detections3.csv") 
-sox4 <- read_delim(file =  "Active Processing/SOX2_NES_S100B/QuPath_output/Stardist_measurements_SOX2_NES_S100B_detections4.csv") 
+sox1 <- read_delim(file =  "SOX2_NES_S100B/QuPath_output/Stardist_measurements_SOX2_NES_S100B_detections1.csv") 
+sox2 <- read_delim(file =  "SOX2_NES_S100B/QuPath_output/Stardist_measurements_SOX2_NES_S100B_detections2.csv") 
+sox3 <- read_delim(file =  "SOX2_NES_S100B/QuPath_output/Stardist_measurements_SOX2_NES_S100B_detections3.csv") 
+sox4 <- read_delim(file =  "SOX2_NES_S100B/QuPath_output/Stardist_measurements_SOX2_NES_S100B_detections4.csv") 
 
 detections_sox <- bind_rows(sox1, sox2, sox3, sox4) %>% left_join(annotations_sox, by=c("Parent" = "Name"))
 
@@ -1905,12 +2024,12 @@ rm(df)
 
 For samples stained for GFAP:
 ```{r, eval=FALSE}
-annotations_gfap <- read_delim(file =  "Active Processing/MGP_GFAP/QuPath_output/Stardist_measurements_MGP_GFAP_annotations.csv") %>% 
+annotations_gfap <- read_delim(file =  "MGP_GFAP/QuPath_output/Stardist_measurements_MGP_GFAP_annotations.csv") %>% 
   filter(Name != "Other") %>% 
   dplyr::select(Image, `Object ID`, Name, `Area µm^2`, `Perimeter µm`)
 
-gfap1 <- read_delim(file =  "Active Processing/MGP_GFAP/QuPath_output/Stardist_measurements_MGP_GFAP_detections1.csv") 
-gfap2 <- read_delim(file =  "Active Processing/MGP_GFAP/QuPath_output/Stardist_measurements_MGP_GFAP_detections2.csv") 
+gfap1 <- read_delim(file =  "MGP_GFAP/QuPath_output/Stardist_measurements_MGP_GFAP_detections1.csv") 
+gfap2 <- read_delim(file =  "MGP_GFAP/QuPath_output/Stardist_measurements_MGP_GFAP_detections2.csv") 
 
 detections_gfap <- bind_rows(gfap1, gfap2) %>% left_join(annotations_gfap, by=c("Parent" = "Name"))
 
@@ -1970,7 +2089,7 @@ combined_plotting_singlesection <- combined_plotting_singlesection %>% mutate(ce
 
 For plotting purposes, load the processed data object:
 ```{r}
-combined_plotting_singlesection <- readRDS(file = "output/combined_plotting_singlesection_upload.RDS")
+combined_plotting_singlesection <- readRDS(file = "/project2/gilad/umans/oxygen_eqtl/output/combined_plotting_singlesection_upload.RDS")
 ```
 
 Next, plot the distributions of cell types here.  Note that, as this is intended as a comparison for responsive cell types as annotated in our single-cell RNAseq data, we exclude cells (e.g., "other progenitors") that do not have a specific correspondence in our transcriptomic data:
