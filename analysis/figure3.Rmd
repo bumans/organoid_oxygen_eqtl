@@ -14,7 +14,9 @@ library(Seurat)
 library(tidyverse)
 library(pals)
 library(RColorBrewer)
+library(pheatmap)
 library(magrittr)
+library(viridis)
 library(mashr)
 library(udr)
 library(ggrepel)
@@ -278,18 +280,18 @@ Going forward, we omit the following cell types, which have too few individuals 
 Now I run MatrixEQTL in each cell type and each condition, using shell script `MatrixEQTL_simple.sh`.  
 ```{bash, eval=FALSE}
 module load R/4.2.0
-for celltype in  Choroid Glia Glut Immature IP Inh NeuronOther RG ; 
+for celltype in Glia Glut Immature IP Inh NeuronOther RG ; 
 do
 sh MatrixEQTL_simple.sh  /project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL "combined_coarse_quality_filter20_032024/expressiontable_matrixeqtl_combined_coarse_control10" "YRI_genotypes_maf10hwee-6_full" /project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/snps/TSSlocs.locs  /project2/gilad/umans/oxygen_eqtl/data/relatedness/YRI_relatedness_gemma.sXX.txt 50000 2 ${celltype}
 sleep 0.1
 done
 
-for celltype in  Choroid Glia Glut Immature IP Inh NeuronOther RG ; 
+for celltype in Glia Glut Immature IP Inh NeuronOther RG ; 
 do
 sh MatrixEQTL_simple.sh  /project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL "combined_coarse_quality_filter20_032024/expressiontable_matrixeqtl_combined_coarse_stim1pct" "YRI_genotypes_maf10hwee-6_full" /project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/snps/TSSlocs.locs  /project2/gilad/umans/oxygen_eqtl/data/relatedness/YRI_relatedness_gemma.sXX.txt 50000 2 ${celltype}
 sleep 0.1
 done
-for celltype in  Choroid Glia Glut Immature IP Inh NeuronOther RG ; 
+for celltype in Glia Glut Immature IP Inh NeuronOther RG ; 
 do
 sh MatrixEQTL_simple.sh  /project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL "combined_coarse_quality_filter20_032024/expressiontable_matrixeqtl_combined_coarse_stim21pct" "YRI_genotypes_maf10hwee-6_full" /project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/snps/TSSlocs.locs  /project2/gilad/umans/oxygen_eqtl/data/relatedness/YRI_relatedness_gemma.sXX.txt 50000 2 ${celltype}
 sleep 0.1
@@ -298,18 +300,18 @@ done
 
 ```{bash, eval=FALSE}
 module load R/4.2.0
-for celltype in  Choroid CorticalHem GliaProg Glut GlutNTS Immature IP IPcycling Inh InhGNRH  InhThalamic RG RGcycling NeuronOther ;
+for celltype in CorticalHem GliaProg Glut GlutNTS Immature IP IPcycling Inh InhGNRH  InhThalamic RG RGcycling NeuronOther ;
 do
 sh MatrixEQTL_simple.sh  /project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL "combined_fine_quality_filter20_032024/expressiontable_matrixeqtl_combined_fine_control10" "YRI_genotypes_maf10hwee-6_full" /project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/snps/TSSlocs.locs  /project2/gilad/umans/oxygen_eqtl/data/relatedness/YRI_relatedness_gemma.sXX.txt 50000 2 ${celltype}
 sleep 0.1
 done
 
-for celltype in  Choroid CorticalHem GliaProg Glut GlutNTS Immature IP IPcycling Inh InhGNRH  InhThalamic RG RGcycling NeuronOther ;
+for celltype in CorticalHem GliaProg Glut GlutNTS Immature IP IPcycling Inh InhGNRH  InhThalamic RG RGcycling NeuronOther ;
 do
 sh MatrixEQTL_simple.sh  /project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL "combined_fine_quality_filter20_032024/expressiontable_matrixeqtl_combined_fine_stim1pct" "YRI_genotypes_maf10hwee-6_full" /project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/snps/TSSlocs.locs  /project2/gilad/umans/oxygen_eqtl/data/relatedness/YRI_relatedness_gemma.sXX.txt 50000 2 ${celltype}
 sleep 0.1
 done
-for celltype in  Choroid CorticalHem GliaProg Glut GlutNTS Immature IP IPcycling Inh InhGNRH  InhThalamic RG RGcycling NeuronOther ;
+for celltype in CorticalHem GliaProg Glut GlutNTS Immature IP IPcycling Inh InhGNRH  InhThalamic RG RGcycling NeuronOther ;
 do
 sh MatrixEQTL_simple.sh  /project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL "combined_fine_quality_filter20_032024/expressiontable_matrixeqtl_combined_fine_stim21pct" "YRI_genotypes_maf10hwee-6_full" /project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/snps/TSSlocs.locs  /project2/gilad/umans/oxygen_eqtl/data/relatedness/YRI_relatedness_gemma.sXX.txt 50000 2 ${celltype}
 sleep 0.1
@@ -319,13 +321,13 @@ done
 Because I ran each chromosome in parallel, I combine the results across chromosomes:
 ```{r, eval=FALSE}
 for (condition in c("control10", "stim1pct", "stim21pct")){
-  for (cells in c("Choroid",  "Glia", "Glut", "Immature", "IP", "Inh", "RG", "NeuronOther")){
+  for (cells in c("Glia", "Glut", "Immature", "IP", "Inh", "RG", "NeuronOther")){
     combined_across_chroms(results_directory = "/project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/output/combined_coarse_quality_filter20_032024/", condition = condition, celltype = cells, results_basename = "expressiontable_matrixeqtl_combined_coarse_", output_basename = "results_combined_")
   }
 }
 
 for (condition in c("control10", "stim1pct", "stim21pct")){
-  for (cells in c("Choroid", "CorticalHem", "GliaProg", "Glut", "GlutNTS", "Immature", "IP", "IPcycling", "Inh", "InhGNRH", "InhThalamic", "RG", "RGcycling", "NeuronOther")){
+  for (cells in c("CorticalHem", "GliaProg", "Glut", "GlutNTS", "Immature", "IP", "IPcycling", "Inh", "InhGNRH", "InhThalamic", "RG", "RGcycling", "NeuronOther")){
     combined_across_chroms(results_directory = "/project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/output/combined_fine_quality_filter20_032024/", condition = condition, celltype = cells, results_basename = "expressiontable_matrixeqtl_combined_fine_", output_basename = "results_combined_")
   }
 }
@@ -333,7 +335,7 @@ for (condition in c("control10", "stim1pct", "stim21pct")){
 
 Next, use mash to combine results across treatment conditions for each cell type.  I first reformat the output to match the output from fastqtl, which allows us to use the [fastqtl2mash](https://stephenslab.github.io/gtexresults/fastqtl2mash.html) tool to prepare for mash.
 ```{r, eval=FALSE}
-for (i in c("Choroid",  "Glia", "Glut", "Immature", "IP", "Inh", "RG", "NeuronOther")){
+for (i in c( "Glia", "Glut", "Immature", "IP", "Inh", "RG", "NeuronOther")){
   for (k in c("control10", "stim1pct", "stim21pct")){
     results <- read_table(paste0("/project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/output/combined_coarse_quality_filter20_032024/results_combined_", k, "_", i, "_nominal.txt"), col_names = TRUE, progress = FALSE, show_col_types = FALSE) %>%
       mutate(se_beta=beta/statistic) %>% 
@@ -347,7 +349,7 @@ for (i in c("Choroid",  "Glia", "Glut", "Immature", "IP", "Inh", "RG", "NeuronOt
   print(paste0("finished ", i))
 }
 
-for (i in c("Choroid", "CorticalHem", "GliaProg", "Glut", "GlutNTS", "Immature", "IP", "IPcycling", "Inh", "InhGNRH", "InhThalamic", "RG", "RGcycling", "NeuronOther")){
+for (i in c("CorticalHem", "GliaProg", "Glut", "GlutNTS", "Immature", "IP", "IPcycling", "Inh", "InhGNRH", "InhThalamic", "RG", "RGcycling", "NeuronOther")){
   for (k in c("control10", "stim1pct", "stim21pct")){
     results <- read_table(paste0("/project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/output/combined_fine_quality_filter20_032024/results_combined_", k, "_", i, "_nominal.txt"), col_names = TRUE, progress = FALSE, show_col_types = FALSE) %>%
       mutate(se_beta=beta/statistic) %>% 
@@ -362,27 +364,61 @@ for (i in c("Choroid", "CorticalHem", "GliaProg", "Glut", "GlutNTS", "Immature",
 }
 ```
 
+Wenhe used an alternative method for estimating the standard error, since small sample sizes can produce t-statistics that are invalid approximations of a z-statistic, especially at large effect sizes.
+```{r, eval=FALSE}
+for (i in c( "Glia", "Glut", "Immature", "IP", "Inh", "RG", "NeuronOther")){
+  for (k in c("control10", "stim1pct", "stim21pct")){
+    results <- read_table(paste0("/project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/output/combined_coarse_quality_filter20_032024/results_combined_", k, "_", i, "_nominal.txt"), col_names = TRUE, progress = FALSE, show_col_types = FALSE) %>%
+      mutate(se_beta=abs(beta/qnorm(pvalue/2))) %>% 
+      dplyr::select(gene, snps, beta, se_beta, pvalue) %>% 
+      na.omit() %>% 
+      arrange(gene)
+   write_tsv(results, file = paste0("/project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/output/combined_coarse_quality_filter20_032024/mash/", i, "_", k, "_formash.out.gz"), col_names = TRUE, quote = "none")
+  rm(results)
+  print(paste0(i, " ", k))
+  }
+  print(paste0("finished ", i))
+}
+
+for (i in c("CorticalHem", "GliaProg", "Glut", "GlutNTS", "Immature", "IP", "IPcycling", "Inh", "InhGNRH", "InhThalamic", "RG", "RGcycling", "NeuronOther")){
+  for (k in c("control10", "stim1pct", "stim21pct")){
+    results <- read_table(paste0("/project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/output/combined_fine_quality_filter20_032024/results_combined_", k, "_", i, "_nominal.txt"), col_names = TRUE, progress = FALSE, show_col_types = FALSE) %>%
+      mutate(se_beta=abs(beta/qnorm(pvalue/2))) %>% 
+      dplyr::select(gene, snps, beta, se_beta, pvalue) %>% 
+      na.omit() %>%
+      arrange(gene)
+   write_tsv(results, file = paste0("/project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/output/combined_fine_quality_filter20_032024/mash/", i, "_", k, "_formash.out.gz"), col_names = TRUE, quote = "none")
+  rm(results)
+  print(paste0(i, " ", k))
+  }
+  print(paste0("finished ", i))
+}
+```
+
+
+
+
 Fastqtl2mash was run separately for each cell type, and then mash was run on each cell type.
 ```{bash, eval=FALSE}
 module load R/4.2.0
-for celltype in Choroid CorticalHem GliaProg Glut GlutNTS Immature Inh InhGNRH InhThalamic IP IPcycling NeuronOther RG RGcycling; 
+for celltype in CorticalHem GliaProg Glut GlutNTS Immature Inh InhGNRH InhThalamic IP IPcycling NeuronOther RG RGcycling; 
 do
-sh mash.sh ${celltype} "/project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/output/combined_fine_quality_filter20_032024/mash/"
+sh mash_PC.sh ${celltype} "/project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/output/combined_fine_quality_filter20_032024/mash/"
 sleep 0.1
 done
 
 module load R/4.2.0
-for celltype in Choroid Glia Glut Immature Inh IP NeuronOther RG Combined; 
+for celltype in Glia Glut Immature Inh IP NeuronOther RG; 
 do
-sh mash.sh ${celltype} "/project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/output/combined_coarse_quality_filter20_032024/mash/"
+sh mash_PC.sh ${celltype} "/project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/output/combined_coarse_quality_filter20_032024/mash/"
 sleep 0.1
 done
 ```
 
-Finally, combine mash output and, for each gene, note the number of pairwise condition comparisons in which effects are shared (ie, significant in at least one condition and effects within 2.5-fold difference) and which genes have effects shared across all conditions.
+Finally, combine mash output and, for each gene, note the number of pairwise condition comparisons in which effects are shared (ie, significant in at least one condition and effects within 2-fold difference) and which genes have effects shared across all conditions.
 ```{r, eval=FALSE}
 mash_by_celltype_all_EE <- function(celltype, mag, sharing_degree, lfsr_thresh) {
-  m2 <- readRDS(file = paste0("/project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/output/combined_fine_quality_filter20_032024/mash/MatrixEQTLSumStats_", celltype, "only_udr_yunqi_vhatem_EE.rds"))
+  m2 <- readRDS(file = paste0("/project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/output/combined_fine_quality_filter20_032024/mash/MatrixEQTLSumStats_", celltype, "only_udr_yunqi_vhatem_EE_PC.rds"))
   lfsr.condition <- m2$result$lfsr
 
   pm.mash.beta_condition <- m2$result$PosteriorMean #no need to adjust, in EE model we're directly outputting beta
@@ -463,17 +499,17 @@ mash_by_celltype_all_EE <- function(celltype, mag, sharing_degree, lfsr_thresh) 
     dplyr::select(gene, gene_snp, control10_lfsr, stim1pct_lfsr, stim21pct_lfsr, control10_beta, stim1pct_beta, stim21pct_beta, sharing, sig_anywhere, sigsharing, sigdifferent, sharing_contexts, allsharing, hypoxia_normoxia_shared, hyperoxia_normoxia_shared, hypoxia_hyperoxia_shared)
   pm.mash.beta_condition
 }
-mash_by_condition <- lapply(c("Choroid", "CorticalHem", "GliaProg", "Glut", "GlutNTS", "Immature", "Inh", "InhGNRH", "InhThalamic", "IP", "IPcycling", "NeuronOther", "RG", "RGcycling"), mash_by_celltype_all_EE, mag=2.5, sharing_degree=0, lfsr_thresh=0.05)
+mash_by_condition <- lapply(c( "CorticalHem", "GliaProg", "Glut", "GlutNTS", "Immature", "Inh", "InhGNRH", "InhThalamic", "IP", "IPcycling", "NeuronOther", "RG", "RGcycling"), mash_by_celltype_all_EE, mag=2, sharing_degree=0, lfsr_thresh=0.1)
 
-mash_by_condition_output_EE <- gdata::combine(mash_by_condition[[1]], mash_by_condition[[2]], mash_by_condition[[3]], mash_by_condition[[4]], mash_by_condition[[5]], mash_by_condition[[6]], mash_by_condition[[7]], mash_by_condition[[8]], mash_by_condition[[9]], mash_by_condition[[10]], mash_by_condition[[11]], mash_by_condition[[12]], mash_by_condition[[13]], mash_by_condition[[14]], names = c("Choroid", "CorticalHem", "GliaProg", "Glut", "GlutNTS", "Immature", "Inh", "InhGNRH", "InhThalamic", "IP", "IPcycling", "NeuronOther", "RG", "RGcycling")) 
+mash_by_condition_output_EE <- gdata::combine(mash_by_condition[[1]], mash_by_condition[[2]], mash_by_condition[[3]], mash_by_condition[[4]], mash_by_condition[[5]], mash_by_condition[[6]], mash_by_condition[[7]], mash_by_condition[[8]], mash_by_condition[[9]], mash_by_condition[[10]], mash_by_condition[[11]], mash_by_condition[[12]], mash_by_condition[[13]],  names = c( "CorticalHem", "GliaProg", "Glut", "GlutNTS", "Immature", "Inh", "InhGNRH", "InhThalamic", "IP", "IPcycling", "NeuronOther", "RG", "RGcycling")) 
 
-saveRDS(mash_by_condition_output_EE, file = "output/combined_mash-by-condition_EE_fine_reharmonized_032024.rds")
+saveRDS(mash_by_condition_output_EE, file = "output/combined_mash-by-condition_EE_fine_reharmonized_newmash_032024.rds")
 ```
 
 And do the same for the coarse-classified cells:
 ```{r, eval=FALSE}
 mash_by_celltype_all_EE <- function(celltype, mag, sharing_degree, lfsr_thresh) {
-  m2 <- readRDS(file = paste0("/project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/output/combined_coarse_quality_filter20_032024/mash/MatrixEQTLSumStats_", celltype, "only_udr_yunqi_vhatem_EE.rds"))
+  m2 <- readRDS(file = paste0("/project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/output/combined_coarse_quality_filter20_032024/mash/MatrixEQTLSumStats_", celltype, "only_udr_yunqi_vhatem_EE_PC.rds"))
   lfsr.condition <- m2$result$lfsr
 
   pm.mash.beta_condition <- m2$result$PosteriorMean #no need to adjust, in EE model we're directly outputting beta
@@ -554,14 +590,14 @@ mash_by_celltype_all_EE <- function(celltype, mag, sharing_degree, lfsr_thresh) 
     dplyr::select(gene, gene_snp, control10_lfsr, stim1pct_lfsr, stim21pct_lfsr, control10_beta, stim1pct_beta, stim21pct_beta, sharing, sig_anywhere, sigsharing, sigdifferent, sharing_contexts, allsharing, hypoxia_normoxia_shared, hyperoxia_normoxia_shared, hypoxia_hyperoxia_shared)
   pm.mash.beta_condition
 }
-mash_by_condition <- lapply(c("Choroid", "Glia", "Glut", "Immature", "Inh", "IP", "NeuronOther", "RG"), mash_by_celltype_all_EE, mag=2.5, sharing_degree=0, lfsr_thresh=0.05)
+mash_by_condition <- lapply(c( "Glia", "Glut", "Immature", "Inh", "IP", "NeuronOther", "RG"), mash_by_celltype_all_EE, mag=2, sharing_degree=0, lfsr_thresh=0.1)
 
-mash_by_condition_output_EE <- gdata::combine(mash_by_condition[[1]], mash_by_condition[[2]], mash_by_condition[[3]], mash_by_condition[[4]], mash_by_condition[[5]], mash_by_condition[[6]], mash_by_condition[[7]], mash_by_condition[[8]], names = c("Choroid", "Glia", "Glut", "Immature", "Inh", "IP", "NeuronOther", "RG")) 
+mash_by_condition_output_EE <- gdata::combine(mash_by_condition[[1]], mash_by_condition[[2]], mash_by_condition[[3]], mash_by_condition[[4]], mash_by_condition[[5]], mash_by_condition[[6]], mash_by_condition[[7]], names = c( "Glia", "Glut", "Immature", "Inh", "IP", "NeuronOther", "RG")) 
 
-saveRDS(mash_by_condition_output_EE, file = "output/combined_mash-by-condition_EE_coarse_reharmonized_032024.rds")
+saveRDS(mash_by_condition_output_EE, file = "output/combined_mash-by-condition_EE_coarse_reharmonized_newmash_032024.rds")
 ```
 
-## Count eGenes, eQTLs and compare to GTEx
+## Count eGenes, eQTLs and compare to reference eQTLs
 GTEx has assessed eQTLs in 13 CNS tissue sites, collectively finding 21,085 significant eGenes.  Of course, just about any gene will be an eGene when compared against this reference set.  Instead, we compare here to the two cerebral cortex datasets, the most analogous tissues to our dorsal brain organoids, which come from two different tissue sources.
 ```{r}
 gtex_cortex_signif <- read.table(file = "/project/gilad/umans/references/gtex/GTEx_Analysis_v8_eQTL/Brain_Cortex.v8.egenes.txt.gz", header = TRUE, sep = "\t", stringsAsFactors = FALSE) %>% filter(qval<0.05) %>% pull(gene_name)
@@ -572,58 +608,63 @@ gtex_cortex_signif <- unique(c(gtex_cortex_signif, gtex_frontalcortex_signif))
 Now, classify eGenes from the organoid dataset by whether they were significant under normoxia and whether they are responsive to manipulating oxygen.  These two binary classifications result in 4 groups:  (1) shared effects in all conditions, detectable under normoxia; (2) dynamic and detectable under normoxia; (3) dynamic and _not_ detectable under normoxia; and (4) shared effects under all conditions but not detectable under normoxia.  Implicitly, group 4 effects needed additional treatment conditions to detect them not because they're responsive to treatment but because of the additional power we get.  
 
 ```{r}
-mash_by_condition_output <- readRDS(file = "output/combined_mash-by-condition_EE_fine_reharmonized_032024.rds") %>% ungroup()
+mash_by_condition_output <- readRDS(file = "/project2/gilad/umans/oxygen_eqtl/output/combined_mash-by-condition_EE_fine_reharmonized_newmash_032024.rds") %>% ungroup()
 
 mash_by_condition_output %>% 
   filter(sig_anywhere) %>% 
- mutate(class=case_when(control10_lfsr < 0.05 & allsharing ~ "class1",
-                         control10_lfsr < 0.05 &  !allsharing ~ "class2",
-                         sig_anywhere & control10_lfsr > 0.05 & !allsharing ~ "class3",
-                         allsharing & control10_lfsr > 0.05 & (stim1pct_lfsr < 0.05 | stim21pct_lfsr < 0.05) ~ "class4")) %>%  group_by(source, class) %>% summarize(egenes=n()) %>% 
+ mutate(class=case_when(control10_lfsr < 0.1 & allsharing ~ "class1",
+                         control10_lfsr < 0.1 &  !allsharing ~ "class2",
+                         sig_anywhere & control10_lfsr > 0.1 & !allsharing ~ "class3",
+                         allsharing & control10_lfsr > 0.1 & (stim1pct_lfsr < 0.1 | stim21pct_lfsr < 0.1) ~ "class4")) %>%  group_by(source, class) %>% summarize(egenes=n()) %>% 
   ggplot(aes(x=factor(source, rev(fine.order)), y=egenes, fill=factor(class, levels = c("class3", "class2", "class4", "class1"), ordered = TRUE))) + geom_bar(stat="identity") + 
   coord_flip() + theme_light() + theme(legend.title = element_blank()) + scale_fill_manual(values=class_colors) 
+
 ```
 Our hypothesis is that the the dynamic effects that emerge under treatment should be less represented in GTEx, compared to  effects that are evident at baseline, as GTEx does not (explicitly) assess gene expression under different environmental perturbations (although post-mortem brain tissue may experience some amount of hypoxia and/or hyperoxia during sample collection).  While not testing for sharing of regulatory sites or effects here, we can ask whether these dynamic eGenes are less likely to be present in GTEx compared to the dynamic eGenes present at baseline.  
 ```{r}
 mash_by_condition_output %>% 
   filter(sig_anywhere) %>% 
-  mutate(class=case_when(control10_lfsr < 0.05 & allsharing ~ "class1",
-                         control10_lfsr < 0.05 &  !allsharing ~ "class2",
-                         sig_anywhere & control10_lfsr > 0.05 & !allsharing ~ "class3",
-                         sig_anywhere & allsharing ~ "class4")) %>%  #because of the order of assignment, this does not include "class1" egenes, ie those that are detectable under normoxia.  equivalent to `allsharing & control10_lfsr > 0.05 & (stim1pct_lfsr < 0.05 | stim21pct_lfsr < 0.05) ~ "class4"`
+  mutate(class=case_when(control10_lfsr < 0.1 & allsharing ~ "class1",
+                         control10_lfsr < 0.1 &  !allsharing ~ "class2",
+                         sig_anywhere & control10_lfsr > 0.1 & !allsharing ~ "class3",
+                         sig_anywhere & allsharing ~ "class4")) %>%  #because of the order of assignment, this does not include "class1" egenes, ie those that are detectable under normoxia.  equivalent to `allsharing & control10_lfsr > 0.1 & (stim1pct_lfsr < 0.1 | stim21pct_lfsr < 0.1) ~ "class4"`
    group_by(source, class) %>% 
   summarise(egene_gtex = sum(gene %in% gtex_cortex_signif),
             egene_in_gtex_fraction = round((sum(gene %in% gtex_cortex_signif))/n(), 4)) %>% 
   ggplot(aes(x=factor(class, levels = c("class1", "class4", "class2", "class3")), y=egene_in_gtex_fraction)) + 
-  geom_boxplot(outlier.shape = NA, aes(color=class)) + 
-  geom_point(aes(group=source, color=source), position = position_jitter(width = 0.2, height = 0)) + 
+  geom_boxplot(outlier.shape = NA, aes(color=class), linewidth=0.4) + 
+  geom_point(aes(group=source, color=source), position = position_jitter(width = 0.2, height = 0), size=0.5) + 
   xlab("eGene class (see note)") + 
   ylab("Fraction of eGenes in GTEx") + 
   theme_light() +  
   scale_color_manual(values=c(manual_palette_fine, class_colors)) + theme(legend.position="none") 
+
 ```
 
 To test the "class 3" (dynamic, not detected under normoxia) eGenes against the non-dynamic eGenes:
 ```{r}
-
 wilcox.test(mash_by_condition_output %>% 
-  filter(sig_anywhere) %>% 
-  mutate(class=case_when(control10_lfsr < 0.05 & allsharing ~ "groupB",
-                         control10_lfsr < 0.05 &  !allsharing ~ "groupB",
-                         sig_anywhere & control10_lfsr > 0.05 & !allsharing ~ "groupA",
-                         sig_anywhere & allsharing ~ "groupC")) %>% 
-   group_by(source, class) %>% 
+  mutate(class=case_when(control10_lfsr < 0.1 & allsharing ~ "groupB",
+                         control10_lfsr < 0.1 &  !allsharing ~ "groupB",
+                         sig_anywhere & control10_lfsr > 0.1 & !allsharing ~ "groupA",
+                         sig_anywhere & allsharing ~ "groupC", 
+                         !sig_anywhere ~ "nonsig")) %>% 
+    complete(source, class) %>% 
+   group_by(source, class, .drop=FALSE) %>% 
+    # filter(sig_anywhere) %>% 
   summarise(egene_gtex = sum(gene %in% (unlist(gtex_cortex_signif) %>% unique())),
             egene_in_gtex_fraction = (sum(gene %in% (unlist(gtex_cortex_signif) %>% unique())))/n()) %>% filter(class=="groupA") %>% pull(egene_in_gtex_fraction), 
   mash_by_condition_output %>% 
   filter(sig_anywhere) %>% 
-  mutate(class=case_when(control10_lfsr < 0.05 & allsharing ~ "groupB",
-                         control10_lfsr < 0.05 &  !allsharing ~ "groupB",
-                         sig_anywhere & control10_lfsr > 0.05 & !allsharing ~ "groupA",
+  mutate(class=case_when(control10_lfsr < 0.1 & allsharing ~ "groupB",
+                         control10_lfsr < 0.1 &  !allsharing ~ "groupB",
+                         sig_anywhere & control10_lfsr > 0.1 & !allsharing ~ "groupA",
                          sig_anywhere & allsharing ~ "groupC")) %>% 
-   group_by(source, class) %>% 
+    complete(source, class) %>% 
+   group_by(source, class, .drop=FALSE) %>% 
   summarise(egene_gtex = sum(gene %in% (unlist(gtex_cortex_signif) %>% unique())),
-            egene_in_gtex_fraction = (sum(gene %in% (unlist(gtex_cortex_signif) %>% unique())))/n()) %>% filter(class %in% c("groupB")) %>% pull(egene_in_gtex_fraction), paired = TRUE,  alternative = "less")
+            egene_in_gtex_fraction = (sum(gene %in% (unlist(gtex_cortex_signif) %>% unique())))/n()) %>% filter(class %in% c("groupB")) %>% pull(egene_in_gtex_fraction), paired=TRUE,  alternative = "less")
+
 ```
 
 
@@ -631,10 +672,10 @@ The fraction of eGenes across cell types that would not be detected without trea
 ```{r}
 mash_by_condition_output %>% 
   filter(sig_anywhere) %>% 
- mutate(class=case_when(control10_lfsr < 0.05 & allsharing ~ "class1",
-                         control10_lfsr < 0.05 &  !allsharing ~ "class2",
-                         sig_anywhere & control10_lfsr > 0.05 & !allsharing ~ "class3",
-                         allsharing & control10_lfsr > 0.05 & (stim1pct_lfsr < 0.05 | stim21pct_lfsr < 0.05) ~ "class4")) %>%  
+ mutate(class=case_when(control10_lfsr < 0.1 & allsharing ~ "class1",
+                         control10_lfsr < 0.1 &  !allsharing ~ "class2",
+                         sig_anywhere & control10_lfsr > 0.1 & !allsharing ~ "class3",
+                         allsharing & control10_lfsr > 0.1 & (stim1pct_lfsr < 0.1 | stim21pct_lfsr < 0.1) ~ "class4")) %>%  
   mutate(control_undetected=class %in% c("class3", "class4")) %>% 
   group_by(source) %>% 
   summarize(undetected_rate=sum(control_undetected)/n()) %>% 
@@ -644,9 +685,9 @@ mash_by_condition_output %>%
 The total number of eGenes detected here, in any condition or cell type, is:
 ```{r}
 mash_by_condition_output %>% 
-  filter(sig_anywhere) %>% 
+  filter(sig_anywhere) %>%
   pull(gene) %>% 
-  unique() %>% 
+  unique() %>%
   length()
 ```
 
@@ -656,7 +697,7 @@ mash_by_condition_output %>%
   filter(sig_anywhere) %>% 
   filter(allsharing) %>% 
   pull(gene) %>% 
-  unique() %>% 
+  unique() %>%
   length()
 ```
 The number of eGenes that have treatment-sensitive effects in at least one cell type is:
@@ -665,7 +706,7 @@ mash_by_condition_output %>%
   filter(sig_anywhere) %>% 
   filter(!allsharing) %>% 
   pull(gene) %>% 
-  unique() %>% 
+  unique() %>%
   length()
 ```
 
@@ -693,12 +734,12 @@ mash_by_condition_output %>%
     group_by(class) %>% 
   summarise(median(egene), median(total), median(dynamic), median(fraction_total), median(fraction_dynamic)) 
 ```
-Here, anything that does not have a similar (ie, within 2.5-fold) effect size in all three oxygen conditions is called "dynamic".  Within this dynamic category we can define the following cases:
+Here, anything that does not have a similar (ie, within 2-fold) effect size in all three oxygen conditions is called "dynamic".  Within this dynamic category we can define the following cases:
 * "treatment-shared" means different between normoxia and both hyperoxia and hypoxia, or, if you prefer, a normoxia-specific effect
 * "hypox_normox" means different in the hyperoxia condition from the other two
 * "hyperox_normox" means different in the hypoxia condition from the other two
 * "alldiff" means each oxygen condition has a different effect size from the other
-* "associatively_shared", somewhat confusingly, means different between one pair of oxygen conditions but otherwise all shared.  How can this happen?  Consider a case where beta_normoxia=1, beta_hypoxia=0.5, and beta_hyperoxia=2.  Here, both hypoxia and hyperoxia effects are shared with the normoxia condition (namely, differ by less than 2.5-fold), but differ from each other.
+* "associatively_shared", somewhat confusingly, means different between one pair of oxygen conditions but otherwise all shared.  How can this happen?  Consider a case where beta_normoxia=0.8, beta_hypoxia=0.4, and beta_hyperoxia=1.6.  Here, both hypoxia and hyperoxia effects are shared with the normoxia condition (namely, differ by less than 2-fold), but differ from each other.
 
 To plot these numbers:
 
@@ -712,7 +753,7 @@ mash_by_condition_output %>%
                         hypoxia_hyperoxia_shared & sharing_contexts==1 ~ "normoxia_specific",
                         sharing_contexts==2 ~ "partial_shared", 
                         sharing_contexts==0 ~ "alldiff"
-                        )) %>%   #because of the order of assignment, this does not include "class1" egenes, ie those that are detectable under normoxia.  equivalent to `allsharing & control10_lfsr > 0.05 & (stim1pct_lfsr < 0.05 | stim21pct_lfsr < 0.05) ~ "class4"`
+                        )) %>%   #because of the order of assignment, this does not include "class1" egenes, ie those that are detectable under normoxia.  equivalent to `allsharing & control10_lfsr > 0.1 & (stim1pct_lfsr < 0.1 | stim21pct_lfsr < 0.1) ~ "class4"`
    group_by(source, class) %>% 
   summarise(egene = n()) %>% 
   ggplot(aes(x=factor(class, levels=c("allsharing", "alldiff", "normoxia_specific", "hypoxia_specific", "hyperoxia_specific",  "partial_shared"), ordered = TRUE), y=egene)) + 
@@ -722,6 +763,8 @@ mash_by_condition_output %>%
   ylab("Number of eGenes") + 
   theme_light() +  
   scale_color_manual(values=c(manual_palette_fine, class_colors3)) + theme(legend.position="none") 
+
+
 ```
 
 ```{r}
@@ -733,12 +776,12 @@ p1 <- mash_by_condition_output %>%
                         hypoxia_hyperoxia_shared & sharing_contexts==1 ~ "normoxia_specific",
                         sharing_contexts==2 ~ "partial_shared", 
                         sharing_contexts==0 ~ "alldiff"
-                        )) %>%   #because of the order of assignment, this does not include "class1" egenes, ie those that are detectable under normoxia.  equivalent to `allsharing & control10_lfsr > 0.05 & (stim1pct_lfsr < 0.05 | stim21pct_lfsr < 0.05) ~ "class4"`
+                        )) %>%   #because of the order of assignment, this does not include "class1" egenes, ie those that are detectable under normoxia.  equivalent to `allsharing & control10_lfsr > 0.1 & (stim1pct_lfsr < 0.1 | stim21pct_lfsr < 0.1) ~ "class4"`
    group_by(source, class) %>% 
   summarise(egene = n()) %>% 
   ggplot(aes(x=factor(class, levels=c("allsharing", "alldiff", "normoxia_specific", "hypoxia_specific", "hyperoxia_specific",  "partial_shared"), ordered = TRUE), y=egene)) + 
-  geom_boxplot(outlier.shape = NA, aes(color=class)) + 
-  geom_point(aes(group=source, color=source), position = position_jitter(width = 0.2, height = 0)) + 
+  geom_boxplot(outlier.shape = NA, aes(color=class), linewidth=0.4) + 
+  geom_point(aes(group=source, color=source), position = position_jitter(width = 0.2, height = 0), size=0.3) + 
   xlab("eGene class (see note)") + 
   ylab("Number of eGenes") + 
   theme_light() +  
@@ -762,12 +805,10 @@ d1 <- mash_by_condition_output %>%
     mutate(fraction_total=egene/total, fraction_dynamic=egene/dynamic) 
 
 
-p1 + geom_point(aes(x=class, y=egene/5),  data = d1, shape=8) +
-  scale_y_continuous(name = "eGenes per cell type", sec.axis = sec_axis(~ . *5, name="Total eQTLs")) 
+p1 + geom_point(aes(x=class, y=egene/7),  data = d1, shape=8, size=0.2) +
+  scale_y_continuous(name = "eGenes per cell type", sec.axis = sec_axis(~ . *7, name="Total eQTLs")) 
   
 ```
-
-
 
 
 
@@ -781,23 +822,23 @@ mash_by_condition_output %>%
                         hypoxia_hyperoxia_shared & sharing_contexts==1 ~ "normoxia_specific",
                         sharing_contexts==2 ~ "partial_shared", 
                         sharing_contexts==0 ~ "alldiff"
-                        )) %>%   #because of the order of assignment, this does not include "class1" egenes, ie those that are detectable under normoxia.  equivalent to `allsharing & control10_lfsr > 0.05 & (stim1pct_lfsr < 0.05 | stim21pct_lfsr < 0.05) ~ "class4"`
+                        )) %>%   #because of the order of assignment, this does not include "class1" egenes, ie those that are detectable under normoxia.  equivalent to `allsharing & control10_lfsr > 0.1 & (stim1pct_lfsr < 0.1 | stim21pct_lfsr < 0.1) ~ "class4"`
    group_by(source, class) %>% 
   summarise(egene_gtex = sum(gene %in% gtex_cortex_signif),
             egene_in_gtex_fraction = round((sum(gene %in% gtex_cortex_signif))/n(), 4)) %>% 
   ggplot(aes(x=factor(class, levels=c("allsharing", "partial_shared", "normoxia_specific", "hypoxia_specific", "hyperoxia_specific", "alldiff"), ordered = TRUE), y=egene_in_gtex_fraction)) + 
-  geom_boxplot(outlier.shape = NA, aes(color=class)) + 
-  geom_point(aes(group=source, color=source), position = position_jitter(width = 0.2, height = 0)) + 
+  geom_boxplot(outlier.shape = NA, aes(color=class), linewidth=0.4) + 
+  geom_point(aes(group=source, color=source), position = position_jitter(width = 0.2, height = 0), size=0.5) + 
   xlab("eGene class (see note)") + 
   ylab("Fraction of eGenes in GTEx") + 
   theme_light() +  
   scale_color_manual(values=c(manual_palette_fine, class_colors)) + theme(legend.position="none") 
+
 ```
 
 We expect that the dynamic eGenes will be less represented in GTEx.  To test this, I first designate the classes above as "standard" (all effects shared, or the strange case of all effects shared except for one comparison), or "dynamic". 
 ```{r}
 wilcox.test(mash_by_condition_output %>% 
-  filter(sig_anywhere) %>% 
  mutate(class=case_when(allsharing ~ "standard",
                         hypoxia_normoxia_shared & sharing_contexts==1 ~ "dynamic",
                         hyperoxia_normoxia_shared & sharing_contexts==1 ~ "dynamic",
@@ -805,12 +846,12 @@ wilcox.test(mash_by_condition_output %>%
                         sharing_contexts==2 ~ "standard", 
                         sharing_contexts==0 ~ "dynamic"
                         )) %>% 
-   group_by(source, class) %>% 
-  summarise(egene_gtex = sum(gene %in% (unlist(gtex_cortex_signif) %>% unique())),
+   group_by(source, class, .drop = FALSE) %>% 
+   filter(sig_anywhere) %>% 
+   summarise(egene_gtex = sum(gene %in% (unlist(gtex_cortex_signif) %>% unique())),
             egene_in_gtex_fraction = (sum(gene %in% (unlist(gtex_cortex_signif) %>% unique())))/n()) %>%
    filter(class %in% c("dynamic")) %>% pull(egene_in_gtex_fraction), 
   mash_by_condition_output %>% 
-  filter(sig_anywhere) %>% 
   mutate(class=case_when(allsharing ~ "standard",
                         hypoxia_normoxia_shared & sharing_contexts==1 ~ "dynamic",
                         hyperoxia_normoxia_shared & sharing_contexts==1 ~ "dynamic",
@@ -818,7 +859,8 @@ wilcox.test(mash_by_condition_output %>%
                         sharing_contexts==2 ~ "standard", 
                         sharing_contexts==0 ~ "dynamic"
                         )) %>% 
-   group_by(source, class) %>% 
+   group_by(source, class, .drop = FALSE) %>% 
+   filter(sig_anywhere) %>% 
   summarise(egene_gtex = sum(gene %in% (unlist(gtex_cortex_signif) %>% unique())),
             egene_in_gtex_fraction = (sum(gene %in% (unlist(gtex_cortex_signif) %>% unique())))/n()) %>%
    filter(class %in% c("standard")) %>% pull(egene_in_gtex_fraction), paired=TRUE, alternative = "less")
@@ -845,7 +887,7 @@ mash_by_condition_output %>%
 
 
 mash_by_condition_output %>% 
-    filter(sig_anywhere) %>% group_by(gene) %>% summarise(eqtls=n()) %>%  summarise(median(eqtls))
+    filter(sig_anywhere) %>% group_by(gene) %>% summarise(eqtls=n()) %>%  summarise(mean(eqtls))
 
 
 ```
@@ -853,75 +895,152 @@ The number of eQTLs not detected in the control condition is:
 ```{r}
 mash_by_condition_output %>%
   filter(sig_anywhere) %>%
-  filter(control10_lfsr>0.05) %>% dim()
+  filter(control10_lfsr>0.1) %>%
+  nrow()
+```
+And the number of response eQTLs not detected at baseline is:
+```{r}
+mash_by_condition_output %>%
+  filter(sig_anywhere) %>%
+  filter(!allsharing) %>% 
+  filter(control10_lfsr>0.1) %>%
+  nrow()
+```
+
+To compare to primary tissue eQTLs more broadly, first I look across all GTEx tissues at at the recall rate of our organoid eGenes.
+```{r}
+gtex_names <- list.files(path = "/project/gilad/umans/references/gtex/GTEx_Analysis_v8_eQTL", pattern="*.v8.egenes.txt.gz")
+
+samplenums <- read_csv(file="/project2/gilad/umans/oxygen_eqtl/data/external/gtex_sample_numbers.csv", col_names = TRUE)
+```
+
+```{r}
+egene_in_gtex <- c()
+for (Y in gtex_names){
+y <- read.table(file = paste0("/project/gilad/umans/references/gtex/GTEx_Analysis_v8_eQTL/", Y), header = TRUE, sep = "\t", stringsAsFactors = FALSE) %>% filter(qval<0.05)
+
+egene_in_gtex[Y] <- mash_by_condition_output %>% 
+  filter(sig_anywhere) %>% 
+  select(gene) %>% distinct() %>% 
+  summarize(sum(gene %in% y$gene_name)/n())
+print(Y)
+}
+
+combined_egene_in_gtex <- egene_in_gtex %>%  bind_rows(.id = "tissue")
+
+as_tibble(cbind(tissue = names(combined_egene_in_gtex), t(combined_egene_in_gtex))) %>% mutate(tissue=str_sub(tissue, end = -18)) %>% 
+  mutate(V2=as.numeric(V2)) %>% left_join(samplenums, by=join_by("tissue"=="Tissue")) %>%
+  ggplot(aes(x=reorder(tissue, V2), y=V2)) + 
+  geom_point( size=0.5) + 
+  scale_y_continuous(name = "Recall rate (black)", sec.axis = sec_axis(~ . *1000, name="GTEx sample size (red)")) +
+  guides(x =  guide_axis(angle = 45)) +
+  geom_point(aes(x=reorder(tissue, V2), y=samples/1000), color="red", size=0.5) + 
+  theme_light() +coord_flip()
+
 ```
 
 
+Next, compare to the much larger Sieberts et al meta-analysis of CMC and AMP-AD cohorts.  
+```{r}
+cmc <- read_csv(file = "/project2/gilad/umans/oxygen_eqtl/data/external/Cortex_MetaAnalysis_ROSMAP_CMC_HBCC_Mayo_cis_eQTL_release.csv.gz", col_names = TRUE) %>% filter(FDR<0.05)
+```
+
+```{r}
+mash_by_condition_output %>% 
+  filter(sig_anywhere) %>% 
+       mutate(class=case_when(allsharing ~ "standard",
+                        hypoxia_normoxia_shared & sharing_contexts==1 ~ "hyperoxia_specific",
+                        hyperoxia_normoxia_shared & sharing_contexts==1 ~ "hypoxia_specific",
+                        hypoxia_hyperoxia_shared & sharing_contexts==1 ~ "normoxia_specific",
+                        sharing_contexts==2 ~ "partial_shared", 
+                        sharing_contexts==0 ~ "alldiff"
+                        ) ) %>%  
+   group_by(source, class) %>% 
+      summarize(in_cmc = sum(gene %in% cmc$geneSymbol)/n()) %>% 
+   ggplot(aes(y=source, x=class, fill=in_cmc)) + 
+   geom_tile() + scale_fill_viridis(discrete=FALSE) + ggtitle("fraction of eGenes in CMC") + guides(x =  guide_axis(angle = 45)) + theme_light()
+```
+
+Overall, this corresponds to 
+```{r}
+mash_by_condition_output %>% 
+  filter(sig_anywhere) %>% 
+  select(gene) %>% 
+  distinct() %>% 
+  summarize(in_cmc = sum(gene %in% cmc$geneSymbol)/n())
+```
+of the eGenes identified in our study.
 
 
 ### Compare to coarse-clustered results
 ```{r}
-mash_by_condition_output_coarse <- readRDS(file = "output/combined_mash-by-condition_EE_coarse_reharmonized_032024.rds") %>% ungroup()
+mash_by_condition_output_coarse <- readRDS(file = "/project2/gilad/umans/oxygen_eqtl/output/combined_mash-by-condition_EE_coarse_reharmonized_newmash_032024.rds") %>% ungroup()  
 
 mash_by_condition_output_coarse %>% 
   filter(sig_anywhere) %>% 
- mutate(class=case_when(control10_lfsr < 0.05 & allsharing ~ "class1",
-                         control10_lfsr < 0.05 &  !allsharing ~ "class2",
-                         sig_anywhere & control10_lfsr > 0.05 & !allsharing ~ "class3",
-                         allsharing & control10_lfsr > 0.05 & (stim1pct_lfsr < 0.05 | stim21pct_lfsr < 0.05) ~ "class4")) %>%  group_by(source, class) %>% summarize(egenes=n()) %>% 
+ mutate(class=case_when(control10_lfsr < 0.1 & allsharing ~ "class1",
+                         control10_lfsr < 0.1 &  !allsharing ~ "class2",
+                         sig_anywhere & control10_lfsr > 0.1 & !allsharing ~ "class3",
+                         allsharing & control10_lfsr > 0.1 & (stim1pct_lfsr < 0.1 | stim21pct_lfsr < 0.1) ~ "class4")) %>%  group_by(source, class) %>% summarize(egenes=n()) %>% 
   ggplot(aes(x=factor(source, rev(coarse.order)), y=egenes, fill=factor(class, levels = c("class3", "class2", "class4", "class1"), ordered = TRUE))) + geom_bar(stat="identity") + 
   coord_flip() + theme_light() + theme(legend.title = element_blank()) + scale_fill_manual(values=class_colors) 
+
+
 ```
 Our hypothesis is that the the dynamic effects that emerge under treatment should be less represented in GTEx, compared to  effects that are evident at baseline, as GTEx does not (explicitly) assess gene expression under different environmental perturbations (although post-mortem brain tissue may experience some amount of hypoxia and/or hyperoxia during sample collection).  While not testing for sharing of regulatory sites or effects here, we can ask whether these dynamic eGenes are less likely to be present in GTEx compared to the dynamic eGenes present at baseline.  
 ```{r}
 mash_by_condition_output_coarse %>% 
   filter(sig_anywhere) %>% 
-  mutate(class=case_when(control10_lfsr < 0.05 & allsharing ~ "class1",
-                         control10_lfsr < 0.05 &  !allsharing ~ "class2",
-                         sig_anywhere & control10_lfsr > 0.05 & !allsharing ~ "class3",
-                         sig_anywhere & allsharing ~ "class4")) %>%  #because of the order of assignment, this does not include "class1" egenes, ie those that are detectable under normoxia.  equivalent to `allsharing & control10_lfsr > 0.05 & (stim1pct_lfsr < 0.05 | stim21pct_lfsr < 0.05) ~ "class4"`
+  mutate(class=case_when(control10_lfsr < 0.1 & allsharing ~ "class1",
+                         control10_lfsr < 0.1 &  !allsharing ~ "class2",
+                         sig_anywhere & control10_lfsr > 0.1 & !allsharing ~ "class3",
+                         sig_anywhere & allsharing ~ "class4")) %>%  #because of the order of assignment, this does not include "class1" egenes, ie those that are detectable under normoxia.  equivalent to `allsharing & control10_lfsr > 0.1 & (stim1pct_lfsr < 0.1 | stim21pct_lfsr < 0.1) ~ "class4"`
   group_by(source, class) %>% 
   summarise(egene_gtex = sum(gene %in% gtex_cortex_signif),
             egene_in_gtex_fraction = round((sum(gene %in% gtex_cortex_signif))/n(), 4)) %>% 
   ggplot(aes(x=factor(class, levels = c("class1", "class4", "class2", "class3")), y=egene_in_gtex_fraction)) + 
-  geom_boxplot(outlier.shape = NA, aes(color=class)) + 
-  geom_point(aes(group=source, color=source), position = position_jitter(width = 0.2, height = 0)) + 
+  geom_boxplot(outlier.shape = NA, aes(color=class), linewidth=0.4) + 
+  geom_point(aes(group=source, color=source), position = position_jitter(width = 0.2, height = 0), size=0.5) + 
   xlab("eGene class (see note)") + 
   ylab("Fraction of eGenes in GTEx") + 
   theme_light() +  
   scale_color_manual(values=c(manual_palette_coarse, class_colors)) + theme(legend.position="none") 
+
 ```
 
 
 ```{r}
 wilcox.test(mash_by_condition_output_coarse %>% 
-  filter(sig_anywhere) %>% 
-  mutate(class=case_when(control10_lfsr < 0.05 & allsharing ~ "groupB",
-                         control10_lfsr < 0.05 &  !allsharing ~ "groupB",
-                         sig_anywhere & control10_lfsr > 0.05 & !allsharing ~ "groupA",
-                         sig_anywhere & allsharing ~ "groupC")) %>% 
-   group_by(source, class) %>% 
+  mutate(class=case_when(control10_lfsr < 0.1 & allsharing ~ "groupB",
+                         control10_lfsr < 0.1 &  !allsharing ~ "groupB",
+                         sig_anywhere & control10_lfsr > 0.1 & !allsharing ~ "groupA",
+                         sig_anywhere & allsharing ~ "groupC", 
+                         !sig_anywhere ~ "nonsig")) %>% 
+    complete(source, class) %>% 
+   group_by(source, class, .drop=FALSE) %>% 
+    # filter(sig_anywhere) %>% 
   summarise(egene_gtex = sum(gene %in% (unlist(gtex_cortex_signif) %>% unique())),
             egene_in_gtex_fraction = (sum(gene %in% (unlist(gtex_cortex_signif) %>% unique())))/n()) %>% filter(class=="groupA") %>% pull(egene_in_gtex_fraction), 
   mash_by_condition_output_coarse %>% 
   filter(sig_anywhere) %>% 
-  mutate(class=case_when(control10_lfsr < 0.05 & allsharing ~ "groupB",
-                         control10_lfsr < 0.05 &  !allsharing ~ "groupB",
-                         sig_anywhere & control10_lfsr > 0.05 & !allsharing ~ "groupA",
+  mutate(class=case_when(control10_lfsr < 0.1 & allsharing ~ "groupB",
+                         control10_lfsr < 0.1 &  !allsharing ~ "groupB",
+                         sig_anywhere & control10_lfsr > 0.1 & !allsharing ~ "groupA",
                          sig_anywhere & allsharing ~ "groupC")) %>% 
-   group_by(source, class) %>% 
+    complete(source, class) %>% 
+   group_by(source, class, .drop=FALSE) %>% 
   summarise(egene_gtex = sum(gene %in% (unlist(gtex_cortex_signif) %>% unique())),
-            egene_in_gtex_fraction = (sum(gene %in% (unlist(gtex_cortex_signif) %>% unique())))/n()) %>% filter(class %in% c("groupB")) %>% pull(egene_in_gtex_fraction), paired = TRUE,  alternative = "less")
+            egene_in_gtex_fraction = (sum(gene %in% (unlist(gtex_cortex_signif) %>% unique())))/n()) %>% filter(class %in% c("groupB")) %>% pull(egene_in_gtex_fraction), paired=TRUE,  alternative = "less")
 ```
 
 The fraction of eGenes across cell types that would not be detected without treatment conditions is:
 ```{r}
 mash_by_condition_output_coarse %>% 
   filter(sig_anywhere) %>% 
-  mutate(class=case_when(control10_lfsr < 0.05 & allsharing ~ "class1",
-                         control10_lfsr < 0.05 &  !allsharing ~ "class2",
-                         sig_anywhere & control10_lfsr > 0.05 & !allsharing ~ "class3",
-                         allsharing & control10_lfsr > 0.05 & (stim1pct_lfsr < 0.05 | stim21pct_lfsr < 0.05) ~ "class4")) %>%  
+  mutate(class=case_when(control10_lfsr < 0.1 & allsharing ~ "class1",
+                         control10_lfsr < 0.1 &  !allsharing ~ "class2",
+                         sig_anywhere & control10_lfsr > 0.1 & !allsharing ~ "class3",
+                         allsharing & control10_lfsr > 0.1 & (stim1pct_lfsr < 0.1 | stim21pct_lfsr < 0.1) ~ "class4")) %>%  
   mutate(control_undetected=class %in% c("class3", "class4")) %>% 
   group_by(source) %>% 
   summarize(undetected_rate=sum(control_undetected)/n()) %>% 
@@ -974,36 +1093,58 @@ mash_by_condition_output_coarse %>%
   ungroup() %>% 
   summarise(across(allsharing:dynamic, median))
 ```
-Here, anything that does not have a similar (ie, within 2.5-fold) effect size in all three oxygen conditions is called "dynamic".  Within this dynamic category we can fine the following cases:
+Here, anything that does not have a similar (ie, within 2-fold) effect size in all three oxygen conditions is called "dynamic".  Within this dynamic category we can fine the following cases:
   * "treatment-shared" means different between normoxia and both hyperoxia and hypoxia, or, if you prefer, a normoxia-specific effect
 * "hypox_normox" means different in the hyperoxia condition from the other two
 * "hyperox_normox" means different in the hypoxia condition from the other two
 * "alldiff" means each oxygen condition has a different effect size from the other
-* "associatively_shared", somewhat confusingly, means different between one pair of oxygen conditions but otherwise all shared.  How can this happen?  Consider a case where beta_normoxia=1, beta_hypoxia=0.5, and beta_hyperoxia=2.  Here, both hypoxia and hyperoxia effects are shared with the normoxia condition (namely, differ by less than 2.5-fold), but differ from each other.
+* "associatively_shared", somewhat confusingly, means different between one pair of oxygen conditions but otherwise all shared.  How can this happen?  Consider a case where beta_normoxia=0.8, beta_hypoxia=0.4, and beta_hyperoxia=1.6.  Here, both hypoxia and hyperoxia effects are shared with the normoxia condition (namely, differ by less than 2-fold), but differ from each other.
 
 To plot these numbers:
   
 ```{r}
 
 class_colors3 <- c("allsharing"="blue", "partial_shared"="red", "normoxia_specific"="red", "hypoxia_specific"="red", "hyperoxia_specific"="red", "alldiff"="red")
-mash_by_condition_output_coarse %>% 
+
+p2 <- mash_by_condition_output_coarse %>% 
   filter(sig_anywhere) %>% 
-  mutate(class=case_when(allsharing ~ "allsharing",
-                         hypoxia_normoxia_shared & sharing_contexts==1 ~ "hyperoxia_specific",
-                         hyperoxia_normoxia_shared & sharing_contexts==1 ~ "hypoxia_specific",
-                         hypoxia_hyperoxia_shared & sharing_contexts==1 ~ "normoxia_specific",
-                         sharing_contexts==2 ~ "partial_shared", 
-                         sharing_contexts==0 ~ "alldiff"
-  )) %>%   #because of the order of assignment, this does not include "class1" egenes, ie those that are detectable under normoxia.  equivalent to `allsharing & control10_lfsr > 0.05 & (stim1pct_lfsr < 0.05 | stim21pct_lfsr < 0.05) ~ "class4"`
-  group_by(source, class) %>% 
+ mutate(class=case_when(allsharing ~ "allsharing",
+                        hypoxia_normoxia_shared & sharing_contexts==1 ~ "hyperoxia_specific",
+                        hyperoxia_normoxia_shared & sharing_contexts==1 ~ "hypoxia_specific",
+                        hypoxia_hyperoxia_shared & sharing_contexts==1 ~ "normoxia_specific",
+                        sharing_contexts==2 ~ "partial_shared", 
+                        sharing_contexts==0 ~ "alldiff"
+                        )) %>%   #because of the order of assignment, this does not include "class1" egenes, ie those that are detectable under normoxia.  equivalent to `allsharing & control10_lfsr > 0.1 & (stim1pct_lfsr < 0.1 | stim21pct_lfsr < 0.1) ~ "class4"`
+   group_by(source, class) %>% 
   summarise(egene = n()) %>% 
   ggplot(aes(x=factor(class, levels=c("allsharing", "alldiff", "normoxia_specific", "hypoxia_specific", "hyperoxia_specific",  "partial_shared"), ordered = TRUE), y=egene)) + 
-  geom_boxplot(outlier.shape = NA, aes(color=class)) + 
-  geom_point(aes(group=source, color=source), position = position_jitter(width = 0.2, height = 0)) + 
+  geom_boxplot(outlier.shape = NA, aes(color=class), linewidth=0.4) + 
+  geom_point(aes(group=source, color=source), position = position_jitter(width = 0.2, height = 0), size=0.3) + 
   xlab("eGene class (see note)") + 
   ylab("Number of eGenes") + 
   theme_light() +  
   scale_color_manual(values=c(manual_palette_coarse, class_colors3)) + theme(legend.position="none") 
+
+
+d2 <- mash_by_condition_output_coarse %>% 
+  filter(sig_anywhere) %>% 
+ mutate(class=case_when(allsharing ~ "allsharing",
+                        hypoxia_normoxia_shared & sharing_contexts==1 ~ "hyperoxia_specific",
+                        hyperoxia_normoxia_shared & sharing_contexts==1 ~ "hypoxia_specific",
+                        hypoxia_hyperoxia_shared & sharing_contexts==1 ~ "normoxia_specific",
+                        sharing_contexts==2 ~ "partial_shared", 
+                        sharing_contexts==0 ~ "alldiff"
+                        ),
+        total=n(),
+        standard=sum(allsharing)) %>%  
+  mutate(dynamic=total-standard) %>% 
+    group_by(class) %>% 
+    summarise(egene = n(), total=median(total), standard=median(standard), dynamic=median(dynamic)) %>% 
+    mutate(fraction_total=egene/total, fraction_dynamic=egene/dynamic) 
+
+p2 + geom_point(aes(x=class, y=egene/5),  data = d2, shape=8, size=0.2) +
+  scale_y_continuous(name = "eGenes per cell type", sec.axis = sec_axis(~ . *5, name="Total eQTLs")) 
+
 ```
 
 What fraction of each of these categories are in GTEx?
@@ -1016,57 +1157,57 @@ mash_by_condition_output_coarse %>%
                          hypoxia_hyperoxia_shared & sharing_contexts==1 ~ "normoxia_specific",
                          sharing_contexts==2 ~ "partial_shared", 
                          sharing_contexts==0 ~ "alldiff"
-  )) %>%   #because of the order of assignment, this does not include "class1" egenes, ie those that are detectable under normoxia.  equivalent to `allsharing & control10_lfsr > 0.05 & (stim1pct_lfsr < 0.05 | stim21pct_lfsr < 0.05) ~ "class4"`
+  )) %>%   #because of the order of assignment, this does not include "class1" egenes, ie those that are detectable under normoxia.  equivalent to `allsharing & control10_lfsr > 0.1 & (stim1pct_lfsr < 0.1 | stim21pct_lfsr < 0.1) ~ "class4"`
   group_by(source, class) %>% 
   summarise(egene_gtex = sum(gene %in% gtex_cortex_signif),
             egene_in_gtex_fraction = round((sum(gene %in% gtex_cortex_signif))/n(), 4)) %>% 
   ggplot(aes(x=factor(class, levels=c("allsharing", "partial_shared", "normoxia_specific", "hypoxia_specific", "hyperoxia_specific", "alldiff"), ordered = TRUE), y=egene_in_gtex_fraction)) + 
-  geom_boxplot(outlier.shape = NA, aes(color=class)) + 
-  geom_point(aes(group=source, color=source), position = position_jitter(width = 0.2, height = 0)) + 
+  geom_boxplot(outlier.shape = NA, aes(color=class), linewidth=0.4) + 
+  geom_point(aes(group=source, color=source), position = position_jitter(width = 0.2, height = 0), size=0.5) + 
   xlab("eGene class (see note)") + 
   ylab("Fraction of eGenes in GTEx") + 
   theme_light() +  
   scale_color_manual(values=c(manual_palette_coarse, class_colors)) + theme(legend.position="none") 
+
+
 ```
 
 We expect that the dynamic eGenes will be less represented in GTEx.  To test this, I first designate the classes above as "standard" (all effects shared, or the strange case of all effects shared except for one comparison), or "dynamic". 
 ```{r}
 wilcox.test(mash_by_condition_output_coarse %>% 
-              filter(sig_anywhere) %>% 
-              mutate(class=case_when(allsharing ~ "standard",
-                                     hypoxia_normoxia_shared & sharing_contexts==1 ~ "dynamic",
-                                     hyperoxia_normoxia_shared & sharing_contexts==1 ~ "dynamic",
-                                     hypoxia_hyperoxia_shared & sharing_contexts==1 ~ "dynamic",
-                                     sharing_contexts==2 ~ "standard", 
-                                     sharing_contexts==0 ~ "dynamic"
-              )) %>% 
-              group_by(source, class) %>% 
-              summarise(egene_gtex = sum(gene %in% (unlist(gtex_cortex_signif) %>% unique())),
-                        egene_in_gtex_fraction = (sum(gene %in% (unlist(gtex_cortex_signif) %>% unique())))/n()) %>% filter(class %in% c("dynamic")) %>% pull(egene_in_gtex_fraction), 
-            mash_by_condition_output_coarse %>% 
-              filter(sig_anywhere) %>% 
-              mutate(class=case_when(allsharing ~ "standard",
-                                     hypoxia_normoxia_shared & sharing_contexts==1 ~ "dynamic",
-                                     hyperoxia_normoxia_shared & sharing_contexts==1 ~ "dynamic",
-                                     hypoxia_hyperoxia_shared & sharing_contexts==1 ~ "dynamic",
-                                     sharing_contexts==2 ~ "standard", 
-                                     sharing_contexts==0 ~ "dynamic"
-              )) %>% 
-              group_by(source, class) %>% 
-              summarise(egene_gtex = sum(gene %in% (unlist(gtex_cortex_signif) %>% unique())),
-                        egene_in_gtex_fraction = (sum(gene %in% (unlist(gtex_cortex_signif) %>% unique())))/n()) %>% filter(class %in% c("standard")) %>% pull(egene_in_gtex_fraction), paired=TRUE, alternative = "less")
+ mutate(class=case_when(allsharing ~ "standard",
+                        hypoxia_normoxia_shared & sharing_contexts==1 ~ "dynamic",
+                        hyperoxia_normoxia_shared & sharing_contexts==1 ~ "dynamic",
+                        hypoxia_hyperoxia_shared & sharing_contexts==1 ~ "dynamic",
+                        sharing_contexts==2 ~ "standard", 
+                        sharing_contexts==0 ~ "dynamic"
+                        )) %>% 
+   group_by(source, class, .drop = FALSE) %>% 
+   filter(sig_anywhere) %>% 
+   summarise(egene_gtex = sum(gene %in% (unlist(gtex_cortex_signif) %>% unique())),
+            egene_in_gtex_fraction = (sum(gene %in% (unlist(gtex_cortex_signif) %>% unique())))/n()) %>%
+   filter(class %in% c("dynamic")) %>% pull(egene_in_gtex_fraction), 
+  mash_by_condition_output_coarse %>% 
+  mutate(class=case_when(allsharing ~ "standard",
+                        hypoxia_normoxia_shared & sharing_contexts==1 ~ "dynamic",
+                        hyperoxia_normoxia_shared & sharing_contexts==1 ~ "dynamic",
+                        hypoxia_hyperoxia_shared & sharing_contexts==1 ~ "dynamic",
+                        sharing_contexts==2 ~ "standard", 
+                        sharing_contexts==0 ~ "dynamic"
+                        )) %>% 
+   group_by(source, class, .drop = FALSE) %>% 
+   filter(sig_anywhere) %>% 
+  summarise(egene_gtex = sum(gene %in% (unlist(gtex_cortex_signif) %>% unique())),
+            egene_in_gtex_fraction = (sum(gene %in% (unlist(gtex_cortex_signif) %>% unique())))/n()) %>%
+   filter(class %in% c("standard")) %>% pull(egene_in_gtex_fraction), paired=TRUE, alternative = "less")
 ```
-
-
-
-
 
 ## Topic analysis
 Here, I outline the steps used to fit a 15-topic model to our data and then estimate topic-interacting QTLs using CellRegMap.  
 
 First, cluster at high resolution to obtain pseudocells, which are defined by individual and treatment.
 ```{r}
-harmony.batchandindividual.sct <- readRDS(file = "output/harmony_organoid_dataset.rds")
+harmony.batchandindividual.sct <- readRDS(file = "/project2/gilad/umans/oxygen_eqtl/output/harmony_organoid_dataset.rds")
 subset_seurat <- subset(harmony.batchandindividual.sct, subset = vireo.prob.singlet > 0.95 & nCount_RNA<20000 & nCount_RNA>2500 & treatment != "control21")
 
 subset_seurat$splitkey <- paste0(subset_seurat$treatment, "_", subset_seurat$vireo.individual)
@@ -1160,7 +1301,7 @@ individual_labels <- enframe(annotations %>% pull(individual, name=pseudocell), 
 
 
 ```{r}
-fit <- readRDS(file = "output/topics_pseudocells_15_nocontrol21_20240124.RDS")
+fit <- readRDS(file = "/project2/gilad/umans/oxygen_eqtl/output/topics_pseudocells_15_nocontrol21_20240124.RDS")
 
 plot.data <- as.data.frame(fit$L) %>% 
   rownames_to_column(var = "pseudocell") %>% 
@@ -1291,7 +1432,7 @@ Interaction testing with CellRegMap works on a subset of SNP-gene pairs, as it i
 
 ```{r, eval=FALSE}
 controlset <- mash_by_condition_output %>% 
-  filter(control10_lfsr<0.05) %>% 
+  filter(control10_lfsr<0.1) %>% 
   separate(gene_snp, into = c("genename", "snp"), sep = "_") %>% 
   # mutate(snp = str_sub(snp, end = -5)) %>% 
   select(snp, gene, source, control10_lfsr)
@@ -1309,7 +1450,7 @@ control_all_snps <- lapply(as.character(unique(controlset$source)), function(x)
   ) %>% bind_rows() %>% distinct()
 
 hypoxiaset <- mash_by_condition_output %>% 
-  filter(stim1pct_lfsr < 0.05) %>% 
+  filter(stim1pct_lfsr < 0.1) %>% 
   separate(gene_snp, into = c("genename", "snp"), sep = "_") %>% 
   # mutate(snp = str_sub(snp, end = -5)) %>% 
   select(snp, gene, source, stim1pct_lfsr)
@@ -1326,7 +1467,7 @@ hypoxia_all_snps <- lapply(as.character(unique(hypoxiaset$source)), function(x)
   ) %>% bind_rows() %>% distinct()
 
 hyperoxiaset <- mash_by_condition_output %>% 
-  filter(stim21pct_lfsr < 0.05) %>% 
+  filter(stim21pct_lfsr < 0.1) %>% 
   separate(gene_snp, into = c("genename", "snp"), sep = "_") %>% 
   # mutate(snp = str_sub(snp, end = -5)) %>% 
   select(snp, gene, source, stim21pct_lfsr)
@@ -1400,23 +1541,23 @@ beta_topic_corrs_matrix <- cor(dplyr::select(crm_betas_loadings, -c(PSEUDOCELL, 
 
 How many of these topic 7-interacting QTLs are not detected as dynamic in the static analysis?
 ```{r}
-mash_by_condition_output <- readRDS(file = "output/combined_mash-by-condition_EE_fine_reharmonized_032024.rds") %>% 
+mash_by_condition_output <- readRDS(file = "/project2/gilad/umans/oxygen_eqtl/output/combined_mash-by-condition_EE_fine_reharmonized_newmash_032024.rds") %>% 
   ungroup() 
 
 hypoxia_egenes <- mash_by_condition_output %>% 
   filter(sig_anywhere) %>% 
-  filter(stim1pct_lfsr < 0.05 & !allsharing ) %>% 
+  filter(stim1pct_lfsr < 0.1 & !allsharing ) %>% 
   pull(gene) %>% unique()
 
  a <- mash_by_condition_output %>% 
   filter(sig_anywhere) %>% 
-  filter(stim1pct_lfsr < 0.05 & stim21pct_lfsr > 0.05 & control10_lfsr > 0.05) %>% 
+  filter(stim1pct_lfsr < 0.1 & stim21pct_lfsr > 0.1 & control10_lfsr > 0.1) %>% 
    filter(!allsharing) %>% 
   pull(gene) %>% unique() 
  
  b <- mash_by_condition_output %>% 
   filter(sig_anywhere) %>% 
-  filter(stim1pct_lfsr > 0.05 & stim21pct_lfsr < 0.05 & control10_lfsr < 0.05) %>% 
+  filter(stim1pct_lfsr > 0.1 & stim21pct_lfsr < 0.1 & control10_lfsr < 0.1) %>% 
    filter(!allsharing) %>% 
   pull(gene) %>% unique()
 
@@ -1445,6 +1586,24 @@ beta_topic_corrs_matrix %>% as.data.frame() %>%
 length(setdiff(k7_egenes, d))
 # setdiff(k7_egenes, d)
 ```
+
+Specifically looking at hypoxia-specific effects, there are only 
+```{r}
+mash_by_condition_output %>% 
+  filter(sig_anywhere) %>% 
+    group_by(source) %>% 
+ mutate(class=case_when(allsharing ~ "allsharing",
+                        hypoxia_normoxia_shared & sharing_contexts==1 ~ "hyperoxia_specific",
+                        hyperoxia_normoxia_shared & sharing_contexts==1 ~ "hypoxia_specific",
+                        hypoxia_hyperoxia_shared & sharing_contexts==1 ~ "normoxia_specific",
+                        sharing_contexts==2 ~ "partial_shared", 
+                        sharing_contexts==0 ~ "alldiff"
+                        )) %>% 
+  filter(class== "hypoxia_specific") %>% 
+  ungroup() %>% 
+  summarize(sum(gene %in% k7_egenes))
+```
+4 eGenes detected in our pseudobulk analysis as hypoxia-specific which are also found in the topic analysis, leaving 214 undetected.
 
 
 ```{r}
@@ -1484,7 +1643,7 @@ Topic 15.  How many of the top correlated eGenes are eGenes in the individual ce
 ```{r}
 beta_topic_corrs_matrix %>% as.data.frame() %>% arrange(desc(abs(k15))) %>% head(n=20) %>% filter(k15>0.6)
 ```
-All of these are specific to the cell types associated with topic 15 except ABCA1, CD151, which are also significant in radial glia and intermediate progenitors (ABCA1) and choroid plexus and neurons (CD151).
+All of these are specific to the cell types associated with topic 15 except CD151, which is also significant in radial glia (of which cortical hem cells are a subset).
 
 ```{r}
 g <- "ABCA1"
@@ -1517,8 +1676,4 @@ ggplot(pseudocell_df2, aes(x=k15, y=ABCA1, color=genotype)) +
   ylab("ABCA1 Expression") +
   labs(color=v) 
 ```
-
-
-
-
 
