@@ -1184,6 +1184,46 @@ for (i in colnames(m_posterior$t)){
   rm(all, ranks, fgseaRes)
 }
 ```
+Plot p-values
+```{r}
+combined_fgsea_all <- read_tsv(file = paste0("/project2/gilad/umans/oxygen_eqtl/output/fgsea/", colnames(m_posterior$t)[1], "_fgsea_all_reharmonized_fine.txt"), col_names = TRUE) %>% dplyr::select(pathway, !!colnames(m_posterior$t)[1] := padj)
+
+for (i in colnames(m_posterior$t)[-1]){
+  temp <- read_tsv(file = paste0("/project2/gilad/umans/oxygen_eqtl/output/fgsea/", i, "_fgsea_all_reharmonized_fine.txt"), col_names = TRUE) %>% dplyr::select(pathway, !!i := padj)
+  combined_fgsea_all <- full_join(combined_fgsea_all, temp, by = "pathway")
+  rm(temp)
+}
+
+combined_fgsea_all <- combined_fgsea_all %>% column_to_rownames(var = "pathway") 
+
+significant_hallmark <- combined_fgsea_all %>% filter(if_any(everything(), ~ .<0.05)) %>% rownames()
+
+
+labels <- data.frame(celltype=str_extract(colnames(combined_fgsea_all), pattern = "[:alpha:]+"),
+                     treatment=str_extract(colnames(combined_fgsea_all), pattern = "[:digit:]+"))
+
+rownames(labels) <- colnames(combined_fgsea_all)
+
+celltypeCol <- manual_palette_fine
+treatmentCol <- c("red", "blue")
+names(treatmentCol) <- unique(labels$treatment)
+annoCol <- list(celltype = celltypeCol,
+                treatment = treatmentCol)
+
+combined_fgsea_all <- combined_fgsea_all[, c("RGcycling21" , "RG21", "CorticalHem21", "IPcycling21", "IP21", "GliaProg21", "Immature21", "Glut21", "GlutNTS21", "NeuronOther21", "Cajal21",  "Inh21",  "InhThalamic21", "InhGNRH21",  "InhSST21", "InhMidbrain21", "VLMC21", "Choroid21", "RGcycling1" , "RG1", "CorticalHem1", "IPcycling1", "IP1", "GliaProg1", "Immature1", "Glut1", "GlutNTS1", "NeuronOther1", "Cajal1",  "Inh1",  "InhThalamic1", "InhGNRH1",  "InhSST1", "InhMidbrain1", "VLMC1", "Choroid1")]
+
+
+# now use pheatmap to annotate
+pheatmap(-log10(combined_fgsea_all), col = colorRampPalette(rev(brewer.pal(11, "Spectral")))(25),
+         border_color = NA,
+         show_colnames = TRUE,
+         treeheight_row = 0, treeheight_col = 0,
+         annotation_col = labels,
+         annotation_colors = annoCol, cluster_cols = FALSE
+         )
+
+rm(combined_fgsea_all)
+```
 
 Combine the output into a single matrix and plot the normalized effect sizes
 ```{r}
@@ -1195,7 +1235,9 @@ for (i in colnames(m_posterior$t)[-1]){
   rm(temp)
 }
 
-combined_fgsea_all <- combined_fgsea_all %>% column_to_rownames(var = "pathway")
+combined_fgsea_all <- combined_fgsea_all %>% 
+  filter(pathway %in% significant_hallmark) %>%
+  column_to_rownames(var = "pathway")
 
 
 labels <- data.frame(celltype=str_extract(colnames(combined_fgsea_all), pattern = "[:alpha:]+"),
@@ -1245,6 +1287,48 @@ for (i in colnames(m_posterior$t)){
 }
 ```
 
+Plot p-values
+```{r}
+combined_fgsea_all <- read_tsv(file = paste0("/project2/gilad/umans/oxygen_eqtl/output/fgsea/", colnames(m_posterior$t)[1], "_fgsea_all_reharmonized_coarse.txt"), col_names = TRUE) %>% dplyr::select(pathway, !!colnames(m_posterior$t)[1] := padj)
+
+for (i in colnames(m_posterior$t)[-1]){
+  temp <- read_tsv(file = paste0("/project2/gilad/umans/oxygen_eqtl/output/fgsea/", i, "_fgsea_all_reharmonized_coarse.txt"), col_names = TRUE) %>% dplyr::select(pathway, !!i := padj)
+  combined_fgsea_all <- full_join(combined_fgsea_all, temp, by = "pathway")
+  rm(temp)
+}
+
+combined_fgsea_all <- combined_fgsea_all %>% column_to_rownames(var = "pathway") 
+
+significant_hallmark_coarse <- combined_fgsea_all %>% filter(if_any(everything(), ~ .<0.05)) %>% rownames()
+
+
+labels <- data.frame(celltype=str_extract(colnames(combined_fgsea_all), pattern = "[:alpha:]+"),
+                     treatment=str_extract(colnames(combined_fgsea_all), pattern = "[:digit:]+"))
+
+rownames(labels) <- colnames(combined_fgsea_all)
+
+celltypeCol <- manual_palette_coarse
+treatmentCol <- c("red", "blue")
+names(treatmentCol) <- unique(labels$treatment)
+annoCol <- list(celltype = celltypeCol,
+                treatment = treatmentCol)
+
+combined_fgsea_all <- combined_fgsea_all[, c("RG21", "IP21", "Glia21", "Immature21", "Glut21", "NeuronOther21", "Cajal21",  "Inh21", "VLMC21", "Choroid21", "RG1", "IP1", "Glia1", "Immature1", "Glut1","NeuronOther1", "Cajal1",  "Inh1", "VLMC1", "Choroid1")]
+
+
+# now use pheatmap to annotate
+pheatmap(-log10(combined_fgsea_all), col = colorRampPalette(rev(brewer.pal(11, "Spectral")))(25),
+         border_color = NA,
+         show_colnames = TRUE,
+         treeheight_row = 0, treeheight_col = 0,
+         annotation_col = labels,
+         annotation_colors = annoCol, cluster_cols = FALSE
+         )
+
+rm(combined_fgsea_all)
+```
+
+
 Combine the output into a single matrix and plot the normalized effect sizes
 ```{r}
 combined_fgsea_all <- read_tsv(file = paste0("/project2/gilad/umans/oxygen_eqtl/output/fgsea/", colnames(m_posterior$t)[1], "_fgsea_all_reharmonized_coarse.txt"), col_names = TRUE) %>% dplyr::select(pathway, !!colnames(m_posterior$t)[1] := NES)
@@ -1255,7 +1339,9 @@ for (i in colnames(m_posterior$t)[-1]){
   rm(temp)
 }
 
-combined_fgsea_all <- combined_fgsea_all %>% column_to_rownames(var = "pathway")
+combined_fgsea_all <- combined_fgsea_all %>%
+  filter(pathway %in% significant_hallmark_coarse) %>% 
+  column_to_rownames(var = "pathway")
 
 
 labels <- data.frame(celltype=str_extract(colnames(combined_fgsea_all), pattern = "[:alpha:]+"),

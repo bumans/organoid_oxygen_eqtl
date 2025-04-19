@@ -16,6 +16,7 @@ library(pals)
 library(RColorBrewer)
 library(pheatmap)
 library(magrittr)
+library(ggpointdensity)
 library(viridis)
 library(mashr)
 library(udr)
@@ -274,7 +275,7 @@ for (condition in c("control10", "stim1pct", "stim21pct")){
   }
 }
 ```
-Going forward, we omit the following cell types, which have too few individuals in one conditoin and, consequently, produce unstable covariate estimates:  Cajal-Retzius cells, SST+ inhibitory neurons, VLMC.
+Going forward, we omit the following cell types, which have too few individuals in one condition and, consequently, produce unstable covariate estimates:  Cajal-Retzius cells, SST+ inhibitory neurons, VLMC.
 
 ## MatrixEQTL and mash processing of results
 Now I run MatrixEQTL in each cell type and each condition, using shell script `MatrixEQTL_simple.sh`.  
@@ -939,7 +940,6 @@ as_tibble(cbind(tissue = names(combined_egene_in_gtex), t(combined_egene_in_gtex
 
 ```
 
-
 Next, compare to the much larger Sieberts et al meta-analysis of CMC and AMP-AD cohorts.  
 ```{r}
 cmc <- read_csv(file = "/project2/gilad/umans/oxygen_eqtl/data/external/Cortex_MetaAnalysis_ROSMAP_CMC_HBCC_Mayo_cis_eQTL_release.csv.gz", col_names = TRUE) %>% filter(FDR<0.05)
@@ -970,6 +970,194 @@ mash_by_condition_output %>%
   summarize(in_cmc = sum(gene %in% cmc$geneSymbol)/n())
 ```
 of the eGenes identified in our study.
+
+Finally, compare the estimated effect sizes of our eQTLs to the corresponding eQTLs in GTEx.  Since mash only prioritizes a single SNP for each eGene in a given cell type (looking across all treaetment conditions), I'll start by obtaining all additional SNPs with equal or better evidence (ie, smaller p-value than the mash-chosen variant) in the same condition and cell type in which we obtained an eQTL with lfsr<0.1.
+
+```{r}
+controlset <- mash_by_condition_output %>% 
+  filter(control10_lfsr<0.1) %>% 
+  separate(gene_snp, into = c("genename", "snp"), sep = "_") %>% 
+  # mutate(snp = str_sub(snp, end = -5)) %>% 
+  select(snp, gene, source, control10_lfsr)
+  
+control_all_snps <- lapply(as.character(unique(controlset$source)), function(x) 
+  controlset %>% filter(source==x) %>% #go cell type by cell type
+    full_join(y=read.table(paste0("/project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/output/combined_fine_quality_filter20_032024/results_combined_control10_", x,"_nominal.txt.gz"), head=TRUE, stringsAsFactors=FALSE), by=join_by(gene, snp==snps)) %>% #join with original snp-gene pairs from which mash drew
+    dplyr::filter(gene %in% (controlset %>% filter(source==x) %>% pull(gene))) %>% #filter to only those genes for which mash found a significant eqtl
+    mutate(control10_lfsr=replace_na(control10_lfsr, replace = 0)) %>% #there will be a lfsr for only the mash lead variant.  set all others to 0
+    group_by(gene) %>% 
+    arrange(pvalue, control10_lfsr, .by_group = TRUE) %>% #first sort by ascending pvalue, then ascending lfsr. because we set the others to 0, this ensures we sort such that the mash lead variant comes last
+    dplyr::slice(1:match(TRUE, !is.na(source))) %>% #take all of the snp-gene pairs up to the mash-chosen one
+    select(snp, gene, pvalue, beta, lfsr=control10_lfsr) %>% 
+    mutate(source=x)
+  ) %>% bind_rows() %>% distinct() %>% 
+  separate(snp, into = c("chrom", "position", "ref"), extra = "drop", sep = ":", convert = TRUE)
+
+hypoxiaset <- mash_by_condition_output %>% 
+  filter(stim1pct_lfsr < 0.1) %>% 
+  separate(gene_snp, into = c("genename", "snp"), sep = "_") %>% 
+  # mutate(snp = str_sub(snp, end = -5)) %>% 
+  select(snp, gene, source, stim1pct_lfsr)
+
+hypoxia_all_snps <- lapply(as.character(unique(hypoxiaset$source)), function(x) 
+  hypoxiaset %>% filter(source==x) %>% full_join(y=read.table(paste0("/project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/output/combined_fine_quality_filter20_032024/results_combined_stim1pct_", x,"_nominal.txt.gz"), head=TRUE, stringsAsFactors=FALSE), by=join_by(gene, snp==snps)) %>% 
+    dplyr::filter(gene %in% (hypoxiaset %>% filter(source==x) %>% pull(gene))) %>% 
+    mutate(stim1pct_lfsr=replace_na(stim1pct_lfsr, replace = 0)) %>% 
+    group_by(gene) %>% 
+    arrange(pvalue, stim1pct_lfsr, .by_group = TRUE) %>% 
+    dplyr::slice(1:match(TRUE, !is.na(source))) %>% 
+    select(snp, gene, pvalue, beta, lfsr=stim1pct_lfsr) %>% 
+    mutate(source=x)
+  ) %>% bind_rows() %>% distinct() %>% 
+  separate(snp, into = c("chrom", "position", "ref"), extra = "drop", sep = ":", convert = TRUE)
+
+hyperoxiaset <- mash_by_condition_output %>% 
+  filter(stim21pct_lfsr < 0.1) %>% 
+  separate(gene_snp, into = c("genename", "snp"), sep = "_") %>% 
+  # mutate(snp = str_sub(snp, end = -5)) %>% 
+  select(snp, gene, source, stim21pct_lfsr)
+
+hyperoxia_all_snps <- lapply(as.character(unique(hyperoxiaset$source)), function(x) 
+  hyperoxiaset %>% filter(source==x) %>% full_join(y=read.table(paste0("/project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/output/combined_fine_quality_filter20_032024/results_combined_stim21pct_", x,"_nominal.txt.gz"), head=TRUE, stringsAsFactors=FALSE), by=join_by(gene, snp==snps)) %>% 
+    dplyr::filter(gene %in% (hyperoxiaset %>% filter(source==x) %>% pull(gene))) %>% 
+    mutate(stim21pct_lfsr=replace_na(stim21pct_lfsr, replace = 0)) %>% 
+    group_by(gene) %>% 
+    arrange(pvalue, stim21pct_lfsr, .by_group = TRUE) %>% 
+    dplyr::slice(1:match(TRUE, !is.na(source))) %>% 
+    select(snp, gene, pvalue, beta, lfsr=stim21pct_lfsr) %>% 
+    mutate(source=x)
+  ) %>% bind_rows() %>% distinct() %>% 
+  separate(snp, into = c("chrom", "position", "ref"), extra = "drop", sep = ":", convert = TRUE)
+
+combined_all_snpgenes <- bind_rows(control_all_snps, hypoxia_all_snps, hyperoxia_all_snps, .id = "treatment") %>% 
+  ungroup() %>% 
+  distinct()
+
+rm(control_all_snps, hypoxia_all_snps, hyperoxia_all_snps)
+```
+
+Now, I go through all GTEx tissues, obtain significant eGenes and all corresponding eSNPs, then filter to the subset that correspond to our organoid results, and obtain a correlation.  
+```{r}
+gtex_names <- list.files(path = "/project/gilad/umans/references/gtex/GTEx_Analysis_v8_eQTL", pattern="*.v8.egenes.txt.gz")
+
+gtex_beta_correlation_all <- list()
+gtex_beta_ngenes_all <- numeric()
+gtex_beta_correlation_all_combined <- numeric()
+
+for (Y in gtex_names){
+signif <- read.table(file = paste0("/project/gilad/umans/references/gtex/GTEx_Analysis_v8_eQTL/", Y), header = TRUE, sep = "\t", stringsAsFactors = FALSE) %>% filter(qval<0.05)
+
+pairs <- read.table(file = paste0("/project/gilad/umans/references/gtex/GTEx_Analysis_v8_eQTL/", str_sub(Y, end=-14), "signif_variant_gene_pairs.txt.gz"), header = TRUE, sep = "\t", stringsAsFactors = FALSE)
+
+joined <- pairs %>% 
+  select(variant_id, gene_id, slope, pval_nominal) %>% 
+  left_join(x=., y=signif %>% select(gene_id, gene_name), by=join_by( gene_id==gene_id), relationship="many-to-one") %>% 
+  mutate(variant_id=str_sub(variant_id, start=4)) %>% 
+  filter(str_detect(variant_id, "X_", negate = TRUE)) %>% #drop the X chromosome
+  separate(variant_id, into = c("chrom", "position", "ref"), extra = "drop", sep="_", convert = TRUE) 
+
+gtex_beta_correlation_all[[Y]] <- inner_join(combined_all_snpgenes, joined, by=join_by(gene==gene_name, chrom==chrom, position==position), relationship="many-to-many") %>% 
+  group_by(source, treatment, .drop=FALSE) %>% 
+  summarize(correlation=cor(beta, slope))
+ 
+gtex_beta_ngenes_all[Y] <- inner_join(combined_all_snpgenes, joined, by=join_by(gene==gene_name, chrom==chrom, position==position), relationship="many-to-many") %>% 
+  group_by(source, treatment, .drop=FALSE) %>% 
+  summarize(n()) 
+
+gtex_beta_correlation_all_combined[Y] <- inner_join(combined_all_snpgenes, joined, by=join_by(gene==gene_name, chrom==chrom, position==position), relationship="many-to-many") %>% 
+  select(!source) %>% select(!lfsr) %>% 
+  distinct() %>% 
+  summarize(correlation=cor(beta, slope))
+
+print(Y)
+rm(signif, pairs, joined)
+}
+
+gtex_beta_correlation_all %>%  bind_rows(.id = "tissue") %>% mutate(tissue=str_sub(tissue, end = -18)) %>% 
+  filter(treatment==1) %>% 
+   ggplot(aes(x=source, y=tissue, fill=correlation)) + 
+   geom_tile() + scale_fill_viridis(discrete=FALSE, limits = c(-1, 1)) + ggtitle("Significant in control") + guides(x =  guide_axis(angle = 45))
+
+gtex_beta_correlation_all %>%  bind_rows(.id = "tissue") %>% mutate(tissue=str_sub(tissue, end = -18)) %>% 
+  filter(treatment==2) %>% 
+   ggplot(aes(x=source, y=tissue, fill=correlation)) + 
+   geom_tile() + scale_fill_viridis(discrete=FALSE, limits = c(-1, 1)) + ggtitle("Significant in hypoxia") + guides(x =  guide_axis(angle = 45))
+
+gtex_beta_correlation_all %>%  bind_rows(.id = "tissue") %>% mutate(tissue=str_sub(tissue, end = -18)) %>% 
+  filter(treatment==3) %>% 
+   ggplot(aes(x=source, y=tissue, fill=correlation)) + 
+   geom_tile() + scale_fill_viridis(discrete=FALSE, limits = c(-1, 1)) + ggtitle("Significant in hyperoxia") + guides(x =  guide_axis(angle = 45))
+
+```
+The actual numbers here are:
+```{r}
+gtex_beta_correlation_all_combined 
+```
+And these are based on a reasonable number of genes:
+```{r}
+gtex_beta_ngenes_all 
+```
+
+
+Plot this faceted, in the same order as the recall rate plot
+```{r}
+gtex_recall <- as_tibble(cbind(tissue = names(combined_egene_in_gtex), t(combined_egene_in_gtex))) %>% mutate(tissue=str_sub(tissue, end = -18)) %>% 
+  mutate(V2=as.numeric(V2)) %>% left_join(samplenums, by=join_by("tissue"=="Tissue")) 
+  
+gtex_beta_correlation_all_plot <- gtex_beta_correlation_all %>%  bind_rows(.id = "tissue") %>% mutate(tissue=str_sub(tissue, end = -18))
+
+left_join(gtex_beta_correlation_all_plot, gtex_recall) %>% 
+  ggplot(aes(x=source, y=reorder(tissue, V2), fill=correlation)) + 
+   geom_tile() + scale_fill_viridis(discrete=FALSE, limits = c(-1, 1)) + guides(x =  guide_axis(angle = 45)) + facet_wrap(facets = vars(treatment)) + theme_light()
+
+```
+Finally, I do the same thing in a combined fashion so as to get an overall scatterplot (shown in Figure S5) and correlation, combining all tissues and conditions.
+```{r, eval=FALSE}
+gtex_beta_snps_all <- list()
+
+for (Y in gtex_names){
+signif <- read.table(file = paste0("/project/gilad/umans/references/gtex/GTEx_Analysis_v8_eQTL/", Y), header = TRUE, sep = "\t", stringsAsFactors = FALSE) %>% filter(qval<0.05)
+
+pairs <- read.table(file = paste0("/project/gilad/umans/references/gtex/GTEx_Analysis_v8_eQTL/", str_sub(Y, end=-14), "signif_variant_gene_pairs.txt.gz"), header = TRUE, sep = "\t", stringsAsFactors = FALSE)
+
+joined <- pairs %>% select(variant_id, gene_id, slope, pval_nominal) %>% left_join(x=., y=signif %>% select(gene_id, gene_name), by=join_by( gene_id==gene_id), relationship="many-to-one") %>% 
+  mutate(variant_id=str_sub(variant_id, start=4)) %>% 
+  filter(str_detect(variant_id, "X_", negate = TRUE)) %>% #drop the X chromosome
+  separate(variant_id, into = c("chrom", "position", "ref"), extra = "drop", sep="_", convert = TRUE) 
+  
+gtex_beta_snps_all[[Y]] <- inner_join(combined_all_snpgenes, joined, by=join_by(gene==gene_name, chrom==chrom, position==position), relationship="many-to-many") 
+
+print(Y)
+rm(signif, pairs, joined)
+}
+```
+
+```{r}
+gtex_beta_snps_all <- readRDS(file = "/project2/gilad/umans/oxygen_eqtl/output/gtex_beta_snps_all.RDS")
+
+gtex_beta_snps_all %>%  
+  bind_rows(.id = "tissue") %>% 
+  mutate(tissue=str_sub(tissue, end = -18)) %>% 
+  ggplot(aes(x=beta, y=slope)) + geom_pointdensity(size=0.1) + scale_color_viridis() + theme_light() +
+  xlab("Beta (organoid)") + ylab ("Beta (GTEx)") + geom_smooth(method="lm", linewidth=0.3, color="gray")
+
+```
+
+And to obtain an overall Pearson's correlation and regression R^2:
+```{r}
+a <- gtex_beta_snps_all %>%  
+  bind_rows(.id = "tissue") %>% 
+  mutate(tissue=str_sub(tissue, end = -18))
+b <- lm(formula = slope ~ beta,  data =a)
+
+summary(b)
+
+cor(a$beta, a$slope)
+```
+
+```{r}
+rm(a, b, gtex_beta_snps_all, gtex_beta_correlation_all_combined, combined_all_snpgenes, gtex_beta_correlation_all_plot, gtex_beta_recall)
+```
 
 
 ### Compare to coarse-clustered results
@@ -1382,12 +1570,13 @@ hypoxia_points <- plot_data[which(plot_data$mark %in% c("black", "lightgray")),]
 highlight_points <- plot_data[which(plot_data$mark %in% c("red")),]
 
 ggplot(data=hypoxia_points, aes(x=logfc, y=z, color=mark,  label=rownames(hypoxia_points)) ) + 
-  geom_point( alpha=0.5)  +
+  geom_point( alpha=0.5, size=0.2)  +
   scale_color_identity() + 
   scale_y_continuous(trans = "sqrt") + theme_light() +
-  geom_point(data=highlight_points, aes(x=logfc, y=z, color=mark, label=rownames(highlight_points))) + 
-  geom_text_repel(data = highlight_points, aes(x=logfc, y=z, color=mark, label=rownames(highlight_points)), color="black") + 
+  geom_point(data=highlight_points, aes(x=logfc, y=z, color=mark, label=rownames(highlight_points)), size=0.2) + 
+  geom_text_repel(data = highlight_points, aes(x=logfc, y=z, color=mark, label=rownames(highlight_points)), size=1.8, color="black") + 
   ggtitle("topic 7")
+
 ```
 I do the same for topic 4, which marks dividing cells, using markers of dividing cells that we see in the pseudobulk data
 ```{r}
@@ -1400,11 +1589,10 @@ plot_points <- plot_data[which(plot_data$mark %in% c("black", "lightgray")),]
 highlight_points <- plot_data[which(plot_data$mark %in% c("red")),]
 
 ggplot(data=plot_points %>% filter(z<300), aes(x=logfc, y=z, color=mark,  label=rownames(plot_points %>% filter(z<300))) ) + 
-  geom_point( alpha=0.5)  + 
+  geom_point( alpha=0.5, size=0.2)  + 
   scale_color_identity()  + 
   theme_light() + 
-  geom_point(data=highlight_points, aes(x=logfc, y=z, color=mark, label=rownames(highlight_points))) + geom_text_repel(data = highlight_points, aes(x=logfc, y=z, color=mark, label=rownames(highlight_points)), color="black")   + 
-  scale_y_continuous(trans = "sqrt") +
+  geom_point(data=highlight_points, aes(x=logfc, y=z, color=mark, label=rownames(highlight_points)), size=0.2) + geom_text_repel(data = highlight_points, aes(x=logfc, y=z, color=mark, label=rownames(highlight_points)), color="black", size=1.8)   + scale_y_continuous(trans = "sqrt") +
   ggtitle("topic 4")
 ```
 And the same for cortical hem-associated topic 3
@@ -1418,13 +1606,14 @@ hem_points <- plot_data_hem[which(plot_data_hem$mark %in% c("black", "lightgray"
 highlight_points <- plot_data_hem[which(plot_data_hem$mark %in% c("red")),]
 
 ggplot(data=hem_points, aes(x=logfc, y=z, color=mark,  label=rownames(hem_points)) ) + 
-  geom_point( alpha=0.5)  + 
+  geom_point( alpha=0.5, size=0.2)  + 
   scale_color_identity() + 
   scale_y_continuous(trans = "sqrt") + 
   theme_light() +  
-  geom_point(data=highlight_points, aes(x=logfc, y=z, color=mark, label=rownames(highlight_points))) + 
-  geom_text_repel(data = highlight_points, aes(x=logfc, y=z, color=mark, label=rownames(highlight_points)), color="black") + 
+  geom_point(data=highlight_points, aes(x=logfc, y=z, color=mark, label=rownames(highlight_points)), size=0.2) + 
+  geom_text_repel(data = highlight_points, aes(x=logfc, y=z, color=mark, label=rownames(highlight_points)), size=1.8,  color="black") + 
   ggtitle("topic 3")
+
 ```
 
 ### Prepare CellRegMap input
@@ -1538,59 +1727,77 @@ crm_betas_loadings <- left_join(crm_betas_wide, topic_loadings, by=c("PSEUDOCELL
 beta_topic_corrs_matrix <- cor(dplyr::select(crm_betas_loadings, -c(PSEUDOCELL, paste0("k", seq(15)))),
                         dplyr::select(crm_betas_loadings, paste0("k", seq(15))))
 ```
+Export as a table for supplement:
+```{r, eval=FALSE}
+data.frame(beta_topic_corrs_matrix) %>% rownames_to_column(var="Gene-SNP") %>%  write_csv(file = "docs/STable_CRM.csv")
+```
+
+
 
 How many of these topic 7-interacting QTLs are not detected as dynamic in the static analysis?
+```{r}
+beta_topic_corrs_p <- apply(dplyr::select(crm_betas_loadings, -c(PSEUDOCELL, paste0("k", seq(15)))) %>% as.matrix(), MARGIN = 2, FUN = function(x) cor.test(x, crm_betas_loadings$k7)$p.value )
+
+beta_topic_corrs_matrix %>% as.data.frame() %>% 
+  dplyr::select(k7) %>% 
+  bind_cols(pval=beta_topic_corrs_p) %>% 
+  rownames_to_column(var = "gene_snp") %>%  
+   separate(gene_snp, into = c("genename", "snp"), sep = "_") %>% 
+    mutate(snp_short = str_sub(snp, end = -5)) %>% 
+  filter(pval < (0.05/289)) %>% dim()
+
+# Many of these have small correlations with k7, which are nonetheless statistically significant.  How many if we threshold to correlation coefficient > 0.1?
+beta_topic_corrs_matrix %>% as.data.frame() %>% 
+  dplyr::select(k7) %>% 
+  bind_cols(pval=beta_topic_corrs_p) %>% 
+  rownames_to_column(var = "gene_snp") %>%  
+   separate(gene_snp, into = c("genename", "snp"), sep = "_") %>% 
+    mutate(snp_short = str_sub(snp, end = -5)) %>% 
+  filter(pval < (0.05/289)) %>% filter(k7>0.1) %>% dim()
+
+k7_egenes <- beta_topic_corrs_matrix %>% as.data.frame() %>% 
+  dplyr::select(k7) %>% 
+  bind_cols(pval=beta_topic_corrs_p) %>% 
+  rownames_to_column(var = "gene_snp") %>%  
+   separate(gene_snp, into = c("genename", "snp"), sep = "_") %>% 
+    mutate(snp_short = str_sub(snp, end = -5)) %>% 
+  filter(pval < (0.05/289)) %>% filter(k7>0.1) %>% pull(genename)
+```
+
+How many of these are more strongly correlated with k7 than any other topic?
+
+```{r}
+beta_topic_corrs_matrix %>% as.data.frame() %>% 
+  bind_cols(pval=beta_topic_corrs_p) %>% 
+  rownames_to_column(var = "gene_snp") %>%  
+   separate(gene_snp, into = c("genename", "snp"), sep = "_") %>% 
+    mutate(snp_short = str_sub(snp, end = -5)) %>% 
+  mutate(max=pmax(abs(k1), abs(k2), abs(k3), abs(k4), abs(k5), abs(k6), abs(k7), abs(k8), abs(k9), abs(k10), abs(k11), abs(k12), abs(k13), abs(k14), abs(k15))) %>% 
+  filter(pval < (0.05/289)) %>% arrange(desc(abs(k7))) %>% 
+  filter(abs(k7)==max)
+```
+Just two, WDR45B and CRABP2.  If we zoom out a little...
+
+```{r}
+beta_topic_corrs_matrix %>% as.data.frame() %>% 
+  bind_cols(pval=beta_topic_corrs_p) %>% 
+  rownames_to_column(var = "gene_snp") %>%  
+   separate(gene_snp, into = c("genename", "snp"), sep = "_") %>% 
+    mutate(snp_short = str_sub(snp, end = -5)) %>% 
+  mutate(max=pmax(abs(k1), abs(k2), abs(k3), abs(k4), abs(k5), abs(k6), abs(k7), abs(k8), abs(k9), abs(k10), abs(k11), abs(k12), abs(k13), abs(k14), abs(k15))) %>% 
+  filter(pval < (0.05/289)) %>% arrange(desc(abs(k7))) %>% 
+  head()
+```
+We see additional genes (e.g., CD44) that are highly correlated with topic 7 but also correlated with other topics as well.
+
+
+Now to compare with the 
 ```{r}
 mash_by_condition_output <- readRDS(file = "/project2/gilad/umans/oxygen_eqtl/output/combined_mash-by-condition_EE_fine_reharmonized_newmash_032024.rds") %>% 
   ungroup() 
 
-hypoxia_egenes <- mash_by_condition_output %>% 
-  filter(sig_anywhere) %>% 
-  filter(stim1pct_lfsr < 0.1 & !allsharing ) %>% 
-  pull(gene) %>% unique()
-
- a <- mash_by_condition_output %>% 
-  filter(sig_anywhere) %>% 
-  filter(stim1pct_lfsr < 0.1 & stim21pct_lfsr > 0.1 & control10_lfsr > 0.1) %>% 
-   filter(!allsharing) %>% 
-  pull(gene) %>% unique() 
- 
- b <- mash_by_condition_output %>% 
-  filter(sig_anywhere) %>% 
-  filter(stim1pct_lfsr > 0.1 & stim21pct_lfsr < 0.1 & control10_lfsr < 0.1) %>% 
-   filter(!allsharing) %>% 
-  pull(gene) %>% unique()
-
-d <-  unique(c(a,b))
- 
-beta_topic_corrs_p <- apply(dplyr::select(crm_betas_loadings, -c(PSEUDOCELL, paste0("k", seq(15)))) %>% as.matrix(), MARGIN = 2, FUN = function(x) cor.test(x, crm_betas_loadings$k7)$p.value )
-
-k7_egenes <- beta_topic_corrs_matrix %>% as.data.frame() %>% 
-  dplyr::select(k7) %>% 
-  bind_cols(beta_topic_corrs_p) %>% 
-  rownames_to_column(var = "gene_snp") %>%  
-   separate(gene_snp, into = c("genename", "snp"), sep = "_") %>% 
-    mutate(snp_short = str_sub(snp, end = -5)) %>% 
-  filter(`...2` < (0.05/289)) %>% pull(genename)
-
-# As a side note, many of these have small correlations with k7, which are nonetheless statistically significant.  How many if we threshold to correlation coefficient > 0.2?
-beta_topic_corrs_matrix %>% as.data.frame() %>% 
-  dplyr::select(k7) %>% 
-  bind_cols(beta_topic_corrs_p) %>% 
-  rownames_to_column(var = "gene_snp") %>%  
-   separate(gene_snp, into = c("genename", "snp"), sep = "_") %>% 
-    mutate(snp_short = str_sub(snp, end = -5)) %>% 
-  filter(`...2` < (0.05/289)) %>% filter(k7>0.2) %>% dim()
-# this yields 20 genes
-
-length(setdiff(k7_egenes, d))
-# setdiff(k7_egenes, d)
-```
-
-Specifically looking at hypoxia-specific effects, there are only 
-```{r}
 mash_by_condition_output %>% 
-  filter(sig_anywhere) %>% 
+  filter(stim1pct_lfsr < 0.1 | stim21pct_lfsr < 0.1 | control10_lfsr < 0.1) %>% 
     group_by(source) %>% 
  mutate(class=case_when(allsharing ~ "allsharing",
                         hypoxia_normoxia_shared & sharing_contexts==1 ~ "hyperoxia_specific",
@@ -1599,16 +1806,23 @@ mash_by_condition_output %>%
                         sharing_contexts==2 ~ "partial_shared", 
                         sharing_contexts==0 ~ "alldiff"
                         )) %>% 
-  filter(class== "hypoxia_specific") %>% 
+  filter(class== "hypoxia_specific") %>%
   ungroup() %>% 
   summarize(sum(gene %in% k7_egenes))
 ```
-4 eGenes detected in our pseudobulk analysis as hypoxia-specific which are also found in the topic analysis, leaving 214 undetected.
+2 eGenes detected in our pseudobulk analysis as hypoxia-specific which are also found in the topic analysis, leaving 56 undetected.
 
-Moreover generally, 150 topic 7 eGenes are not eGenes at all in our pseudobulk analysis.
+Moreover generally, 38 topic 7 eGenes are not eGenes at all in our pseudobulk analysis.
 ```{r}
 length(setdiff(k7_egenes, mash_by_condition_output %>% 
   filter(sig_anywhere) %>% 
+  pull(gene) %>% unique() ))
+```
+
+Meaning 20 are eGenes in our pseudobulk analysis:
+```{r}
+length(intersect(k7_egenes, mash_by_condition_output %>% 
+  filter(stim1pct_lfsr < 0.1 | stim21pct_lfsr < 0.1 | control10_lfsr < 0.1) %>% 
   pull(gene) %>% unique() ))
 ```
 
