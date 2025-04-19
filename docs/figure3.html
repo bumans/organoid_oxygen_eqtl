@@ -382,7 +382,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2025-02-25
+<strong>Last updated:</strong> 2025-04-19
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -513,15 +513,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcombumansorganoidoxygeneqtltreee2e70467d39ad127f69810cc1a8b76b20329d19dtargetblanke2e7046a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcombumansorganoidoxygeneqtltree03481ab6588f88ac18e08221a4e314bdf8b07261targetblank03481aba">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/bumans/organoid_oxygen_eqtl/tree/e2e70467d39ad127f69810cc1a8b76b20329d19d" target="_blank">e2e7046</a>
+<a href="https://github.com/bumans/organoid_oxygen_eqtl/tree/03481ab6588f88ac18e08221a4e314bdf8b07261" target="_blank">03481ab</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcombumansorganoidoxygeneqtltreee2e70467d39ad127f69810cc1a8b76b20329d19dtargetblanke2e7046a"
+id="strongRepositoryversionstrongahrefhttpsgithubcombumansorganoidoxygeneqtltree03481ab6588f88ac18e08221a4e314bdf8b07261targetblank03481aba"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -531,7 +531,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/bumans/organoid_oxygen_eqtl/tree/e2e70467d39ad127f69810cc1a8b76b20329d19d" target="_blank">e2e7046</a>.
+<a href="https://github.com/bumans/organoid_oxygen_eqtl/tree/03481ab6588f88ac18e08221a4e314bdf8b07261" target="_blank">03481ab</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -548,11 +548,12 @@ were generated:
 Ignored files:
     Ignored:    .DS_Store
     Ignored:    analysis/.Rhistory
+    Ignored:    analysis/figure/
     Ignored:    code/.DS_Store
 
 Unstaged changes:
-    Modified:   analysis/shared_functions_style_items.R
     Deleted:    code/mash_EE.R
+    Modified:   code/mash_EE_PC.R
 
 </code></pre>
 <p>
@@ -598,6 +599,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/bumans/organoid_oxygen_eqtl/blob/03481ab6588f88ac18e08221a4e314bdf8b07261/analysis/figure3.Rmd" target="_blank">03481ab</a>
+</td>
+<td>
+Ben Umans
+</td>
+<td>
+2025-04-19
+</td>
+<td>
+updated April 2025
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/bumans/organoid_oxygen_eqtl/d3c21816ed24d3a21df142816a5bfcca4805f225/docs/figure3.html" target="_blank">d3c2181</a>
+</td>
+<td>
+Ben Umans
+</td>
+<td>
+2025-02-25
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -721,7 +756,8 @@ The following object is masked from &#39;package:purrr&#39;:
 The following object is masked from &#39;package:tidyr&#39;:
 
     extract</code></pre>
-<pre class="r"><code>library(viridis)</code></pre>
+<pre class="r"><code>library(ggpointdensity)
+library(viridis)</code></pre>
 <pre><code>Loading required package: viridisLite
 
 Attaching package: &#39;viridisLite&#39;
@@ -1028,7 +1064,7 @@ data:</p>
   }
 }</code></pre>
 <p>Going forward, we omit the following cell types, which have too few
-individuals in one conditoin and, consequently, produce unstable
+individuals in one condition and, consequently, produce unstable
 covariate estimates: Cajal-Retzius cells, SST+ inhibitory neurons,
 VLMC.</p>
 </div>
@@ -2109,96 +2145,481 @@ Ben Umans
 <pre><code>     in_cmc
 1 0.9139483</code></pre>
 <p>of the eGenes identified in our study.</p>
-<div id="compare-to-coarse-clustered-results" class="section level3">
-<h3>Compare to coarse-clustered results</h3>
-<pre class="r"><code>mash_by_condition_output_coarse &lt;- readRDS(file = &quot;/project2/gilad/umans/oxygen_eqtl/output/combined_mash-by-condition_EE_coarse_reharmonized_newmash_032024.rds&quot;) %&gt;% ungroup()  
+<p>Finally, compare the estimated effect sizes of our eQTLs to the
+corresponding eQTLs in GTEx. Since mash only prioritizes a single SNP
+for each eGene in a given cell type (looking across all treaetment
+conditions), I’ll start by obtaining all additional SNPs with equal or
+better evidence (ie, smaller p-value than the mash-chosen variant) in
+the same condition and cell type in which we obtained an eQTL with
+lfsr&lt;0.1.</p>
+<pre class="r"><code>controlset &lt;- mash_by_condition_output %&gt;% 
+  filter(control10_lfsr&lt;0.1) %&gt;% 
+  separate(gene_snp, into = c(&quot;genename&quot;, &quot;snp&quot;), sep = &quot;_&quot;) %&gt;% 
+  # mutate(snp = str_sub(snp, end = -5)) %&gt;% 
+  select(snp, gene, source, control10_lfsr)
+  
+control_all_snps &lt;- lapply(as.character(unique(controlset$source)), function(x) 
+  controlset %&gt;% filter(source==x) %&gt;% #go cell type by cell type
+    full_join(y=read.table(paste0(&quot;/project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/output/combined_fine_quality_filter20_032024/results_combined_control10_&quot;, x,&quot;_nominal.txt.gz&quot;), head=TRUE, stringsAsFactors=FALSE), by=join_by(gene, snp==snps)) %&gt;% #join with original snp-gene pairs from which mash drew
+    dplyr::filter(gene %in% (controlset %&gt;% filter(source==x) %&gt;% pull(gene))) %&gt;% #filter to only those genes for which mash found a significant eqtl
+    mutate(control10_lfsr=replace_na(control10_lfsr, replace = 0)) %&gt;% #there will be a lfsr for only the mash lead variant.  set all others to 0
+    group_by(gene) %&gt;% 
+    arrange(pvalue, control10_lfsr, .by_group = TRUE) %&gt;% #first sort by ascending pvalue, then ascending lfsr. because we set the others to 0, this ensures we sort such that the mash lead variant comes last
+    dplyr::slice(1:match(TRUE, !is.na(source))) %&gt;% #take all of the snp-gene pairs up to the mash-chosen one
+    select(snp, gene, pvalue, beta, lfsr=control10_lfsr) %&gt;% 
+    mutate(source=x)
+  ) %&gt;% bind_rows() %&gt;% distinct() %&gt;% 
+  separate(snp, into = c(&quot;chrom&quot;, &quot;position&quot;, &quot;ref&quot;), extra = &quot;drop&quot;, sep = &quot;:&quot;, convert = TRUE)
 
-mash_by_condition_output_coarse %&gt;% 
-  filter(sig_anywhere) %&gt;% 
- mutate(class=case_when(control10_lfsr &lt; 0.1 &amp; allsharing ~ &quot;class1&quot;,
-                         control10_lfsr &lt; 0.1 &amp;  !allsharing ~ &quot;class2&quot;,
-                         sig_anywhere &amp; control10_lfsr &gt; 0.1 &amp; !allsharing ~ &quot;class3&quot;,
-                         allsharing &amp; control10_lfsr &gt; 0.1 &amp; (stim1pct_lfsr &lt; 0.1 | stim21pct_lfsr &lt; 0.1) ~ &quot;class4&quot;)) %&gt;%  group_by(source, class) %&gt;% summarize(egenes=n()) %&gt;% 
-  ggplot(aes(x=factor(source, rev(coarse.order)), y=egenes, fill=factor(class, levels = c(&quot;class3&quot;, &quot;class2&quot;, &quot;class4&quot;, &quot;class1&quot;), ordered = TRUE))) + geom_bar(stat=&quot;identity&quot;) + 
-  coord_flip() + theme_light() + theme(legend.title = element_blank()) + scale_fill_manual(values=class_colors) </code></pre>
+hypoxiaset &lt;- mash_by_condition_output %&gt;% 
+  filter(stim1pct_lfsr &lt; 0.1) %&gt;% 
+  separate(gene_snp, into = c(&quot;genename&quot;, &quot;snp&quot;), sep = &quot;_&quot;) %&gt;% 
+  # mutate(snp = str_sub(snp, end = -5)) %&gt;% 
+  select(snp, gene, source, stim1pct_lfsr)
+
+hypoxia_all_snps &lt;- lapply(as.character(unique(hypoxiaset$source)), function(x) 
+  hypoxiaset %&gt;% filter(source==x) %&gt;% full_join(y=read.table(paste0(&quot;/project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/output/combined_fine_quality_filter20_032024/results_combined_stim1pct_&quot;, x,&quot;_nominal.txt.gz&quot;), head=TRUE, stringsAsFactors=FALSE), by=join_by(gene, snp==snps)) %&gt;% 
+    dplyr::filter(gene %in% (hypoxiaset %&gt;% filter(source==x) %&gt;% pull(gene))) %&gt;% 
+    mutate(stim1pct_lfsr=replace_na(stim1pct_lfsr, replace = 0)) %&gt;% 
+    group_by(gene) %&gt;% 
+    arrange(pvalue, stim1pct_lfsr, .by_group = TRUE) %&gt;% 
+    dplyr::slice(1:match(TRUE, !is.na(source))) %&gt;% 
+    select(snp, gene, pvalue, beta, lfsr=stim1pct_lfsr) %&gt;% 
+    mutate(source=x)
+  ) %&gt;% bind_rows() %&gt;% distinct() %&gt;% 
+  separate(snp, into = c(&quot;chrom&quot;, &quot;position&quot;, &quot;ref&quot;), extra = &quot;drop&quot;, sep = &quot;:&quot;, convert = TRUE)
+
+hyperoxiaset &lt;- mash_by_condition_output %&gt;% 
+  filter(stim21pct_lfsr &lt; 0.1) %&gt;% 
+  separate(gene_snp, into = c(&quot;genename&quot;, &quot;snp&quot;), sep = &quot;_&quot;) %&gt;% 
+  # mutate(snp = str_sub(snp, end = -5)) %&gt;% 
+  select(snp, gene, source, stim21pct_lfsr)
+
+hyperoxia_all_snps &lt;- lapply(as.character(unique(hyperoxiaset$source)), function(x) 
+  hyperoxiaset %&gt;% filter(source==x) %&gt;% full_join(y=read.table(paste0(&quot;/project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/output/combined_fine_quality_filter20_032024/results_combined_stim21pct_&quot;, x,&quot;_nominal.txt.gz&quot;), head=TRUE, stringsAsFactors=FALSE), by=join_by(gene, snp==snps)) %&gt;% 
+    dplyr::filter(gene %in% (hyperoxiaset %&gt;% filter(source==x) %&gt;% pull(gene))) %&gt;% 
+    mutate(stim21pct_lfsr=replace_na(stim21pct_lfsr, replace = 0)) %&gt;% 
+    group_by(gene) %&gt;% 
+    arrange(pvalue, stim21pct_lfsr, .by_group = TRUE) %&gt;% 
+    dplyr::slice(1:match(TRUE, !is.na(source))) %&gt;% 
+    select(snp, gene, pvalue, beta, lfsr=stim21pct_lfsr) %&gt;% 
+    mutate(source=x)
+  ) %&gt;% bind_rows() %&gt;% distinct() %&gt;% 
+  separate(snp, into = c(&quot;chrom&quot;, &quot;position&quot;, &quot;ref&quot;), extra = &quot;drop&quot;, sep = &quot;:&quot;, convert = TRUE)
+
+combined_all_snpgenes &lt;- bind_rows(control_all_snps, hypoxia_all_snps, hyperoxia_all_snps, .id = &quot;treatment&quot;) %&gt;% 
+  ungroup() %&gt;% 
+  distinct()
+
+rm(control_all_snps, hypoxia_all_snps, hyperoxia_all_snps)</code></pre>
+<p>Now, I go through all GTEx tissues, obtain significant eGenes and all
+corresponding eSNPs, then filter to the subset that correspond to our
+organoid results, and obtain a correlation.</p>
+<pre class="r"><code>gtex_names &lt;- list.files(path = &quot;/project/gilad/umans/references/gtex/GTEx_Analysis_v8_eQTL&quot;, pattern=&quot;*.v8.egenes.txt.gz&quot;)
+
+gtex_beta_correlation_all &lt;- list()
+gtex_beta_ngenes_all &lt;- numeric()
+gtex_beta_correlation_all_combined &lt;- numeric()
+
+for (Y in gtex_names){
+signif &lt;- read.table(file = paste0(&quot;/project/gilad/umans/references/gtex/GTEx_Analysis_v8_eQTL/&quot;, Y), header = TRUE, sep = &quot;\t&quot;, stringsAsFactors = FALSE) %&gt;% filter(qval&lt;0.05)
+
+pairs &lt;- read.table(file = paste0(&quot;/project/gilad/umans/references/gtex/GTEx_Analysis_v8_eQTL/&quot;, str_sub(Y, end=-14), &quot;signif_variant_gene_pairs.txt.gz&quot;), header = TRUE, sep = &quot;\t&quot;, stringsAsFactors = FALSE)
+
+joined &lt;- pairs %&gt;% 
+  select(variant_id, gene_id, slope, pval_nominal) %&gt;% 
+  left_join(x=., y=signif %&gt;% select(gene_id, gene_name), by=join_by( gene_id==gene_id), relationship=&quot;many-to-one&quot;) %&gt;% 
+  mutate(variant_id=str_sub(variant_id, start=4)) %&gt;% 
+  filter(str_detect(variant_id, &quot;X_&quot;, negate = TRUE)) %&gt;% #drop the X chromosome
+  separate(variant_id, into = c(&quot;chrom&quot;, &quot;position&quot;, &quot;ref&quot;), extra = &quot;drop&quot;, sep=&quot;_&quot;, convert = TRUE) 
+
+gtex_beta_correlation_all[[Y]] &lt;- inner_join(combined_all_snpgenes, joined, by=join_by(gene==gene_name, chrom==chrom, position==position), relationship=&quot;many-to-many&quot;) %&gt;% 
+  group_by(source, treatment, .drop=FALSE) %&gt;% 
+  summarize(correlation=cor(beta, slope))
+ 
+gtex_beta_ngenes_all[Y] &lt;- inner_join(combined_all_snpgenes, joined, by=join_by(gene==gene_name, chrom==chrom, position==position), relationship=&quot;many-to-many&quot;) %&gt;% 
+  group_by(source, treatment, .drop=FALSE) %&gt;% 
+  summarize(n()) 
+
+gtex_beta_correlation_all_combined[Y] &lt;- inner_join(combined_all_snpgenes, joined, by=join_by(gene==gene_name, chrom==chrom, position==position), relationship=&quot;many-to-many&quot;) %&gt;% 
+  select(!source) %&gt;% select(!lfsr) %&gt;% 
+  distinct() %&gt;% 
+  summarize(correlation=cor(beta, slope))
+
+print(Y)
+rm(signif, pairs, joined)
+}</code></pre>
 <pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.
+`summarise()` has grouped output by &#39;source&#39;. You can override using the
 `.groups` argument.</code></pre>
-<p><img src="figure/figure3.Rmd/unnamed-chunk-42-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-42-1">
-Past versions of unnamed-chunk-42-1.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-42-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/bumans/organoid_oxygen_eqtl/blob/f3578711cc3b3a960a456417cbbfe5965c05a55a/docs/figure/figure3.Rmd/unnamed-chunk-42-1.png" target="_blank">f357871</a>
-</td>
-<td>
-Ben Umans
-</td>
-<td>
-2025-02-24
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/bumans/organoid_oxygen_eqtl/blob/f0eaf05032fddf90549dcb3c3274e965ceb16048/docs/figure/figure3.Rmd/unnamed-chunk-42-1.png" target="_blank">f0eaf05</a>
-</td>
-<td>
-Ben Umans
-</td>
-<td>
-2024-09-05
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<p>Our hypothesis is that the the dynamic effects that emerge under
-treatment should be less represented in GTEx, compared to effects that
-are evident at baseline, as GTEx does not (explicitly) assess gene
-expression under different environmental perturbations (although
-post-mortem brain tissue may experience some amount of hypoxia and/or
-hyperoxia during sample collection). While not testing for sharing of
-regulatory sites or effects here, we can ask whether these dynamic
-eGenes are less likely to be present in GTEx compared to the dynamic
-eGenes present at baseline.</p>
-<pre class="r"><code>mash_by_condition_output_coarse %&gt;% 
-  filter(sig_anywhere) %&gt;% 
-  mutate(class=case_when(control10_lfsr &lt; 0.1 &amp; allsharing ~ &quot;class1&quot;,
-                         control10_lfsr &lt; 0.1 &amp;  !allsharing ~ &quot;class2&quot;,
-                         sig_anywhere &amp; control10_lfsr &gt; 0.1 &amp; !allsharing ~ &quot;class3&quot;,
-                         sig_anywhere &amp; allsharing ~ &quot;class4&quot;)) %&gt;%  #because of the order of assignment, this does not include &quot;class1&quot; egenes, ie those that are detectable under normoxia.  equivalent to `allsharing &amp; control10_lfsr &gt; 0.1 &amp; (stim1pct_lfsr &lt; 0.1 | stim21pct_lfsr &lt; 0.1) ~ &quot;class4&quot;`
-  group_by(source, class) %&gt;% 
-  summarise(egene_gtex = sum(gene %in% gtex_cortex_signif),
-            egene_in_gtex_fraction = round((sum(gene %in% gtex_cortex_signif))/n(), 4)) %&gt;% 
-  ggplot(aes(x=factor(class, levels = c(&quot;class1&quot;, &quot;class4&quot;, &quot;class2&quot;, &quot;class3&quot;)), y=egene_in_gtex_fraction)) + 
-  geom_boxplot(outlier.shape = NA, aes(color=class), linewidth=0.4) + 
-  geom_point(aes(group=source, color=source), position = position_jitter(width = 0.2, height = 0), size=0.5) + 
-  xlab(&quot;eGene class (see note)&quot;) + 
-  ylab(&quot;Fraction of eGenes in GTEx&quot;) + 
-  theme_light() +  
-  scale_color_manual(values=c(manual_palette_coarse, class_colors)) + theme(legend.position=&quot;none&quot;) </code></pre>
+<pre><code>Warning in gtex_beta_ngenes_all[Y] &lt;- inner_join(combined_all_snpgenes, :
+number of items to replace is not a multiple of replacement length</code></pre>
+<pre><code>[1] &quot;Adipose_Subcutaneous.v8.egenes.txt.gz&quot;</code></pre>
 <pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.
+`summarise()` has grouped output by &#39;source&#39;. You can override using the
 `.groups` argument.</code></pre>
+<pre><code>Warning in gtex_beta_ngenes_all[Y] &lt;- inner_join(combined_all_snpgenes, :
+number of items to replace is not a multiple of replacement length</code></pre>
+<pre><code>[1] &quot;Adipose_Visceral_Omentum.v8.egenes.txt.gz&quot;</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.
+`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<pre><code>Warning in gtex_beta_ngenes_all[Y] &lt;- inner_join(combined_all_snpgenes, :
+number of items to replace is not a multiple of replacement length</code></pre>
+<pre><code>[1] &quot;Adrenal_Gland.v8.egenes.txt.gz&quot;</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.
+`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<pre><code>Warning in gtex_beta_ngenes_all[Y] &lt;- inner_join(combined_all_snpgenes, :
+number of items to replace is not a multiple of replacement length</code></pre>
+<pre><code>[1] &quot;Artery_Aorta.v8.egenes.txt.gz&quot;</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.
+`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<pre><code>Warning in gtex_beta_ngenes_all[Y] &lt;- inner_join(combined_all_snpgenes, :
+number of items to replace is not a multiple of replacement length</code></pre>
+<pre><code>[1] &quot;Artery_Coronary.v8.egenes.txt.gz&quot;</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.
+`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<pre><code>Warning in gtex_beta_ngenes_all[Y] &lt;- inner_join(combined_all_snpgenes, :
+number of items to replace is not a multiple of replacement length</code></pre>
+<pre><code>[1] &quot;Artery_Tibial.v8.egenes.txt.gz&quot;</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.
+`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<pre><code>Warning in gtex_beta_ngenes_all[Y] &lt;- inner_join(combined_all_snpgenes, :
+number of items to replace is not a multiple of replacement length</code></pre>
+<pre><code>[1] &quot;Brain_Amygdala.v8.egenes.txt.gz&quot;</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.
+`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<pre><code>Warning in gtex_beta_ngenes_all[Y] &lt;- inner_join(combined_all_snpgenes, :
+number of items to replace is not a multiple of replacement length</code></pre>
+<pre><code>[1] &quot;Brain_Anterior_cingulate_cortex_BA24.v8.egenes.txt.gz&quot;</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.
+`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<pre><code>Warning in gtex_beta_ngenes_all[Y] &lt;- inner_join(combined_all_snpgenes, :
+number of items to replace is not a multiple of replacement length</code></pre>
+<pre><code>[1] &quot;Brain_Caudate_basal_ganglia.v8.egenes.txt.gz&quot;</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.
+`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<pre><code>Warning in gtex_beta_ngenes_all[Y] &lt;- inner_join(combined_all_snpgenes, :
+number of items to replace is not a multiple of replacement length</code></pre>
+<pre><code>[1] &quot;Brain_Cerebellar_Hemisphere.v8.egenes.txt.gz&quot;</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.
+`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<pre><code>Warning in gtex_beta_ngenes_all[Y] &lt;- inner_join(combined_all_snpgenes, :
+number of items to replace is not a multiple of replacement length</code></pre>
+<pre><code>[1] &quot;Brain_Cerebellum.v8.egenes.txt.gz&quot;</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.
+`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<pre><code>Warning in gtex_beta_ngenes_all[Y] &lt;- inner_join(combined_all_snpgenes, :
+number of items to replace is not a multiple of replacement length</code></pre>
+<pre><code>[1] &quot;Brain_Cortex.v8.egenes.txt.gz&quot;</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.
+`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<pre><code>Warning in gtex_beta_ngenes_all[Y] &lt;- inner_join(combined_all_snpgenes, :
+number of items to replace is not a multiple of replacement length</code></pre>
+<pre><code>[1] &quot;Brain_Frontal_Cortex_BA9.v8.egenes.txt.gz&quot;</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.
+`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<pre><code>Warning in gtex_beta_ngenes_all[Y] &lt;- inner_join(combined_all_snpgenes, :
+number of items to replace is not a multiple of replacement length</code></pre>
+<pre><code>[1] &quot;Brain_Hippocampus.v8.egenes.txt.gz&quot;</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.
+`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<pre><code>Warning in gtex_beta_ngenes_all[Y] &lt;- inner_join(combined_all_snpgenes, :
+number of items to replace is not a multiple of replacement length</code></pre>
+<pre><code>[1] &quot;Brain_Hypothalamus.v8.egenes.txt.gz&quot;</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.
+`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<pre><code>Warning in gtex_beta_ngenes_all[Y] &lt;- inner_join(combined_all_snpgenes, :
+number of items to replace is not a multiple of replacement length</code></pre>
+<pre><code>[1] &quot;Brain_Nucleus_accumbens_basal_ganglia.v8.egenes.txt.gz&quot;</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.
+`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<pre><code>Warning in gtex_beta_ngenes_all[Y] &lt;- inner_join(combined_all_snpgenes, :
+number of items to replace is not a multiple of replacement length</code></pre>
+<pre><code>[1] &quot;Brain_Putamen_basal_ganglia.v8.egenes.txt.gz&quot;</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.
+`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<pre><code>Warning in gtex_beta_ngenes_all[Y] &lt;- inner_join(combined_all_snpgenes, :
+number of items to replace is not a multiple of replacement length</code></pre>
+<pre><code>[1] &quot;Brain_Spinal_cord_cervical_c-1.v8.egenes.txt.gz&quot;</code></pre>
+<pre><code>Warning: There were 2 warnings in `summarize()`.
+The first warning was:
+ℹ In argument: `correlation = cor(beta, slope)`.
+ℹ In group 26: `source = &quot;InhGNRH&quot;`, `treatment = &quot;2&quot;`.
+Caused by warning in `cor()`:
+! the standard deviation is zero
+ℹ Run `dplyr::last_dplyr_warnings()` to see the 1 remaining warning.</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.
+`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<pre><code>Warning in gtex_beta_ngenes_all[Y] &lt;- inner_join(combined_all_snpgenes, :
+number of items to replace is not a multiple of replacement length</code></pre>
+<pre><code>[1] &quot;Brain_Substantia_nigra.v8.egenes.txt.gz&quot;</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.
+`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<pre><code>Warning in gtex_beta_ngenes_all[Y] &lt;- inner_join(combined_all_snpgenes, :
+number of items to replace is not a multiple of replacement length</code></pre>
+<pre><code>[1] &quot;Breast_Mammary_Tissue.v8.egenes.txt.gz&quot;</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.
+`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<pre><code>Warning in gtex_beta_ngenes_all[Y] &lt;- inner_join(combined_all_snpgenes, :
+number of items to replace is not a multiple of replacement length</code></pre>
+<pre><code>[1] &quot;Cells_Cultured_fibroblasts.v8.egenes.txt.gz&quot;</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.
+`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<pre><code>Warning in gtex_beta_ngenes_all[Y] &lt;- inner_join(combined_all_snpgenes, :
+number of items to replace is not a multiple of replacement length</code></pre>
+<pre><code>[1] &quot;Cells_EBV-transformed_lymphocytes.v8.egenes.txt.gz&quot;</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.
+`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<pre><code>Warning in gtex_beta_ngenes_all[Y] &lt;- inner_join(combined_all_snpgenes, :
+number of items to replace is not a multiple of replacement length</code></pre>
+<pre><code>[1] &quot;Colon_Sigmoid.v8.egenes.txt.gz&quot;</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.
+`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<pre><code>Warning in gtex_beta_ngenes_all[Y] &lt;- inner_join(combined_all_snpgenes, :
+number of items to replace is not a multiple of replacement length</code></pre>
+<pre><code>[1] &quot;Colon_Transverse.v8.egenes.txt.gz&quot;</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.
+`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<pre><code>Warning in gtex_beta_ngenes_all[Y] &lt;- inner_join(combined_all_snpgenes, :
+number of items to replace is not a multiple of replacement length</code></pre>
+<pre><code>[1] &quot;Esophagus_Gastroesophageal_Junction.v8.egenes.txt.gz&quot;</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.
+`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<pre><code>Warning in gtex_beta_ngenes_all[Y] &lt;- inner_join(combined_all_snpgenes, :
+number of items to replace is not a multiple of replacement length</code></pre>
+<pre><code>[1] &quot;Esophagus_Mucosa.v8.egenes.txt.gz&quot;</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.
+`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<pre><code>Warning in gtex_beta_ngenes_all[Y] &lt;- inner_join(combined_all_snpgenes, :
+number of items to replace is not a multiple of replacement length</code></pre>
+<pre><code>[1] &quot;Esophagus_Muscularis.v8.egenes.txt.gz&quot;</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.
+`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<pre><code>Warning in gtex_beta_ngenes_all[Y] &lt;- inner_join(combined_all_snpgenes, :
+number of items to replace is not a multiple of replacement length</code></pre>
+<pre><code>[1] &quot;Heart_Atrial_Appendage.v8.egenes.txt.gz&quot;</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.
+`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<pre><code>Warning in gtex_beta_ngenes_all[Y] &lt;- inner_join(combined_all_snpgenes, :
+number of items to replace is not a multiple of replacement length</code></pre>
+<pre><code>[1] &quot;Heart_Left_Ventricle.v8.egenes.txt.gz&quot;</code></pre>
+<pre><code>Warning: There were 3 warnings in `summarize()`.
+The first warning was:
+ℹ In argument: `correlation = cor(beta, slope)`.
+ℹ In group 11: `source = &quot;GlutNTS&quot;`, `treatment = &quot;3&quot;`.
+Caused by warning in `cor()`:
+! the standard deviation is zero
+ℹ Run `dplyr::last_dplyr_warnings()` to see the 2 remaining warnings.</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.
+`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<pre><code>Warning in gtex_beta_ngenes_all[Y] &lt;- inner_join(combined_all_snpgenes, :
+number of items to replace is not a multiple of replacement length</code></pre>
+<pre><code>[1] &quot;Kidney_Cortex.v8.egenes.txt.gz&quot;</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.
+`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<pre><code>Warning in gtex_beta_ngenes_all[Y] &lt;- inner_join(combined_all_snpgenes, :
+number of items to replace is not a multiple of replacement length</code></pre>
+<pre><code>[1] &quot;Liver.v8.egenes.txt.gz&quot;</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.
+`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<pre><code>Warning in gtex_beta_ngenes_all[Y] &lt;- inner_join(combined_all_snpgenes, :
+number of items to replace is not a multiple of replacement length</code></pre>
+<pre><code>[1] &quot;Lung.v8.egenes.txt.gz&quot;</code></pre>
+<pre><code>Warning: There was 1 warning in `summarize()`.
+ℹ In argument: `correlation = cor(beta, slope)`.
+ℹ In group 25: `source = &quot;InhGNRH&quot;`, `treatment = &quot;1&quot;`.
+Caused by warning in `cor()`:
+! the standard deviation is zero</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.
+`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<pre><code>Warning in gtex_beta_ngenes_all[Y] &lt;- inner_join(combined_all_snpgenes, :
+number of items to replace is not a multiple of replacement length</code></pre>
+<pre><code>[1] &quot;Minor_Salivary_Gland.v8.egenes.txt.gz&quot;</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.
+`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<pre><code>Warning in gtex_beta_ngenes_all[Y] &lt;- inner_join(combined_all_snpgenes, :
+number of items to replace is not a multiple of replacement length</code></pre>
+<pre><code>[1] &quot;Muscle_Skeletal.v8.egenes.txt.gz&quot;</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.
+`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<pre><code>Warning in gtex_beta_ngenes_all[Y] &lt;- inner_join(combined_all_snpgenes, :
+number of items to replace is not a multiple of replacement length</code></pre>
+<pre><code>[1] &quot;Nerve_Tibial.v8.egenes.txt.gz&quot;</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.
+`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<pre><code>Warning in gtex_beta_ngenes_all[Y] &lt;- inner_join(combined_all_snpgenes, :
+number of items to replace is not a multiple of replacement length</code></pre>
+<pre><code>[1] &quot;Ovary.v8.egenes.txt.gz&quot;</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.
+`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<pre><code>Warning in gtex_beta_ngenes_all[Y] &lt;- inner_join(combined_all_snpgenes, :
+number of items to replace is not a multiple of replacement length</code></pre>
+<pre><code>[1] &quot;Pancreas.v8.egenes.txt.gz&quot;</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.
+`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<pre><code>Warning in gtex_beta_ngenes_all[Y] &lt;- inner_join(combined_all_snpgenes, :
+number of items to replace is not a multiple of replacement length</code></pre>
+<pre><code>[1] &quot;Pituitary.v8.egenes.txt.gz&quot;</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.
+`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<pre><code>Warning in gtex_beta_ngenes_all[Y] &lt;- inner_join(combined_all_snpgenes, :
+number of items to replace is not a multiple of replacement length</code></pre>
+<pre><code>[1] &quot;Prostate.v8.egenes.txt.gz&quot;</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.
+`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<pre><code>Warning in gtex_beta_ngenes_all[Y] &lt;- inner_join(combined_all_snpgenes, :
+number of items to replace is not a multiple of replacement length</code></pre>
+<pre><code>[1] &quot;Skin_Not_Sun_Exposed_Suprapubic.v8.egenes.txt.gz&quot;</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.
+`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<pre><code>Warning in gtex_beta_ngenes_all[Y] &lt;- inner_join(combined_all_snpgenes, :
+number of items to replace is not a multiple of replacement length</code></pre>
+<pre><code>[1] &quot;Skin_Sun_Exposed_Lower_leg.v8.egenes.txt.gz&quot;</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.
+`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<pre><code>Warning in gtex_beta_ngenes_all[Y] &lt;- inner_join(combined_all_snpgenes, :
+number of items to replace is not a multiple of replacement length</code></pre>
+<pre><code>[1] &quot;Small_Intestine_Terminal_Ileum.v8.egenes.txt.gz&quot;</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.
+`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<pre><code>Warning in gtex_beta_ngenes_all[Y] &lt;- inner_join(combined_all_snpgenes, :
+number of items to replace is not a multiple of replacement length</code></pre>
+<pre><code>[1] &quot;Spleen.v8.egenes.txt.gz&quot;</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.
+`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<pre><code>Warning in gtex_beta_ngenes_all[Y] &lt;- inner_join(combined_all_snpgenes, :
+number of items to replace is not a multiple of replacement length</code></pre>
+<pre><code>[1] &quot;Stomach.v8.egenes.txt.gz&quot;</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.
+`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<pre><code>Warning in gtex_beta_ngenes_all[Y] &lt;- inner_join(combined_all_snpgenes, :
+number of items to replace is not a multiple of replacement length</code></pre>
+<pre><code>[1] &quot;Testis.v8.egenes.txt.gz&quot;</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.
+`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<pre><code>Warning in gtex_beta_ngenes_all[Y] &lt;- inner_join(combined_all_snpgenes, :
+number of items to replace is not a multiple of replacement length</code></pre>
+<pre><code>[1] &quot;Thyroid.v8.egenes.txt.gz&quot;</code></pre>
+<pre><code>Warning: There was 1 warning in `summarize()`.
+ℹ In argument: `correlation = cor(beta, slope)`.
+ℹ In group 25: `source = &quot;InhGNRH&quot;`, `treatment = &quot;1&quot;`.
+Caused by warning in `cor()`:
+! the standard deviation is zero</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.
+`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<pre><code>Warning in gtex_beta_ngenes_all[Y] &lt;- inner_join(combined_all_snpgenes, :
+number of items to replace is not a multiple of replacement length</code></pre>
+<pre><code>[1] &quot;Uterus.v8.egenes.txt.gz&quot;</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.
+`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<pre><code>Warning in gtex_beta_ngenes_all[Y] &lt;- inner_join(combined_all_snpgenes, :
+number of items to replace is not a multiple of replacement length</code></pre>
+<pre><code>[1] &quot;Vagina.v8.egenes.txt.gz&quot;</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.
+`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<pre><code>Warning in gtex_beta_ngenes_all[Y] &lt;- inner_join(combined_all_snpgenes, :
+number of items to replace is not a multiple of replacement length</code></pre>
+<pre><code>[1] &quot;Whole_Blood.v8.egenes.txt.gz&quot;</code></pre>
+<pre class="r"><code>gtex_beta_correlation_all %&gt;%  bind_rows(.id = &quot;tissue&quot;) %&gt;% mutate(tissue=str_sub(tissue, end = -18)) %&gt;% 
+  filter(treatment==1) %&gt;% 
+   ggplot(aes(x=source, y=tissue, fill=correlation)) + 
+   geom_tile() + scale_fill_viridis(discrete=FALSE, limits = c(-1, 1)) + ggtitle(&quot;Significant in control&quot;) + guides(x =  guide_axis(angle = 45))</code></pre>
 <p><img src="figure/figure3.Rmd/unnamed-chunk-43-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-43-1">
@@ -2236,6 +2657,854 @@ Ben Umans
 <tr>
 <td>
 <a href="https://github.com/bumans/organoid_oxygen_eqtl/blob/f0eaf05032fddf90549dcb3c3274e965ceb16048/docs/figure/figure3.Rmd/unnamed-chunk-43-1.png" target="_blank">f0eaf05</a>
+</td>
+<td>
+Ben Umans
+</td>
+<td>
+2024-09-05
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code>gtex_beta_correlation_all %&gt;%  bind_rows(.id = &quot;tissue&quot;) %&gt;% mutate(tissue=str_sub(tissue, end = -18)) %&gt;% 
+  filter(treatment==2) %&gt;% 
+   ggplot(aes(x=source, y=tissue, fill=correlation)) + 
+   geom_tile() + scale_fill_viridis(discrete=FALSE, limits = c(-1, 1)) + ggtitle(&quot;Significant in hypoxia&quot;) + guides(x =  guide_axis(angle = 45))</code></pre>
+<p><img src="figure/figure3.Rmd/unnamed-chunk-43-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>gtex_beta_correlation_all %&gt;%  bind_rows(.id = &quot;tissue&quot;) %&gt;% mutate(tissue=str_sub(tissue, end = -18)) %&gt;% 
+  filter(treatment==3) %&gt;% 
+   ggplot(aes(x=source, y=tissue, fill=correlation)) + 
+   geom_tile() + scale_fill_viridis(discrete=FALSE, limits = c(-1, 1)) + ggtitle(&quot;Significant in hyperoxia&quot;) + guides(x =  guide_axis(angle = 45))</code></pre>
+<p><img src="figure/figure3.Rmd/unnamed-chunk-43-3.png" width="672" style="display: block; margin: auto;" />
+The actual numbers here are:</p>
+<pre class="r"><code>gtex_beta_correlation_all_combined </code></pre>
+<pre><code>$Adipose_Subcutaneous.v8.egenes.txt.gz
+[1] 0.3990559
+
+$Adipose_Visceral_Omentum.v8.egenes.txt.gz
+[1] 0.5450481
+
+$Adrenal_Gland.v8.egenes.txt.gz
+[1] 0.5746033
+
+$Artery_Aorta.v8.egenes.txt.gz
+[1] 0.392625
+
+$Artery_Coronary.v8.egenes.txt.gz
+[1] 0.6257047
+
+$Artery_Tibial.v8.egenes.txt.gz
+[1] 0.4568482
+
+$Brain_Amygdala.v8.egenes.txt.gz
+[1] 0.5023542
+
+$Brain_Anterior_cingulate_cortex_BA24.v8.egenes.txt.gz
+[1] 0.5774967
+
+$Brain_Caudate_basal_ganglia.v8.egenes.txt.gz
+[1] 0.5683777
+
+$Brain_Cerebellar_Hemisphere.v8.egenes.txt.gz
+[1] 0.60424
+
+$Brain_Cerebellum.v8.egenes.txt.gz
+[1] 0.6105223
+
+$Brain_Cortex.v8.egenes.txt.gz
+[1] 0.5772053
+
+$Brain_Frontal_Cortex_BA9.v8.egenes.txt.gz
+[1] 0.6008969
+
+$Brain_Hippocampus.v8.egenes.txt.gz
+[1] 0.5486654
+
+$Brain_Hypothalamus.v8.egenes.txt.gz
+[1] 0.58624
+
+$Brain_Nucleus_accumbens_basal_ganglia.v8.egenes.txt.gz
+[1] 0.5921205
+
+$Brain_Putamen_basal_ganglia.v8.egenes.txt.gz
+[1] 0.5985901
+
+$`Brain_Spinal_cord_cervical_c-1.v8.egenes.txt.gz`
+[1] 0.5489082
+
+$Brain_Substantia_nigra.v8.egenes.txt.gz
+[1] 0.5810231
+
+$Breast_Mammary_Tissue.v8.egenes.txt.gz
+[1] 0.6063023
+
+$Cells_Cultured_fibroblasts.v8.egenes.txt.gz
+[1] 0.1949566
+
+$`Cells_EBV-transformed_lymphocytes.v8.egenes.txt.gz`
+[1] 0.8133432
+
+$Colon_Sigmoid.v8.egenes.txt.gz
+[1] 0.5612438
+
+$Colon_Transverse.v8.egenes.txt.gz
+[1] 0.5965302
+
+$Esophagus_Gastroesophageal_Junction.v8.egenes.txt.gz
+[1] 0.5449756
+
+$Esophagus_Mucosa.v8.egenes.txt.gz
+[1] 0.3540216
+
+$Esophagus_Muscularis.v8.egenes.txt.gz
+[1] 0.5316953
+
+$Heart_Atrial_Appendage.v8.egenes.txt.gz
+[1] 0.561822
+
+$Heart_Left_Ventricle.v8.egenes.txt.gz
+[1] 0.3360566
+
+$Kidney_Cortex.v8.egenes.txt.gz
+[1] 0.4139731
+
+$Liver.v8.egenes.txt.gz
+[1] 0.4708509
+
+$Lung.v8.egenes.txt.gz
+[1] 0.5531796
+
+$Minor_Salivary_Gland.v8.egenes.txt.gz
+[1] 0.6656595
+
+$Muscle_Skeletal.v8.egenes.txt.gz
+[1] 0.4703824
+
+$Nerve_Tibial.v8.egenes.txt.gz
+[1] 0.5247274
+
+$Ovary.v8.egenes.txt.gz
+[1] 0.5932552
+
+$Pancreas.v8.egenes.txt.gz
+[1] 0.5765865
+
+$Pituitary.v8.egenes.txt.gz
+[1] 0.6220919
+
+$Prostate.v8.egenes.txt.gz
+[1] 0.5550918
+
+$Skin_Not_Sun_Exposed_Suprapubic.v8.egenes.txt.gz
+[1] 0.5375844
+
+$Skin_Sun_Exposed_Lower_leg.v8.egenes.txt.gz
+[1] 0.5276979
+
+$Small_Intestine_Terminal_Ileum.v8.egenes.txt.gz
+[1] 0.6090839
+
+$Spleen.v8.egenes.txt.gz
+[1] 0.5484934
+
+$Stomach.v8.egenes.txt.gz
+[1] 0.613231
+
+$Testis.v8.egenes.txt.gz
+[1] 0.4697669
+
+$Thyroid.v8.egenes.txt.gz
+[1] 0.5051611
+
+$Uterus.v8.egenes.txt.gz
+[1] 0.6052053
+
+$Vagina.v8.egenes.txt.gz
+[1] 0.6569809
+
+$Whole_Blood.v8.egenes.txt.gz
+[1] 0.6217828</code></pre>
+<p>And these are based on a reasonable number of genes:</p>
+<pre class="r"><code>gtex_beta_ngenes_all </code></pre>
+<pre><code>$Adipose_Subcutaneous.v8.egenes.txt.gz
+ [1] &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;GliaProg&quot;    &quot;GliaProg&quot;   
+ [6] &quot;GliaProg&quot;    &quot;Glut&quot;        &quot;Glut&quot;        &quot;Glut&quot;        &quot;GlutNTS&quot;    
+[11] &quot;GlutNTS&quot;     &quot;GlutNTS&quot;     &quot;IP&quot;          &quot;IP&quot;          &quot;IP&quot;         
+[16] &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;Immature&quot;    &quot;Immature&quot;   
+[21] &quot;Immature&quot;    &quot;Inh&quot;         &quot;Inh&quot;         &quot;Inh&quot;         &quot;InhGNRH&quot;    
+[26] &quot;InhGNRH&quot;     &quot;InhGNRH&quot;     &quot;InhThalamic&quot; &quot;InhThalamic&quot; &quot;InhThalamic&quot;
+[31] &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;RG&quot;          &quot;RG&quot;         
+[36] &quot;RG&quot;          &quot;RGcycling&quot;   &quot;RGcycling&quot;   &quot;RGcycling&quot;  
+
+$Adipose_Visceral_Omentum.v8.egenes.txt.gz
+ [1] &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;GliaProg&quot;    &quot;GliaProg&quot;   
+ [6] &quot;GliaProg&quot;    &quot;Glut&quot;        &quot;Glut&quot;        &quot;Glut&quot;        &quot;GlutNTS&quot;    
+[11] &quot;GlutNTS&quot;     &quot;GlutNTS&quot;     &quot;IP&quot;          &quot;IP&quot;          &quot;IP&quot;         
+[16] &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;Immature&quot;    &quot;Immature&quot;   
+[21] &quot;Immature&quot;    &quot;Inh&quot;         &quot;Inh&quot;         &quot;Inh&quot;         &quot;InhGNRH&quot;    
+[26] &quot;InhGNRH&quot;     &quot;InhGNRH&quot;     &quot;InhThalamic&quot; &quot;InhThalamic&quot; &quot;InhThalamic&quot;
+[31] &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;RG&quot;          &quot;RG&quot;         
+[36] &quot;RG&quot;          &quot;RGcycling&quot;   &quot;RGcycling&quot;   &quot;RGcycling&quot;  
+
+$Adrenal_Gland.v8.egenes.txt.gz
+ [1] &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;GliaProg&quot;    &quot;GliaProg&quot;   
+ [6] &quot;GliaProg&quot;    &quot;Glut&quot;        &quot;Glut&quot;        &quot;Glut&quot;        &quot;GlutNTS&quot;    
+[11] &quot;GlutNTS&quot;     &quot;GlutNTS&quot;     &quot;IP&quot;          &quot;IP&quot;          &quot;IP&quot;         
+[16] &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;Immature&quot;    &quot;Immature&quot;   
+[21] &quot;Immature&quot;    &quot;Inh&quot;         &quot;Inh&quot;         &quot;Inh&quot;         &quot;InhGNRH&quot;    
+[26] &quot;InhGNRH&quot;     &quot;InhGNRH&quot;     &quot;InhThalamic&quot; &quot;InhThalamic&quot; &quot;InhThalamic&quot;
+[31] &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;RG&quot;          &quot;RG&quot;         
+[36] &quot;RG&quot;          &quot;RGcycling&quot;   &quot;RGcycling&quot;   &quot;RGcycling&quot;  
+
+$Artery_Aorta.v8.egenes.txt.gz
+ [1] &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;GliaProg&quot;    &quot;GliaProg&quot;   
+ [6] &quot;GliaProg&quot;    &quot;Glut&quot;        &quot;Glut&quot;        &quot;Glut&quot;        &quot;GlutNTS&quot;    
+[11] &quot;GlutNTS&quot;     &quot;GlutNTS&quot;     &quot;IP&quot;          &quot;IP&quot;          &quot;IP&quot;         
+[16] &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;Immature&quot;    &quot;Immature&quot;   
+[21] &quot;Immature&quot;    &quot;Inh&quot;         &quot;Inh&quot;         &quot;Inh&quot;         &quot;InhGNRH&quot;    
+[26] &quot;InhGNRH&quot;     &quot;InhGNRH&quot;     &quot;InhThalamic&quot; &quot;InhThalamic&quot; &quot;InhThalamic&quot;
+[31] &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;RG&quot;          &quot;RG&quot;         
+[36] &quot;RG&quot;          &quot;RGcycling&quot;   &quot;RGcycling&quot;   &quot;RGcycling&quot;  
+
+$Artery_Coronary.v8.egenes.txt.gz
+ [1] &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;GliaProg&quot;    &quot;GliaProg&quot;   
+ [6] &quot;GliaProg&quot;    &quot;Glut&quot;        &quot;Glut&quot;        &quot;Glut&quot;        &quot;GlutNTS&quot;    
+[11] &quot;GlutNTS&quot;     &quot;GlutNTS&quot;     &quot;IP&quot;          &quot;IP&quot;          &quot;IP&quot;         
+[16] &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;Immature&quot;    &quot;Immature&quot;   
+[21] &quot;Immature&quot;    &quot;Inh&quot;         &quot;Inh&quot;         &quot;Inh&quot;         &quot;InhGNRH&quot;    
+[26] &quot;InhGNRH&quot;     &quot;InhGNRH&quot;     &quot;InhThalamic&quot; &quot;InhThalamic&quot; &quot;InhThalamic&quot;
+[31] &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;RG&quot;          &quot;RG&quot;         
+[36] &quot;RG&quot;          &quot;RGcycling&quot;   &quot;RGcycling&quot;   &quot;RGcycling&quot;  
+
+$Artery_Tibial.v8.egenes.txt.gz
+ [1] &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;GliaProg&quot;    &quot;GliaProg&quot;   
+ [6] &quot;GliaProg&quot;    &quot;Glut&quot;        &quot;Glut&quot;        &quot;Glut&quot;        &quot;GlutNTS&quot;    
+[11] &quot;GlutNTS&quot;     &quot;GlutNTS&quot;     &quot;IP&quot;          &quot;IP&quot;          &quot;IP&quot;         
+[16] &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;Immature&quot;    &quot;Immature&quot;   
+[21] &quot;Immature&quot;    &quot;Inh&quot;         &quot;Inh&quot;         &quot;Inh&quot;         &quot;InhGNRH&quot;    
+[26] &quot;InhGNRH&quot;     &quot;InhGNRH&quot;     &quot;InhThalamic&quot; &quot;InhThalamic&quot; &quot;InhThalamic&quot;
+[31] &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;RG&quot;          &quot;RG&quot;         
+[36] &quot;RG&quot;          &quot;RGcycling&quot;   &quot;RGcycling&quot;   &quot;RGcycling&quot;  
+
+$Brain_Amygdala.v8.egenes.txt.gz
+ [1] &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;GliaProg&quot;    &quot;GliaProg&quot;   
+ [6] &quot;GliaProg&quot;    &quot;Glut&quot;        &quot;Glut&quot;        &quot;Glut&quot;        &quot;GlutNTS&quot;    
+[11] &quot;GlutNTS&quot;     &quot;GlutNTS&quot;     &quot;IP&quot;          &quot;IP&quot;          &quot;IP&quot;         
+[16] &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;Immature&quot;    &quot;Immature&quot;   
+[21] &quot;Immature&quot;    &quot;Inh&quot;         &quot;Inh&quot;         &quot;Inh&quot;         &quot;InhGNRH&quot;    
+[26] &quot;InhGNRH&quot;     &quot;InhGNRH&quot;     &quot;InhThalamic&quot; &quot;InhThalamic&quot; &quot;InhThalamic&quot;
+[31] &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;RG&quot;          &quot;RG&quot;         
+[36] &quot;RG&quot;          &quot;RGcycling&quot;   &quot;RGcycling&quot;   &quot;RGcycling&quot;  
+
+$Brain_Anterior_cingulate_cortex_BA24.v8.egenes.txt.gz
+ [1] &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;GliaProg&quot;    &quot;GliaProg&quot;   
+ [6] &quot;GliaProg&quot;    &quot;Glut&quot;        &quot;Glut&quot;        &quot;Glut&quot;        &quot;GlutNTS&quot;    
+[11] &quot;GlutNTS&quot;     &quot;GlutNTS&quot;     &quot;IP&quot;          &quot;IP&quot;          &quot;IP&quot;         
+[16] &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;Immature&quot;    &quot;Immature&quot;   
+[21] &quot;Immature&quot;    &quot;Inh&quot;         &quot;Inh&quot;         &quot;Inh&quot;         &quot;InhGNRH&quot;    
+[26] &quot;InhGNRH&quot;     &quot;InhGNRH&quot;     &quot;InhThalamic&quot; &quot;InhThalamic&quot; &quot;InhThalamic&quot;
+[31] &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;RG&quot;          &quot;RG&quot;         
+[36] &quot;RG&quot;          &quot;RGcycling&quot;   &quot;RGcycling&quot;   &quot;RGcycling&quot;  
+
+$Brain_Caudate_basal_ganglia.v8.egenes.txt.gz
+ [1] &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;GliaProg&quot;    &quot;GliaProg&quot;   
+ [6] &quot;GliaProg&quot;    &quot;Glut&quot;        &quot;Glut&quot;        &quot;Glut&quot;        &quot;GlutNTS&quot;    
+[11] &quot;GlutNTS&quot;     &quot;GlutNTS&quot;     &quot;IP&quot;          &quot;IP&quot;          &quot;IP&quot;         
+[16] &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;Immature&quot;    &quot;Immature&quot;   
+[21] &quot;Immature&quot;    &quot;Inh&quot;         &quot;Inh&quot;         &quot;Inh&quot;         &quot;InhGNRH&quot;    
+[26] &quot;InhGNRH&quot;     &quot;InhGNRH&quot;     &quot;InhThalamic&quot; &quot;InhThalamic&quot; &quot;InhThalamic&quot;
+[31] &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;RG&quot;          &quot;RG&quot;         
+[36] &quot;RG&quot;          &quot;RGcycling&quot;   &quot;RGcycling&quot;   &quot;RGcycling&quot;  
+
+$Brain_Cerebellar_Hemisphere.v8.egenes.txt.gz
+ [1] &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;GliaProg&quot;    &quot;GliaProg&quot;   
+ [6] &quot;GliaProg&quot;    &quot;Glut&quot;        &quot;Glut&quot;        &quot;Glut&quot;        &quot;GlutNTS&quot;    
+[11] &quot;GlutNTS&quot;     &quot;GlutNTS&quot;     &quot;IP&quot;          &quot;IP&quot;          &quot;IP&quot;         
+[16] &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;Immature&quot;    &quot;Immature&quot;   
+[21] &quot;Immature&quot;    &quot;Inh&quot;         &quot;Inh&quot;         &quot;Inh&quot;         &quot;InhGNRH&quot;    
+[26] &quot;InhGNRH&quot;     &quot;InhGNRH&quot;     &quot;InhThalamic&quot; &quot;InhThalamic&quot; &quot;InhThalamic&quot;
+[31] &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;RG&quot;          &quot;RG&quot;         
+[36] &quot;RG&quot;          &quot;RGcycling&quot;   &quot;RGcycling&quot;   &quot;RGcycling&quot;  
+
+$Brain_Cerebellum.v8.egenes.txt.gz
+ [1] &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;GliaProg&quot;    &quot;GliaProg&quot;   
+ [6] &quot;GliaProg&quot;    &quot;Glut&quot;        &quot;Glut&quot;        &quot;Glut&quot;        &quot;GlutNTS&quot;    
+[11] &quot;GlutNTS&quot;     &quot;GlutNTS&quot;     &quot;IP&quot;          &quot;IP&quot;          &quot;IP&quot;         
+[16] &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;Immature&quot;    &quot;Immature&quot;   
+[21] &quot;Immature&quot;    &quot;Inh&quot;         &quot;Inh&quot;         &quot;Inh&quot;         &quot;InhGNRH&quot;    
+[26] &quot;InhGNRH&quot;     &quot;InhGNRH&quot;     &quot;InhThalamic&quot; &quot;InhThalamic&quot; &quot;InhThalamic&quot;
+[31] &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;RG&quot;          &quot;RG&quot;         
+[36] &quot;RG&quot;          &quot;RGcycling&quot;   &quot;RGcycling&quot;   &quot;RGcycling&quot;  
+
+$Brain_Cortex.v8.egenes.txt.gz
+ [1] &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;GliaProg&quot;    &quot;GliaProg&quot;   
+ [6] &quot;GliaProg&quot;    &quot;Glut&quot;        &quot;Glut&quot;        &quot;Glut&quot;        &quot;GlutNTS&quot;    
+[11] &quot;GlutNTS&quot;     &quot;GlutNTS&quot;     &quot;IP&quot;          &quot;IP&quot;          &quot;IP&quot;         
+[16] &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;Immature&quot;    &quot;Immature&quot;   
+[21] &quot;Immature&quot;    &quot;Inh&quot;         &quot;Inh&quot;         &quot;Inh&quot;         &quot;InhGNRH&quot;    
+[26] &quot;InhGNRH&quot;     &quot;InhGNRH&quot;     &quot;InhThalamic&quot; &quot;InhThalamic&quot; &quot;InhThalamic&quot;
+[31] &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;RG&quot;          &quot;RG&quot;         
+[36] &quot;RG&quot;          &quot;RGcycling&quot;   &quot;RGcycling&quot;   &quot;RGcycling&quot;  
+
+$Brain_Frontal_Cortex_BA9.v8.egenes.txt.gz
+ [1] &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;GliaProg&quot;    &quot;GliaProg&quot;   
+ [6] &quot;GliaProg&quot;    &quot;Glut&quot;        &quot;Glut&quot;        &quot;Glut&quot;        &quot;GlutNTS&quot;    
+[11] &quot;GlutNTS&quot;     &quot;GlutNTS&quot;     &quot;IP&quot;          &quot;IP&quot;          &quot;IP&quot;         
+[16] &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;Immature&quot;    &quot;Immature&quot;   
+[21] &quot;Immature&quot;    &quot;Inh&quot;         &quot;Inh&quot;         &quot;Inh&quot;         &quot;InhGNRH&quot;    
+[26] &quot;InhGNRH&quot;     &quot;InhGNRH&quot;     &quot;InhThalamic&quot; &quot;InhThalamic&quot; &quot;InhThalamic&quot;
+[31] &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;RG&quot;          &quot;RG&quot;         
+[36] &quot;RG&quot;          &quot;RGcycling&quot;   &quot;RGcycling&quot;   &quot;RGcycling&quot;  
+
+$Brain_Hippocampus.v8.egenes.txt.gz
+ [1] &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;GliaProg&quot;    &quot;GliaProg&quot;   
+ [6] &quot;GliaProg&quot;    &quot;Glut&quot;        &quot;Glut&quot;        &quot;Glut&quot;        &quot;GlutNTS&quot;    
+[11] &quot;GlutNTS&quot;     &quot;GlutNTS&quot;     &quot;IP&quot;          &quot;IP&quot;          &quot;IP&quot;         
+[16] &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;Immature&quot;    &quot;Immature&quot;   
+[21] &quot;Immature&quot;    &quot;Inh&quot;         &quot;Inh&quot;         &quot;Inh&quot;         &quot;InhGNRH&quot;    
+[26] &quot;InhGNRH&quot;     &quot;InhGNRH&quot;     &quot;InhThalamic&quot; &quot;InhThalamic&quot; &quot;InhThalamic&quot;
+[31] &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;RG&quot;          &quot;RG&quot;         
+[36] &quot;RG&quot;          &quot;RGcycling&quot;   &quot;RGcycling&quot;   &quot;RGcycling&quot;  
+
+$Brain_Hypothalamus.v8.egenes.txt.gz
+ [1] &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;GliaProg&quot;    &quot;GliaProg&quot;   
+ [6] &quot;GliaProg&quot;    &quot;Glut&quot;        &quot;Glut&quot;        &quot;Glut&quot;        &quot;GlutNTS&quot;    
+[11] &quot;GlutNTS&quot;     &quot;GlutNTS&quot;     &quot;IP&quot;          &quot;IP&quot;          &quot;IP&quot;         
+[16] &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;Immature&quot;    &quot;Immature&quot;   
+[21] &quot;Immature&quot;    &quot;Inh&quot;         &quot;Inh&quot;         &quot;Inh&quot;         &quot;InhGNRH&quot;    
+[26] &quot;InhGNRH&quot;     &quot;InhGNRH&quot;     &quot;InhThalamic&quot; &quot;InhThalamic&quot; &quot;InhThalamic&quot;
+[31] &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;RG&quot;          &quot;RG&quot;         
+[36] &quot;RG&quot;          &quot;RGcycling&quot;   &quot;RGcycling&quot;   &quot;RGcycling&quot;  
+
+$Brain_Nucleus_accumbens_basal_ganglia.v8.egenes.txt.gz
+ [1] &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;GliaProg&quot;    &quot;GliaProg&quot;   
+ [6] &quot;GliaProg&quot;    &quot;Glut&quot;        &quot;Glut&quot;        &quot;Glut&quot;        &quot;GlutNTS&quot;    
+[11] &quot;GlutNTS&quot;     &quot;GlutNTS&quot;     &quot;IP&quot;          &quot;IP&quot;          &quot;IP&quot;         
+[16] &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;Immature&quot;    &quot;Immature&quot;   
+[21] &quot;Immature&quot;    &quot;Inh&quot;         &quot;Inh&quot;         &quot;Inh&quot;         &quot;InhGNRH&quot;    
+[26] &quot;InhGNRH&quot;     &quot;InhGNRH&quot;     &quot;InhThalamic&quot; &quot;InhThalamic&quot; &quot;InhThalamic&quot;
+[31] &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;RG&quot;          &quot;RG&quot;         
+[36] &quot;RG&quot;          &quot;RGcycling&quot;   &quot;RGcycling&quot;   &quot;RGcycling&quot;  
+
+$Brain_Putamen_basal_ganglia.v8.egenes.txt.gz
+ [1] &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;GliaProg&quot;    &quot;GliaProg&quot;   
+ [6] &quot;GliaProg&quot;    &quot;Glut&quot;        &quot;Glut&quot;        &quot;Glut&quot;        &quot;GlutNTS&quot;    
+[11] &quot;GlutNTS&quot;     &quot;GlutNTS&quot;     &quot;IP&quot;          &quot;IP&quot;          &quot;IP&quot;         
+[16] &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;Immature&quot;    &quot;Immature&quot;   
+[21] &quot;Immature&quot;    &quot;Inh&quot;         &quot;Inh&quot;         &quot;Inh&quot;         &quot;InhGNRH&quot;    
+[26] &quot;InhGNRH&quot;     &quot;InhGNRH&quot;     &quot;InhThalamic&quot; &quot;InhThalamic&quot; &quot;InhThalamic&quot;
+[31] &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;RG&quot;          &quot;RG&quot;         
+[36] &quot;RG&quot;          &quot;RGcycling&quot;   &quot;RGcycling&quot;   &quot;RGcycling&quot;  
+
+$`Brain_Spinal_cord_cervical_c-1.v8.egenes.txt.gz`
+ [1] &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;GliaProg&quot;    &quot;GliaProg&quot;   
+ [6] &quot;GliaProg&quot;    &quot;Glut&quot;        &quot;Glut&quot;        &quot;Glut&quot;        &quot;GlutNTS&quot;    
+[11] &quot;GlutNTS&quot;     &quot;GlutNTS&quot;     &quot;IP&quot;          &quot;IP&quot;          &quot;IP&quot;         
+[16] &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;Immature&quot;    &quot;Immature&quot;   
+[21] &quot;Immature&quot;    &quot;Inh&quot;         &quot;Inh&quot;         &quot;Inh&quot;         &quot;InhGNRH&quot;    
+[26] &quot;InhGNRH&quot;     &quot;InhGNRH&quot;     &quot;InhThalamic&quot; &quot;InhThalamic&quot; &quot;InhThalamic&quot;
+[31] &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;RG&quot;          &quot;RG&quot;         
+[36] &quot;RG&quot;          &quot;RGcycling&quot;   &quot;RGcycling&quot;   &quot;RGcycling&quot;  
+
+$Brain_Substantia_nigra.v8.egenes.txt.gz
+ [1] &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;GliaProg&quot;    &quot;GliaProg&quot;   
+ [6] &quot;GliaProg&quot;    &quot;Glut&quot;        &quot;Glut&quot;        &quot;Glut&quot;        &quot;GlutNTS&quot;    
+[11] &quot;GlutNTS&quot;     &quot;GlutNTS&quot;     &quot;IP&quot;          &quot;IP&quot;          &quot;IP&quot;         
+[16] &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;Immature&quot;    &quot;Immature&quot;   
+[21] &quot;Immature&quot;    &quot;Inh&quot;         &quot;Inh&quot;         &quot;Inh&quot;         &quot;InhGNRH&quot;    
+[26] &quot;InhGNRH&quot;     &quot;InhGNRH&quot;     &quot;InhThalamic&quot; &quot;InhThalamic&quot; &quot;InhThalamic&quot;
+[31] &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;RG&quot;          &quot;RG&quot;         
+[36] &quot;RG&quot;          &quot;RGcycling&quot;   &quot;RGcycling&quot;   &quot;RGcycling&quot;  
+
+$Breast_Mammary_Tissue.v8.egenes.txt.gz
+ [1] &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;GliaProg&quot;    &quot;GliaProg&quot;   
+ [6] &quot;GliaProg&quot;    &quot;Glut&quot;        &quot;Glut&quot;        &quot;Glut&quot;        &quot;GlutNTS&quot;    
+[11] &quot;GlutNTS&quot;     &quot;GlutNTS&quot;     &quot;IP&quot;          &quot;IP&quot;          &quot;IP&quot;         
+[16] &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;Immature&quot;    &quot;Immature&quot;   
+[21] &quot;Immature&quot;    &quot;Inh&quot;         &quot;Inh&quot;         &quot;Inh&quot;         &quot;InhGNRH&quot;    
+[26] &quot;InhGNRH&quot;     &quot;InhGNRH&quot;     &quot;InhThalamic&quot; &quot;InhThalamic&quot; &quot;InhThalamic&quot;
+[31] &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;RG&quot;          &quot;RG&quot;         
+[36] &quot;RG&quot;          &quot;RGcycling&quot;   &quot;RGcycling&quot;   &quot;RGcycling&quot;  
+
+$Cells_Cultured_fibroblasts.v8.egenes.txt.gz
+ [1] &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;GliaProg&quot;    &quot;GliaProg&quot;   
+ [6] &quot;GliaProg&quot;    &quot;Glut&quot;        &quot;Glut&quot;        &quot;Glut&quot;        &quot;GlutNTS&quot;    
+[11] &quot;GlutNTS&quot;     &quot;GlutNTS&quot;     &quot;IP&quot;          &quot;IP&quot;          &quot;IP&quot;         
+[16] &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;Immature&quot;    &quot;Immature&quot;   
+[21] &quot;Immature&quot;    &quot;Inh&quot;         &quot;Inh&quot;         &quot;Inh&quot;         &quot;InhGNRH&quot;    
+[26] &quot;InhGNRH&quot;     &quot;InhGNRH&quot;     &quot;InhThalamic&quot; &quot;InhThalamic&quot; &quot;InhThalamic&quot;
+[31] &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;RG&quot;          &quot;RG&quot;         
+[36] &quot;RG&quot;          &quot;RGcycling&quot;   &quot;RGcycling&quot;   &quot;RGcycling&quot;  
+
+$`Cells_EBV-transformed_lymphocytes.v8.egenes.txt.gz`
+ [1] &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;GliaProg&quot;    &quot;GliaProg&quot;   
+ [6] &quot;GliaProg&quot;    &quot;Glut&quot;        &quot;Glut&quot;        &quot;Glut&quot;        &quot;GlutNTS&quot;    
+[11] &quot;GlutNTS&quot;     &quot;GlutNTS&quot;     &quot;IP&quot;          &quot;IP&quot;          &quot;IP&quot;         
+[16] &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;Immature&quot;    &quot;Immature&quot;   
+[21] &quot;Immature&quot;    &quot;Inh&quot;         &quot;Inh&quot;         &quot;Inh&quot;         &quot;InhGNRH&quot;    
+[26] &quot;InhGNRH&quot;     &quot;InhGNRH&quot;     &quot;InhThalamic&quot; &quot;InhThalamic&quot; &quot;InhThalamic&quot;
+[31] &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;RG&quot;          &quot;RG&quot;         
+[36] &quot;RG&quot;          &quot;RGcycling&quot;   &quot;RGcycling&quot;   &quot;RGcycling&quot;  
+
+$Colon_Sigmoid.v8.egenes.txt.gz
+ [1] &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;GliaProg&quot;    &quot;GliaProg&quot;   
+ [6] &quot;GliaProg&quot;    &quot;Glut&quot;        &quot;Glut&quot;        &quot;Glut&quot;        &quot;GlutNTS&quot;    
+[11] &quot;GlutNTS&quot;     &quot;GlutNTS&quot;     &quot;IP&quot;          &quot;IP&quot;          &quot;IP&quot;         
+[16] &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;Immature&quot;    &quot;Immature&quot;   
+[21] &quot;Immature&quot;    &quot;Inh&quot;         &quot;Inh&quot;         &quot;Inh&quot;         &quot;InhGNRH&quot;    
+[26] &quot;InhGNRH&quot;     &quot;InhGNRH&quot;     &quot;InhThalamic&quot; &quot;InhThalamic&quot; &quot;InhThalamic&quot;
+[31] &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;RG&quot;          &quot;RG&quot;         
+[36] &quot;RG&quot;          &quot;RGcycling&quot;   &quot;RGcycling&quot;   &quot;RGcycling&quot;  
+
+$Colon_Transverse.v8.egenes.txt.gz
+ [1] &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;GliaProg&quot;    &quot;GliaProg&quot;   
+ [6] &quot;GliaProg&quot;    &quot;Glut&quot;        &quot;Glut&quot;        &quot;Glut&quot;        &quot;GlutNTS&quot;    
+[11] &quot;GlutNTS&quot;     &quot;GlutNTS&quot;     &quot;IP&quot;          &quot;IP&quot;          &quot;IP&quot;         
+[16] &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;Immature&quot;    &quot;Immature&quot;   
+[21] &quot;Immature&quot;    &quot;Inh&quot;         &quot;Inh&quot;         &quot;Inh&quot;         &quot;InhGNRH&quot;    
+[26] &quot;InhGNRH&quot;     &quot;InhGNRH&quot;     &quot;InhThalamic&quot; &quot;InhThalamic&quot; &quot;InhThalamic&quot;
+[31] &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;RG&quot;          &quot;RG&quot;         
+[36] &quot;RG&quot;          &quot;RGcycling&quot;   &quot;RGcycling&quot;   &quot;RGcycling&quot;  
+
+$Esophagus_Gastroesophageal_Junction.v8.egenes.txt.gz
+ [1] &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;GliaProg&quot;    &quot;GliaProg&quot;   
+ [6] &quot;GliaProg&quot;    &quot;Glut&quot;        &quot;Glut&quot;        &quot;Glut&quot;        &quot;GlutNTS&quot;    
+[11] &quot;GlutNTS&quot;     &quot;GlutNTS&quot;     &quot;IP&quot;          &quot;IP&quot;          &quot;IP&quot;         
+[16] &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;Immature&quot;    &quot;Immature&quot;   
+[21] &quot;Immature&quot;    &quot;Inh&quot;         &quot;Inh&quot;         &quot;Inh&quot;         &quot;InhGNRH&quot;    
+[26] &quot;InhGNRH&quot;     &quot;InhGNRH&quot;     &quot;InhThalamic&quot; &quot;InhThalamic&quot; &quot;InhThalamic&quot;
+[31] &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;RG&quot;          &quot;RG&quot;         
+[36] &quot;RG&quot;          &quot;RGcycling&quot;   &quot;RGcycling&quot;   &quot;RGcycling&quot;  
+
+$Esophagus_Mucosa.v8.egenes.txt.gz
+ [1] &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;GliaProg&quot;    &quot;GliaProg&quot;   
+ [6] &quot;GliaProg&quot;    &quot;Glut&quot;        &quot;Glut&quot;        &quot;Glut&quot;        &quot;GlutNTS&quot;    
+[11] &quot;GlutNTS&quot;     &quot;GlutNTS&quot;     &quot;IP&quot;          &quot;IP&quot;          &quot;IP&quot;         
+[16] &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;Immature&quot;    &quot;Immature&quot;   
+[21] &quot;Immature&quot;    &quot;Inh&quot;         &quot;Inh&quot;         &quot;Inh&quot;         &quot;InhGNRH&quot;    
+[26] &quot;InhGNRH&quot;     &quot;InhGNRH&quot;     &quot;InhThalamic&quot; &quot;InhThalamic&quot; &quot;InhThalamic&quot;
+[31] &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;RG&quot;          &quot;RG&quot;         
+[36] &quot;RG&quot;          &quot;RGcycling&quot;   &quot;RGcycling&quot;   &quot;RGcycling&quot;  
+
+$Esophagus_Muscularis.v8.egenes.txt.gz
+ [1] &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;GliaProg&quot;    &quot;GliaProg&quot;   
+ [6] &quot;GliaProg&quot;    &quot;Glut&quot;        &quot;Glut&quot;        &quot;Glut&quot;        &quot;GlutNTS&quot;    
+[11] &quot;GlutNTS&quot;     &quot;GlutNTS&quot;     &quot;IP&quot;          &quot;IP&quot;          &quot;IP&quot;         
+[16] &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;Immature&quot;    &quot;Immature&quot;   
+[21] &quot;Immature&quot;    &quot;Inh&quot;         &quot;Inh&quot;         &quot;Inh&quot;         &quot;InhGNRH&quot;    
+[26] &quot;InhGNRH&quot;     &quot;InhGNRH&quot;     &quot;InhThalamic&quot; &quot;InhThalamic&quot; &quot;InhThalamic&quot;
+[31] &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;RG&quot;          &quot;RG&quot;         
+[36] &quot;RG&quot;          &quot;RGcycling&quot;   &quot;RGcycling&quot;   &quot;RGcycling&quot;  
+
+$Heart_Atrial_Appendage.v8.egenes.txt.gz
+ [1] &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;GliaProg&quot;    &quot;GliaProg&quot;   
+ [6] &quot;GliaProg&quot;    &quot;Glut&quot;        &quot;Glut&quot;        &quot;Glut&quot;        &quot;GlutNTS&quot;    
+[11] &quot;GlutNTS&quot;     &quot;GlutNTS&quot;     &quot;IP&quot;          &quot;IP&quot;          &quot;IP&quot;         
+[16] &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;Immature&quot;    &quot;Immature&quot;   
+[21] &quot;Immature&quot;    &quot;Inh&quot;         &quot;Inh&quot;         &quot;Inh&quot;         &quot;InhGNRH&quot;    
+[26] &quot;InhGNRH&quot;     &quot;InhGNRH&quot;     &quot;InhThalamic&quot; &quot;InhThalamic&quot; &quot;InhThalamic&quot;
+[31] &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;RG&quot;          &quot;RG&quot;         
+[36] &quot;RG&quot;          &quot;RGcycling&quot;   &quot;RGcycling&quot;   &quot;RGcycling&quot;  
+
+$Heart_Left_Ventricle.v8.egenes.txt.gz
+ [1] &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;GliaProg&quot;    &quot;GliaProg&quot;   
+ [6] &quot;GliaProg&quot;    &quot;Glut&quot;        &quot;Glut&quot;        &quot;Glut&quot;        &quot;GlutNTS&quot;    
+[11] &quot;GlutNTS&quot;     &quot;GlutNTS&quot;     &quot;IP&quot;          &quot;IP&quot;          &quot;IP&quot;         
+[16] &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;Immature&quot;    &quot;Immature&quot;   
+[21] &quot;Immature&quot;    &quot;Inh&quot;         &quot;Inh&quot;         &quot;Inh&quot;         &quot;InhGNRH&quot;    
+[26] &quot;InhGNRH&quot;     &quot;InhGNRH&quot;     &quot;InhThalamic&quot; &quot;InhThalamic&quot; &quot;InhThalamic&quot;
+[31] &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;RG&quot;          &quot;RG&quot;         
+[36] &quot;RG&quot;          &quot;RGcycling&quot;   &quot;RGcycling&quot;   &quot;RGcycling&quot;  
+
+$Kidney_Cortex.v8.egenes.txt.gz
+ [1] &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;GliaProg&quot;    &quot;GliaProg&quot;    &quot;GliaProg&quot;   
+ [6] &quot;Glut&quot;        &quot;Glut&quot;        &quot;Glut&quot;        &quot;GlutNTS&quot;     &quot;GlutNTS&quot;    
+[11] &quot;GlutNTS&quot;     &quot;IP&quot;          &quot;IP&quot;          &quot;IP&quot;          &quot;IPcycling&quot;  
+[16] &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;Immature&quot;    &quot;Immature&quot;    &quot;Immature&quot;   
+[21] &quot;Inh&quot;         &quot;Inh&quot;         &quot;Inh&quot;         &quot;InhGNRH&quot;     &quot;InhGNRH&quot;    
+[26] &quot;InhThalamic&quot; &quot;InhThalamic&quot; &quot;InhThalamic&quot; &quot;NeuronOther&quot; &quot;NeuronOther&quot;
+[31] &quot;NeuronOther&quot; &quot;RG&quot;          &quot;RG&quot;          &quot;RG&quot;          &quot;RGcycling&quot;  
+[36] &quot;RGcycling&quot;   &quot;RGcycling&quot;  
+
+$Liver.v8.egenes.txt.gz
+ [1] &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;GliaProg&quot;    &quot;GliaProg&quot;   
+ [6] &quot;GliaProg&quot;    &quot;Glut&quot;        &quot;Glut&quot;        &quot;Glut&quot;        &quot;GlutNTS&quot;    
+[11] &quot;GlutNTS&quot;     &quot;GlutNTS&quot;     &quot;IP&quot;          &quot;IP&quot;          &quot;IP&quot;         
+[16] &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;Immature&quot;    &quot;Immature&quot;   
+[21] &quot;Immature&quot;    &quot;Inh&quot;         &quot;Inh&quot;         &quot;Inh&quot;         &quot;InhGNRH&quot;    
+[26] &quot;InhGNRH&quot;     &quot;InhGNRH&quot;     &quot;InhThalamic&quot; &quot;InhThalamic&quot; &quot;InhThalamic&quot;
+[31] &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;RG&quot;          &quot;RG&quot;         
+[36] &quot;RG&quot;          &quot;RGcycling&quot;   &quot;RGcycling&quot;   &quot;RGcycling&quot;  
+
+$Lung.v8.egenes.txt.gz
+ [1] &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;GliaProg&quot;    &quot;GliaProg&quot;   
+ [6] &quot;GliaProg&quot;    &quot;Glut&quot;        &quot;Glut&quot;        &quot;Glut&quot;        &quot;GlutNTS&quot;    
+[11] &quot;GlutNTS&quot;     &quot;GlutNTS&quot;     &quot;IP&quot;          &quot;IP&quot;          &quot;IP&quot;         
+[16] &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;Immature&quot;    &quot;Immature&quot;   
+[21] &quot;Immature&quot;    &quot;Inh&quot;         &quot;Inh&quot;         &quot;Inh&quot;         &quot;InhGNRH&quot;    
+[26] &quot;InhGNRH&quot;     &quot;InhGNRH&quot;     &quot;InhThalamic&quot; &quot;InhThalamic&quot; &quot;InhThalamic&quot;
+[31] &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;RG&quot;          &quot;RG&quot;         
+[36] &quot;RG&quot;          &quot;RGcycling&quot;   &quot;RGcycling&quot;   &quot;RGcycling&quot;  
+
+$Minor_Salivary_Gland.v8.egenes.txt.gz
+ [1] &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;GliaProg&quot;    &quot;GliaProg&quot;   
+ [6] &quot;GliaProg&quot;    &quot;Glut&quot;        &quot;Glut&quot;        &quot;Glut&quot;        &quot;GlutNTS&quot;    
+[11] &quot;GlutNTS&quot;     &quot;GlutNTS&quot;     &quot;IP&quot;          &quot;IP&quot;          &quot;IP&quot;         
+[16] &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;Immature&quot;    &quot;Immature&quot;   
+[21] &quot;Immature&quot;    &quot;Inh&quot;         &quot;Inh&quot;         &quot;Inh&quot;         &quot;InhGNRH&quot;    
+[26] &quot;InhGNRH&quot;     &quot;InhGNRH&quot;     &quot;InhThalamic&quot; &quot;InhThalamic&quot; &quot;InhThalamic&quot;
+[31] &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;RG&quot;          &quot;RG&quot;         
+[36] &quot;RG&quot;          &quot;RGcycling&quot;   &quot;RGcycling&quot;   &quot;RGcycling&quot;  
+
+$Muscle_Skeletal.v8.egenes.txt.gz
+ [1] &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;GliaProg&quot;    &quot;GliaProg&quot;   
+ [6] &quot;GliaProg&quot;    &quot;Glut&quot;        &quot;Glut&quot;        &quot;Glut&quot;        &quot;GlutNTS&quot;    
+[11] &quot;GlutNTS&quot;     &quot;GlutNTS&quot;     &quot;IP&quot;          &quot;IP&quot;          &quot;IP&quot;         
+[16] &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;Immature&quot;    &quot;Immature&quot;   
+[21] &quot;Immature&quot;    &quot;Inh&quot;         &quot;Inh&quot;         &quot;Inh&quot;         &quot;InhGNRH&quot;    
+[26] &quot;InhGNRH&quot;     &quot;InhGNRH&quot;     &quot;InhThalamic&quot; &quot;InhThalamic&quot; &quot;InhThalamic&quot;
+[31] &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;RG&quot;          &quot;RG&quot;         
+[36] &quot;RG&quot;          &quot;RGcycling&quot;   &quot;RGcycling&quot;   &quot;RGcycling&quot;  
+
+$Nerve_Tibial.v8.egenes.txt.gz
+ [1] &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;GliaProg&quot;    &quot;GliaProg&quot;   
+ [6] &quot;GliaProg&quot;    &quot;Glut&quot;        &quot;Glut&quot;        &quot;Glut&quot;        &quot;GlutNTS&quot;    
+[11] &quot;GlutNTS&quot;     &quot;GlutNTS&quot;     &quot;IP&quot;          &quot;IP&quot;          &quot;IP&quot;         
+[16] &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;Immature&quot;    &quot;Immature&quot;   
+[21] &quot;Immature&quot;    &quot;Inh&quot;         &quot;Inh&quot;         &quot;Inh&quot;         &quot;InhGNRH&quot;    
+[26] &quot;InhGNRH&quot;     &quot;InhGNRH&quot;     &quot;InhThalamic&quot; &quot;InhThalamic&quot; &quot;InhThalamic&quot;
+[31] &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;RG&quot;          &quot;RG&quot;         
+[36] &quot;RG&quot;          &quot;RGcycling&quot;   &quot;RGcycling&quot;   &quot;RGcycling&quot;  
+
+$Ovary.v8.egenes.txt.gz
+ [1] &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;GliaProg&quot;    &quot;GliaProg&quot;   
+ [6] &quot;GliaProg&quot;    &quot;Glut&quot;        &quot;Glut&quot;        &quot;Glut&quot;        &quot;GlutNTS&quot;    
+[11] &quot;GlutNTS&quot;     &quot;GlutNTS&quot;     &quot;IP&quot;          &quot;IP&quot;          &quot;IP&quot;         
+[16] &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;Immature&quot;    &quot;Immature&quot;   
+[21] &quot;Immature&quot;    &quot;Inh&quot;         &quot;Inh&quot;         &quot;Inh&quot;         &quot;InhGNRH&quot;    
+[26] &quot;InhGNRH&quot;     &quot;InhGNRH&quot;     &quot;InhThalamic&quot; &quot;InhThalamic&quot; &quot;InhThalamic&quot;
+[31] &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;RG&quot;          &quot;RG&quot;         
+[36] &quot;RG&quot;          &quot;RGcycling&quot;   &quot;RGcycling&quot;   &quot;RGcycling&quot;  
+
+$Pancreas.v8.egenes.txt.gz
+ [1] &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;GliaProg&quot;    &quot;GliaProg&quot;   
+ [6] &quot;GliaProg&quot;    &quot;Glut&quot;        &quot;Glut&quot;        &quot;Glut&quot;        &quot;GlutNTS&quot;    
+[11] &quot;GlutNTS&quot;     &quot;GlutNTS&quot;     &quot;IP&quot;          &quot;IP&quot;          &quot;IP&quot;         
+[16] &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;Immature&quot;    &quot;Immature&quot;   
+[21] &quot;Immature&quot;    &quot;Inh&quot;         &quot;Inh&quot;         &quot;Inh&quot;         &quot;InhGNRH&quot;    
+[26] &quot;InhGNRH&quot;     &quot;InhGNRH&quot;     &quot;InhThalamic&quot; &quot;InhThalamic&quot; &quot;InhThalamic&quot;
+[31] &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;RG&quot;          &quot;RG&quot;         
+[36] &quot;RG&quot;          &quot;RGcycling&quot;   &quot;RGcycling&quot;   &quot;RGcycling&quot;  
+
+$Pituitary.v8.egenes.txt.gz
+ [1] &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;GliaProg&quot;    &quot;GliaProg&quot;   
+ [6] &quot;GliaProg&quot;    &quot;Glut&quot;        &quot;Glut&quot;        &quot;Glut&quot;        &quot;GlutNTS&quot;    
+[11] &quot;GlutNTS&quot;     &quot;GlutNTS&quot;     &quot;IP&quot;          &quot;IP&quot;          &quot;IP&quot;         
+[16] &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;Immature&quot;    &quot;Immature&quot;   
+[21] &quot;Immature&quot;    &quot;Inh&quot;         &quot;Inh&quot;         &quot;Inh&quot;         &quot;InhGNRH&quot;    
+[26] &quot;InhGNRH&quot;     &quot;InhGNRH&quot;     &quot;InhThalamic&quot; &quot;InhThalamic&quot; &quot;InhThalamic&quot;
+[31] &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;RG&quot;          &quot;RG&quot;         
+[36] &quot;RG&quot;          &quot;RGcycling&quot;   &quot;RGcycling&quot;   &quot;RGcycling&quot;  
+
+$Prostate.v8.egenes.txt.gz
+ [1] &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;GliaProg&quot;    &quot;GliaProg&quot;   
+ [6] &quot;GliaProg&quot;    &quot;Glut&quot;        &quot;Glut&quot;        &quot;Glut&quot;        &quot;GlutNTS&quot;    
+[11] &quot;GlutNTS&quot;     &quot;GlutNTS&quot;     &quot;IP&quot;          &quot;IP&quot;          &quot;IP&quot;         
+[16] &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;Immature&quot;    &quot;Immature&quot;   
+[21] &quot;Immature&quot;    &quot;Inh&quot;         &quot;Inh&quot;         &quot;Inh&quot;         &quot;InhGNRH&quot;    
+[26] &quot;InhGNRH&quot;     &quot;InhGNRH&quot;     &quot;InhThalamic&quot; &quot;InhThalamic&quot; &quot;InhThalamic&quot;
+[31] &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;RG&quot;          &quot;RG&quot;         
+[36] &quot;RG&quot;          &quot;RGcycling&quot;   &quot;RGcycling&quot;   &quot;RGcycling&quot;  
+
+$Skin_Not_Sun_Exposed_Suprapubic.v8.egenes.txt.gz
+ [1] &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;GliaProg&quot;    &quot;GliaProg&quot;   
+ [6] &quot;GliaProg&quot;    &quot;Glut&quot;        &quot;Glut&quot;        &quot;Glut&quot;        &quot;GlutNTS&quot;    
+[11] &quot;GlutNTS&quot;     &quot;GlutNTS&quot;     &quot;IP&quot;          &quot;IP&quot;          &quot;IP&quot;         
+[16] &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;Immature&quot;    &quot;Immature&quot;   
+[21] &quot;Immature&quot;    &quot;Inh&quot;         &quot;Inh&quot;         &quot;Inh&quot;         &quot;InhGNRH&quot;    
+[26] &quot;InhGNRH&quot;     &quot;InhGNRH&quot;     &quot;InhThalamic&quot; &quot;InhThalamic&quot; &quot;InhThalamic&quot;
+[31] &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;RG&quot;          &quot;RG&quot;         
+[36] &quot;RG&quot;          &quot;RGcycling&quot;   &quot;RGcycling&quot;   &quot;RGcycling&quot;  
+
+$Skin_Sun_Exposed_Lower_leg.v8.egenes.txt.gz
+ [1] &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;GliaProg&quot;    &quot;GliaProg&quot;   
+ [6] &quot;GliaProg&quot;    &quot;Glut&quot;        &quot;Glut&quot;        &quot;Glut&quot;        &quot;GlutNTS&quot;    
+[11] &quot;GlutNTS&quot;     &quot;GlutNTS&quot;     &quot;IP&quot;          &quot;IP&quot;          &quot;IP&quot;         
+[16] &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;Immature&quot;    &quot;Immature&quot;   
+[21] &quot;Immature&quot;    &quot;Inh&quot;         &quot;Inh&quot;         &quot;Inh&quot;         &quot;InhGNRH&quot;    
+[26] &quot;InhGNRH&quot;     &quot;InhGNRH&quot;     &quot;InhThalamic&quot; &quot;InhThalamic&quot; &quot;InhThalamic&quot;
+[31] &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;RG&quot;          &quot;RG&quot;         
+[36] &quot;RG&quot;          &quot;RGcycling&quot;   &quot;RGcycling&quot;   &quot;RGcycling&quot;  
+
+$Small_Intestine_Terminal_Ileum.v8.egenes.txt.gz
+ [1] &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;GliaProg&quot;    &quot;GliaProg&quot;   
+ [6] &quot;GliaProg&quot;    &quot;Glut&quot;        &quot;Glut&quot;        &quot;Glut&quot;        &quot;GlutNTS&quot;    
+[11] &quot;GlutNTS&quot;     &quot;GlutNTS&quot;     &quot;IP&quot;          &quot;IP&quot;          &quot;IP&quot;         
+[16] &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;Immature&quot;    &quot;Immature&quot;   
+[21] &quot;Immature&quot;    &quot;Inh&quot;         &quot;Inh&quot;         &quot;Inh&quot;         &quot;InhGNRH&quot;    
+[26] &quot;InhGNRH&quot;     &quot;InhGNRH&quot;     &quot;InhThalamic&quot; &quot;InhThalamic&quot; &quot;InhThalamic&quot;
+[31] &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;RG&quot;          &quot;RG&quot;         
+[36] &quot;RG&quot;          &quot;RGcycling&quot;   &quot;RGcycling&quot;   &quot;RGcycling&quot;  
+
+$Spleen.v8.egenes.txt.gz
+ [1] &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;GliaProg&quot;    &quot;GliaProg&quot;   
+ [6] &quot;GliaProg&quot;    &quot;Glut&quot;        &quot;Glut&quot;        &quot;Glut&quot;        &quot;GlutNTS&quot;    
+[11] &quot;GlutNTS&quot;     &quot;GlutNTS&quot;     &quot;IP&quot;          &quot;IP&quot;          &quot;IP&quot;         
+[16] &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;Immature&quot;    &quot;Immature&quot;   
+[21] &quot;Immature&quot;    &quot;Inh&quot;         &quot;Inh&quot;         &quot;Inh&quot;         &quot;InhGNRH&quot;    
+[26] &quot;InhGNRH&quot;     &quot;InhGNRH&quot;     &quot;InhThalamic&quot; &quot;InhThalamic&quot; &quot;InhThalamic&quot;
+[31] &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;RG&quot;          &quot;RG&quot;         
+[36] &quot;RG&quot;          &quot;RGcycling&quot;   &quot;RGcycling&quot;   &quot;RGcycling&quot;  
+
+$Stomach.v8.egenes.txt.gz
+ [1] &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;GliaProg&quot;    &quot;GliaProg&quot;   
+ [6] &quot;GliaProg&quot;    &quot;Glut&quot;        &quot;Glut&quot;        &quot;Glut&quot;        &quot;GlutNTS&quot;    
+[11] &quot;GlutNTS&quot;     &quot;GlutNTS&quot;     &quot;IP&quot;          &quot;IP&quot;          &quot;IP&quot;         
+[16] &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;Immature&quot;    &quot;Immature&quot;   
+[21] &quot;Immature&quot;    &quot;Inh&quot;         &quot;Inh&quot;         &quot;Inh&quot;         &quot;InhGNRH&quot;    
+[26] &quot;InhGNRH&quot;     &quot;InhGNRH&quot;     &quot;InhThalamic&quot; &quot;InhThalamic&quot; &quot;InhThalamic&quot;
+[31] &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;RG&quot;          &quot;RG&quot;         
+[36] &quot;RG&quot;          &quot;RGcycling&quot;   &quot;RGcycling&quot;   &quot;RGcycling&quot;  
+
+$Testis.v8.egenes.txt.gz
+ [1] &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;GliaProg&quot;    &quot;GliaProg&quot;   
+ [6] &quot;GliaProg&quot;    &quot;Glut&quot;        &quot;Glut&quot;        &quot;Glut&quot;        &quot;GlutNTS&quot;    
+[11] &quot;GlutNTS&quot;     &quot;GlutNTS&quot;     &quot;IP&quot;          &quot;IP&quot;          &quot;IP&quot;         
+[16] &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;Immature&quot;    &quot;Immature&quot;   
+[21] &quot;Immature&quot;    &quot;Inh&quot;         &quot;Inh&quot;         &quot;Inh&quot;         &quot;InhGNRH&quot;    
+[26] &quot;InhGNRH&quot;     &quot;InhGNRH&quot;     &quot;InhThalamic&quot; &quot;InhThalamic&quot; &quot;InhThalamic&quot;
+[31] &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;RG&quot;          &quot;RG&quot;         
+[36] &quot;RG&quot;          &quot;RGcycling&quot;   &quot;RGcycling&quot;   &quot;RGcycling&quot;  
+
+$Thyroid.v8.egenes.txt.gz
+ [1] &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;GliaProg&quot;    &quot;GliaProg&quot;   
+ [6] &quot;GliaProg&quot;    &quot;Glut&quot;        &quot;Glut&quot;        &quot;Glut&quot;        &quot;GlutNTS&quot;    
+[11] &quot;GlutNTS&quot;     &quot;GlutNTS&quot;     &quot;IP&quot;          &quot;IP&quot;          &quot;IP&quot;         
+[16] &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;Immature&quot;    &quot;Immature&quot;   
+[21] &quot;Immature&quot;    &quot;Inh&quot;         &quot;Inh&quot;         &quot;Inh&quot;         &quot;InhGNRH&quot;    
+[26] &quot;InhGNRH&quot;     &quot;InhGNRH&quot;     &quot;InhThalamic&quot; &quot;InhThalamic&quot; &quot;InhThalamic&quot;
+[31] &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;RG&quot;          &quot;RG&quot;         
+[36] &quot;RG&quot;          &quot;RGcycling&quot;   &quot;RGcycling&quot;   &quot;RGcycling&quot;  
+
+$Uterus.v8.egenes.txt.gz
+ [1] &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;GliaProg&quot;    &quot;GliaProg&quot;   
+ [6] &quot;GliaProg&quot;    &quot;Glut&quot;        &quot;Glut&quot;        &quot;Glut&quot;        &quot;GlutNTS&quot;    
+[11] &quot;GlutNTS&quot;     &quot;GlutNTS&quot;     &quot;IP&quot;          &quot;IP&quot;          &quot;IP&quot;         
+[16] &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;Immature&quot;    &quot;Immature&quot;   
+[21] &quot;Immature&quot;    &quot;Inh&quot;         &quot;Inh&quot;         &quot;Inh&quot;         &quot;InhGNRH&quot;    
+[26] &quot;InhGNRH&quot;     &quot;InhGNRH&quot;     &quot;InhThalamic&quot; &quot;InhThalamic&quot; &quot;InhThalamic&quot;
+[31] &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;RG&quot;          &quot;RG&quot;         
+[36] &quot;RG&quot;          &quot;RGcycling&quot;   &quot;RGcycling&quot;   &quot;RGcycling&quot;  
+
+$Vagina.v8.egenes.txt.gz
+ [1] &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;GliaProg&quot;    &quot;GliaProg&quot;   
+ [6] &quot;GliaProg&quot;    &quot;Glut&quot;        &quot;Glut&quot;        &quot;Glut&quot;        &quot;GlutNTS&quot;    
+[11] &quot;GlutNTS&quot;     &quot;GlutNTS&quot;     &quot;IP&quot;          &quot;IP&quot;          &quot;IP&quot;         
+[16] &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;Immature&quot;    &quot;Immature&quot;   
+[21] &quot;Immature&quot;    &quot;Inh&quot;         &quot;Inh&quot;         &quot;Inh&quot;         &quot;InhGNRH&quot;    
+[26] &quot;InhGNRH&quot;     &quot;InhThalamic&quot; &quot;InhThalamic&quot; &quot;InhThalamic&quot; &quot;NeuronOther&quot;
+[31] &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;RG&quot;          &quot;RG&quot;          &quot;RG&quot;         
+[36] &quot;RGcycling&quot;   &quot;RGcycling&quot;   &quot;RGcycling&quot;  
+
+$Whole_Blood.v8.egenes.txt.gz
+ [1] &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;CorticalHem&quot; &quot;GliaProg&quot;    &quot;GliaProg&quot;   
+ [6] &quot;GliaProg&quot;    &quot;Glut&quot;        &quot;Glut&quot;        &quot;Glut&quot;        &quot;GlutNTS&quot;    
+[11] &quot;GlutNTS&quot;     &quot;GlutNTS&quot;     &quot;IP&quot;          &quot;IP&quot;          &quot;IP&quot;         
+[16] &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;IPcycling&quot;   &quot;Immature&quot;    &quot;Immature&quot;   
+[21] &quot;Immature&quot;    &quot;Inh&quot;         &quot;Inh&quot;         &quot;Inh&quot;         &quot;InhGNRH&quot;    
+[26] &quot;InhGNRH&quot;     &quot;InhGNRH&quot;     &quot;InhThalamic&quot; &quot;InhThalamic&quot; &quot;InhThalamic&quot;
+[31] &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;NeuronOther&quot; &quot;RG&quot;          &quot;RG&quot;         
+[36] &quot;RG&quot;          &quot;RGcycling&quot;   &quot;RGcycling&quot;   &quot;RGcycling&quot;  </code></pre>
+<p>Plot this faceted, in the same order as the recall rate plot</p>
+<pre class="r"><code>gtex_recall &lt;- as_tibble(cbind(tissue = names(combined_egene_in_gtex), t(combined_egene_in_gtex))) %&gt;% mutate(tissue=str_sub(tissue, end = -18)) %&gt;% 
+  mutate(V2=as.numeric(V2)) %&gt;% left_join(samplenums, by=join_by(&quot;tissue&quot;==&quot;Tissue&quot;)) 
+  
+gtex_beta_correlation_all_plot &lt;- gtex_beta_correlation_all %&gt;%  bind_rows(.id = &quot;tissue&quot;) %&gt;% mutate(tissue=str_sub(tissue, end = -18))
+
+left_join(gtex_beta_correlation_all_plot, gtex_recall) %&gt;% 
+  ggplot(aes(x=source, y=reorder(tissue, V2), fill=correlation)) + 
+   geom_tile() + scale_fill_viridis(discrete=FALSE, limits = c(-1, 1)) + guides(x =  guide_axis(angle = 45)) + facet_wrap(facets = vars(treatment)) + theme_light()</code></pre>
+<pre><code>Joining with `by = join_by(tissue)`</code></pre>
+<p><img src="figure/figure3.Rmd/unnamed-chunk-46-1.png" width="672" style="display: block; margin: auto;" />
+Finally, I do the same thing in a combined fashion so as to get an
+overall scatterplot (shown in Figure S5) and correlation, combining all
+tissues and conditions.</p>
+<pre class="r"><code>gtex_beta_snps_all &lt;- list()
+
+for (Y in gtex_names){
+signif &lt;- read.table(file = paste0(&quot;/project/gilad/umans/references/gtex/GTEx_Analysis_v8_eQTL/&quot;, Y), header = TRUE, sep = &quot;\t&quot;, stringsAsFactors = FALSE) %&gt;% filter(qval&lt;0.05)
+
+pairs &lt;- read.table(file = paste0(&quot;/project/gilad/umans/references/gtex/GTEx_Analysis_v8_eQTL/&quot;, str_sub(Y, end=-14), &quot;signif_variant_gene_pairs.txt.gz&quot;), header = TRUE, sep = &quot;\t&quot;, stringsAsFactors = FALSE)
+
+joined &lt;- pairs %&gt;% select(variant_id, gene_id, slope, pval_nominal) %&gt;% left_join(x=., y=signif %&gt;% select(gene_id, gene_name), by=join_by( gene_id==gene_id), relationship=&quot;many-to-one&quot;) %&gt;% 
+  mutate(variant_id=str_sub(variant_id, start=4)) %&gt;% 
+  filter(str_detect(variant_id, &quot;X_&quot;, negate = TRUE)) %&gt;% #drop the X chromosome
+  separate(variant_id, into = c(&quot;chrom&quot;, &quot;position&quot;, &quot;ref&quot;), extra = &quot;drop&quot;, sep=&quot;_&quot;, convert = TRUE) 
+  
+gtex_beta_snps_all[[Y]] &lt;- inner_join(combined_all_snpgenes, joined, by=join_by(gene==gene_name, chrom==chrom, position==position), relationship=&quot;many-to-many&quot;) 
+
+print(Y)
+rm(signif, pairs, joined)
+}</code></pre>
+<pre class="r"><code>gtex_beta_snps_all &lt;- readRDS(file = &quot;/project2/gilad/umans/oxygen_eqtl/output/gtex_beta_snps_all.RDS&quot;)
+
+gtex_beta_snps_all %&gt;%  
+  bind_rows(.id = &quot;tissue&quot;) %&gt;% 
+  mutate(tissue=str_sub(tissue, end = -18)) %&gt;% 
+  ggplot(aes(x=beta, y=slope)) + geom_pointdensity(size=0.1) + scale_color_viridis() + theme_light() +
+  xlab(&quot;Beta (organoid)&quot;) + ylab (&quot;Beta (GTEx)&quot;) + geom_smooth(method=&quot;lm&quot;, linewidth=0.3, color=&quot;gray&quot;)</code></pre>
+<pre><code>`geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
+<p><img src="figure/figure3.Rmd/unnamed-chunk-48-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>And to obtain an overall Pearson’s correlation and regression
+R^2:</p>
+<pre class="r"><code>a &lt;- gtex_beta_snps_all %&gt;%  
+  bind_rows(.id = &quot;tissue&quot;) %&gt;% 
+  mutate(tissue=str_sub(tissue, end = -18))
+b &lt;- lm(formula = slope ~ beta,  data =a)
+
+summary(b)</code></pre>
+<pre><code>
+Call:
+lm(formula = slope ~ beta, data = a)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-2.2431 -0.2928  0.0449  0.2866  3.7908 
+
+Coefficients:
+              Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) -0.1094020  0.0008795  -124.4   &lt;2e-16 ***
+beta         0.2975402  0.0008201   362.8   &lt;2e-16 ***
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+Residual standard error: 0.5166 on 346494 degrees of freedom
+Multiple R-squared:  0.2753,    Adjusted R-squared:  0.2753 
+F-statistic: 1.316e+05 on 1 and 346494 DF,  p-value: &lt; 2.2e-16</code></pre>
+<pre class="r"><code>cor(a$beta, a$slope)</code></pre>
+<pre><code>[1] 0.5247052</code></pre>
+<pre class="r"><code>rm(a, b, gtex_beta_snps_all, gtex_beta_correlation_all_combined, combined_all_snpgenes, gtex_beta_correlation_all_plot, gtex_beta_recall)</code></pre>
+<pre><code>Warning in rm(a, b, gtex_beta_snps_all, gtex_beta_correlation_all_combined, :
+object &#39;gtex_beta_recall&#39; not found</code></pre>
+<div id="compare-to-coarse-clustered-results" class="section level3">
+<h3>Compare to coarse-clustered results</h3>
+<pre class="r"><code>mash_by_condition_output_coarse &lt;- readRDS(file = &quot;/project2/gilad/umans/oxygen_eqtl/output/combined_mash-by-condition_EE_coarse_reharmonized_newmash_032024.rds&quot;) %&gt;% ungroup()  
+
+mash_by_condition_output_coarse %&gt;% 
+  filter(sig_anywhere) %&gt;% 
+ mutate(class=case_when(control10_lfsr &lt; 0.1 &amp; allsharing ~ &quot;class1&quot;,
+                         control10_lfsr &lt; 0.1 &amp;  !allsharing ~ &quot;class2&quot;,
+                         sig_anywhere &amp; control10_lfsr &gt; 0.1 &amp; !allsharing ~ &quot;class3&quot;,
+                         allsharing &amp; control10_lfsr &gt; 0.1 &amp; (stim1pct_lfsr &lt; 0.1 | stim21pct_lfsr &lt; 0.1) ~ &quot;class4&quot;)) %&gt;%  group_by(source, class) %&gt;% summarize(egenes=n()) %&gt;% 
+  ggplot(aes(x=factor(source, rev(coarse.order)), y=egenes, fill=factor(class, levels = c(&quot;class3&quot;, &quot;class2&quot;, &quot;class4&quot;, &quot;class1&quot;), ordered = TRUE))) + geom_bar(stat=&quot;identity&quot;) + 
+  coord_flip() + theme_light() + theme(legend.title = element_blank()) + scale_fill_manual(values=class_colors) </code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<p><img src="figure/figure3.Rmd/unnamed-chunk-51-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-51-1">
+Past versions of unnamed-chunk-51-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-51-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bumans/organoid_oxygen_eqtl/blob/f3578711cc3b3a960a456417cbbfe5965c05a55a/docs/figure/figure3.Rmd/unnamed-chunk-51-1.png" target="_blank">f357871</a>
+</td>
+<td>
+Ben Umans
+</td>
+<td>
+2025-02-24
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Our hypothesis is that the the dynamic effects that emerge under
+treatment should be less represented in GTEx, compared to effects that
+are evident at baseline, as GTEx does not (explicitly) assess gene
+expression under different environmental perturbations (although
+post-mortem brain tissue may experience some amount of hypoxia and/or
+hyperoxia during sample collection). While not testing for sharing of
+regulatory sites or effects here, we can ask whether these dynamic
+eGenes are less likely to be present in GTEx compared to the dynamic
+eGenes present at baseline.</p>
+<pre class="r"><code>mash_by_condition_output_coarse %&gt;% 
+  filter(sig_anywhere) %&gt;% 
+  mutate(class=case_when(control10_lfsr &lt; 0.1 &amp; allsharing ~ &quot;class1&quot;,
+                         control10_lfsr &lt; 0.1 &amp;  !allsharing ~ &quot;class2&quot;,
+                         sig_anywhere &amp; control10_lfsr &gt; 0.1 &amp; !allsharing ~ &quot;class3&quot;,
+                         sig_anywhere &amp; allsharing ~ &quot;class4&quot;)) %&gt;%  #because of the order of assignment, this does not include &quot;class1&quot; egenes, ie those that are detectable under normoxia.  equivalent to `allsharing &amp; control10_lfsr &gt; 0.1 &amp; (stim1pct_lfsr &lt; 0.1 | stim21pct_lfsr &lt; 0.1) ~ &quot;class4&quot;`
+  group_by(source, class) %&gt;% 
+  summarise(egene_gtex = sum(gene %in% gtex_cortex_signif),
+            egene_in_gtex_fraction = round((sum(gene %in% gtex_cortex_signif))/n(), 4)) %&gt;% 
+  ggplot(aes(x=factor(class, levels = c(&quot;class1&quot;, &quot;class4&quot;, &quot;class2&quot;, &quot;class3&quot;)), y=egene_in_gtex_fraction)) + 
+  geom_boxplot(outlier.shape = NA, aes(color=class), linewidth=0.4) + 
+  geom_point(aes(group=source, color=source), position = position_jitter(width = 0.2, height = 0), size=0.5) + 
+  xlab(&quot;eGene class (see note)&quot;) + 
+  ylab(&quot;Fraction of eGenes in GTEx&quot;) + 
+  theme_light() +  
+  scale_color_manual(values=c(manual_palette_coarse, class_colors)) + theme(legend.position=&quot;none&quot;) </code></pre>
+<pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
+`.groups` argument.</code></pre>
+<p><img src="figure/figure3.Rmd/unnamed-chunk-52-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-52-1">
+Past versions of unnamed-chunk-52-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-52-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bumans/organoid_oxygen_eqtl/blob/f3578711cc3b3a960a456417cbbfe5965c05a55a/docs/figure/figure3.Rmd/unnamed-chunk-52-1.png" target="_blank">f357871</a>
+</td>
+<td>
+Ben Umans
+</td>
+<td>
+2025-02-24
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/bumans/organoid_oxygen_eqtl/blob/f0eaf05032fddf90549dcb3c3274e965ceb16048/docs/figure/figure3.Rmd/unnamed-chunk-52-1.png" target="_blank">f0eaf05</a>
 </td>
 <td>
 Ben Umans
@@ -2398,44 +3667,7 @@ p2 &lt;- mash_by_condition_output_coarse %&gt;%
 
 p2 + geom_point(aes(x=class, y=egene/5),  data = d2, shape=8, size=0.2) +
   scale_y_continuous(name = &quot;eGenes per cell type&quot;, sec.axis = sec_axis(~ . *5, name=&quot;Total eQTLs&quot;)) </code></pre>
-<p><img src="figure/figure3.Rmd/unnamed-chunk-50-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-50-1">
-Past versions of unnamed-chunk-50-1.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-50-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/bumans/organoid_oxygen_eqtl/blob/f3578711cc3b3a960a456417cbbfe5965c05a55a/docs/figure/figure3.Rmd/unnamed-chunk-50-1.png" target="_blank">f357871</a>
-</td>
-<td>
-Ben Umans
-</td>
-<td>
-2025-02-24
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<p><img src="figure/figure3.Rmd/unnamed-chunk-59-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>What fraction of each of these categories are in GTEx?</p>
 <pre class="r"><code>mash_by_condition_output_coarse %&gt;% 
   filter(sig_anywhere) %&gt;% 
@@ -2458,13 +3690,13 @@ Ben Umans
   scale_color_manual(values=c(manual_palette_coarse, class_colors)) + theme(legend.position=&quot;none&quot;) </code></pre>
 <pre><code>`summarise()` has grouped output by &#39;source&#39;. You can override using the
 `.groups` argument.</code></pre>
-<p><img src="figure/figure3.Rmd/unnamed-chunk-51-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/figure3.Rmd/unnamed-chunk-60-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-51-1">
-Past versions of unnamed-chunk-51-1.png
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-60-1">
+Past versions of unnamed-chunk-60-1.png
 </button>
 </p>
-<div id="fig-unnamed-chunk-51-1" class="collapse">
+<div id="fig-unnamed-chunk-60-1" class="collapse">
 <div class="table-responsive">
 <table class="table table-condensed table-hover">
 <thead>
@@ -2483,7 +3715,7 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://github.com/bumans/organoid_oxygen_eqtl/blob/f3578711cc3b3a960a456417cbbfe5965c05a55a/docs/figure/figure3.Rmd/unnamed-chunk-51-1.png" target="_blank">f357871</a>
+<a href="https://github.com/bumans/organoid_oxygen_eqtl/blob/f3578711cc3b3a960a456417cbbfe5965c05a55a/docs/figure/figure3.Rmd/unnamed-chunk-60-1.png" target="_blank">f357871</a>
 </td>
 <td>
 Ben Umans
@@ -2563,7 +3795,7 @@ Number of edges: 6947030
 Running Louvain algorithm...
 Maximum modularity in 10 random starts: 0.6973
 Number of communities: 258
-Elapsed time: 97 seconds</code></pre>
+Elapsed time: 94 seconds</code></pre>
 <pre><code>2 singletons identified. 256 final clusters.</code></pre>
 <pre class="r"><code>subset_seurat$pseudocell &lt;- paste0(subset_seurat$splitkey, &quot;_&quot;, subset_seurat$seurat_clusters)</code></pre>
 <p>Then, obtain pseudobulk data from the pseudocells.</p>
@@ -2687,44 +3919,7 @@ pheatmap(sub_samp_ordered, col = colorRampPalette(rev(brewer.pal(11, &quot;Spect
          annotation_colors = annoCol,
          cluster_rows = FALSE, cluster_cols = FALSE
          )</code></pre>
-<p><img src="figure/figure3.Rmd/unnamed-chunk-60-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-60-1">
-Past versions of unnamed-chunk-60-1.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-60-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/bumans/organoid_oxygen_eqtl/blob/f3578711cc3b3a960a456417cbbfe5965c05a55a/docs/figure/figure3.Rmd/unnamed-chunk-60-1.png" target="_blank">f357871</a>
-</td>
-<td>
-Ben Umans
-</td>
-<td>
-2025-02-24
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<p><img src="figure/figure3.Rmd/unnamed-chunk-69-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 <div id="topic-model-de" class="section level3">
 <h3>Topic model DE</h3>
@@ -2759,24 +3954,24 @@ hypoxia_points &lt;- plot_data[which(plot_data$mark %in% c(&quot;black&quot;, &q
 highlight_points &lt;- plot_data[which(plot_data$mark %in% c(&quot;red&quot;)),]
 
 ggplot(data=hypoxia_points, aes(x=logfc, y=z, color=mark,  label=rownames(hypoxia_points)) ) + 
-  geom_point( alpha=0.5)  +
+  geom_point( alpha=0.5, size=0.2)  +
   scale_color_identity() + 
   scale_y_continuous(trans = &quot;sqrt&quot;) + theme_light() +
-  geom_point(data=highlight_points, aes(x=logfc, y=z, color=mark, label=rownames(highlight_points))) + 
-  geom_text_repel(data = highlight_points, aes(x=logfc, y=z, color=mark, label=rownames(highlight_points)), color=&quot;black&quot;) + 
+  geom_point(data=highlight_points, aes(x=logfc, y=z, color=mark, label=rownames(highlight_points)), size=0.2) + 
+  geom_text_repel(data = highlight_points, aes(x=logfc, y=z, color=mark, label=rownames(highlight_points)), size=1.8, color=&quot;black&quot;) + 
   ggtitle(&quot;topic 7&quot;)</code></pre>
 <pre><code>Warning in geom_point(data = highlight_points, aes(x = logfc, y = z, color =
 mark, : Ignoring unknown aesthetics: label</code></pre>
 <pre><code>Warning: Removed 208 rows containing missing values (`geom_point()`).</code></pre>
-<pre><code>Warning: ggrepel: 48 unlabeled data points (too many overlaps). Consider
+<pre><code>Warning: ggrepel: 19 unlabeled data points (too many overlaps). Consider
 increasing max.overlaps</code></pre>
-<p><img src="figure/figure3.Rmd/unnamed-chunk-63-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/figure3.Rmd/unnamed-chunk-72-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-63-1">
-Past versions of unnamed-chunk-63-1.png
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-72-1">
+Past versions of unnamed-chunk-72-1.png
 </button>
 </p>
-<div id="fig-unnamed-chunk-63-1" class="collapse">
+<div id="fig-unnamed-chunk-72-1" class="collapse">
 <div class="table-responsive">
 <table class="table table-condensed table-hover">
 <thead>
@@ -2795,24 +3990,24 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://github.com/bumans/organoid_oxygen_eqtl/blob/f3578711cc3b3a960a456417cbbfe5965c05a55a/docs/figure/figure3.Rmd/unnamed-chunk-63-1.png" target="_blank">f357871</a>
+<a href="https://github.com/bumans/organoid_oxygen_eqtl/blob/d3c21816ed24d3a21df142816a5bfcca4805f225/docs/figure/figure3.Rmd/unnamed-chunk-72-1.png" target="_blank">d3c2181</a>
+</td>
+<td>
+Ben Umans
+</td>
+<td>
+2025-02-25
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/bumans/organoid_oxygen_eqtl/blob/f3578711cc3b3a960a456417cbbfe5965c05a55a/docs/figure/figure3.Rmd/unnamed-chunk-72-1.png" target="_blank">f357871</a>
 </td>
 <td>
 Ben Umans
 </td>
 <td>
 2025-02-24
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/bumans/organoid_oxygen_eqtl/blob/f0eaf05032fddf90549dcb3c3274e965ceb16048/docs/figure/figure3.Rmd/unnamed-chunk-63-1.png" target="_blank">f0eaf05</a>
-</td>
-<td>
-Ben Umans
-</td>
-<td>
-2024-09-05
 </td>
 </tr>
 </tbody>
@@ -2830,21 +4025,20 @@ plot_points &lt;- plot_data[which(plot_data$mark %in% c(&quot;black&quot;, &quot
 highlight_points &lt;- plot_data[which(plot_data$mark %in% c(&quot;red&quot;)),]
 
 ggplot(data=plot_points %&gt;% filter(z&lt;300), aes(x=logfc, y=z, color=mark,  label=rownames(plot_points %&gt;% filter(z&lt;300))) ) + 
-  geom_point( alpha=0.5)  + 
+  geom_point( alpha=0.5, size=0.2)  + 
   scale_color_identity()  + 
   theme_light() + 
-  geom_point(data=highlight_points, aes(x=logfc, y=z, color=mark, label=rownames(highlight_points))) + geom_text_repel(data = highlight_points, aes(x=logfc, y=z, color=mark, label=rownames(highlight_points)), color=&quot;black&quot;)   + 
-  scale_y_continuous(trans = &quot;sqrt&quot;) +
+  geom_point(data=highlight_points, aes(x=logfc, y=z, color=mark, label=rownames(highlight_points)), size=0.2) + geom_text_repel(data = highlight_points, aes(x=logfc, y=z, color=mark, label=rownames(highlight_points)), color=&quot;black&quot;, size=1.8)   + scale_y_continuous(trans = &quot;sqrt&quot;) +
   ggtitle(&quot;topic 4&quot;)</code></pre>
 <pre><code>Warning in geom_point(data = highlight_points, aes(x = logfc, y = z, color =
 mark, : Ignoring unknown aesthetics: label</code></pre>
-<p><img src="figure/figure3.Rmd/unnamed-chunk-64-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/figure3.Rmd/unnamed-chunk-73-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-64-1">
-Past versions of unnamed-chunk-64-1.png
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-73-1">
+Past versions of unnamed-chunk-73-1.png
 </button>
 </p>
-<div id="fig-unnamed-chunk-64-1" class="collapse">
+<div id="fig-unnamed-chunk-73-1" class="collapse">
 <div class="table-responsive">
 <table class="table table-condensed table-hover">
 <thead>
@@ -2863,13 +4057,13 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://github.com/bumans/organoid_oxygen_eqtl/blob/f3578711cc3b3a960a456417cbbfe5965c05a55a/docs/figure/figure3.Rmd/unnamed-chunk-64-1.png" target="_blank">f357871</a>
+<a href="https://github.com/bumans/organoid_oxygen_eqtl/blob/d3c21816ed24d3a21df142816a5bfcca4805f225/docs/figure/figure3.Rmd/unnamed-chunk-73-1.png" target="_blank">d3c2181</a>
 </td>
 <td>
 Ben Umans
 </td>
 <td>
-2025-02-24
+2025-02-25
 </td>
 </tr>
 </tbody>
@@ -2886,23 +4080,23 @@ hem_points &lt;- plot_data_hem[which(plot_data_hem$mark %in% c(&quot;black&quot;
 highlight_points &lt;- plot_data_hem[which(plot_data_hem$mark %in% c(&quot;red&quot;)),]
 
 ggplot(data=hem_points, aes(x=logfc, y=z, color=mark,  label=rownames(hem_points)) ) + 
-  geom_point( alpha=0.5)  + 
+  geom_point( alpha=0.5, size=0.2)  + 
   scale_color_identity() + 
   scale_y_continuous(trans = &quot;sqrt&quot;) + 
   theme_light() +  
-  geom_point(data=highlight_points, aes(x=logfc, y=z, color=mark, label=rownames(highlight_points))) + 
-  geom_text_repel(data = highlight_points, aes(x=logfc, y=z, color=mark, label=rownames(highlight_points)), color=&quot;black&quot;) + 
+  geom_point(data=highlight_points, aes(x=logfc, y=z, color=mark, label=rownames(highlight_points)), size=0.2) + 
+  geom_text_repel(data = highlight_points, aes(x=logfc, y=z, color=mark, label=rownames(highlight_points)), size=1.8,  color=&quot;black&quot;) + 
   ggtitle(&quot;topic 3&quot;)</code></pre>
 <pre><code>Warning in geom_point(data = highlight_points, aes(x = logfc, y = z, color =
 mark, : Ignoring unknown aesthetics: label</code></pre>
 <pre><code>Warning: Removed 343 rows containing missing values (`geom_point()`).</code></pre>
-<p><img src="figure/figure3.Rmd/unnamed-chunk-65-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/figure3.Rmd/unnamed-chunk-74-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-65-1">
-Past versions of unnamed-chunk-65-1.png
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-74-1">
+Past versions of unnamed-chunk-74-1.png
 </button>
 </p>
-<div id="fig-unnamed-chunk-65-1" class="collapse">
+<div id="fig-unnamed-chunk-74-1" class="collapse">
 <div class="table-responsive">
 <table class="table table-condensed table-hover">
 <thead>
@@ -2921,24 +4115,24 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://github.com/bumans/organoid_oxygen_eqtl/blob/f3578711cc3b3a960a456417cbbfe5965c05a55a/docs/figure/figure3.Rmd/unnamed-chunk-65-1.png" target="_blank">f357871</a>
+<a href="https://github.com/bumans/organoid_oxygen_eqtl/blob/d3c21816ed24d3a21df142816a5bfcca4805f225/docs/figure/figure3.Rmd/unnamed-chunk-74-1.png" target="_blank">d3c2181</a>
+</td>
+<td>
+Ben Umans
+</td>
+<td>
+2025-02-25
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/bumans/organoid_oxygen_eqtl/blob/f3578711cc3b3a960a456417cbbfe5965c05a55a/docs/figure/figure3.Rmd/unnamed-chunk-74-1.png" target="_blank">f357871</a>
 </td>
 <td>
 Ben Umans
 </td>
 <td>
 2025-02-24
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/bumans/organoid_oxygen_eqtl/blob/f0eaf05032fddf90549dcb3c3274e965ceb16048/docs/figure/figure3.Rmd/unnamed-chunk-65-1.png" target="_blank">f0eaf05</a>
-</td>
-<td>
-Ben Umans
-</td>
-<td>
-2024-09-05
 </td>
 </tr>
 </tbody>
@@ -3086,60 +4280,100 @@ dbl (15): k1, k2, k3, k4, k5, k6, k7, k8, k9, k10, k11, k12, k13, k14, k15
 
 beta_topic_corrs_matrix &lt;- cor(dplyr::select(crm_betas_loadings, -c(PSEUDOCELL, paste0(&quot;k&quot;, seq(15)))),
                         dplyr::select(crm_betas_loadings, paste0(&quot;k&quot;, seq(15))))</code></pre>
+<p>Export as a table for supplement:</p>
+<pre class="r"><code>data.frame(beta_topic_corrs_matrix) %&gt;% rownames_to_column(var=&quot;Gene-SNP&quot;) %&gt;%  write_csv(file = &quot;docs/STable_CRM.csv&quot;)</code></pre>
 <p>How many of these topic 7-interacting QTLs are not detected as
 dynamic in the static analysis?</p>
+<pre class="r"><code>beta_topic_corrs_p &lt;- apply(dplyr::select(crm_betas_loadings, -c(PSEUDOCELL, paste0(&quot;k&quot;, seq(15)))) %&gt;% as.matrix(), MARGIN = 2, FUN = function(x) cor.test(x, crm_betas_loadings$k7)$p.value )
+
+beta_topic_corrs_matrix %&gt;% as.data.frame() %&gt;% 
+  dplyr::select(k7) %&gt;% 
+  bind_cols(pval=beta_topic_corrs_p) %&gt;% 
+  rownames_to_column(var = &quot;gene_snp&quot;) %&gt;%  
+   separate(gene_snp, into = c(&quot;genename&quot;, &quot;snp&quot;), sep = &quot;_&quot;) %&gt;% 
+    mutate(snp_short = str_sub(snp, end = -5)) %&gt;% 
+  filter(pval &lt; (0.05/289)) %&gt;% dim()</code></pre>
+<pre><code>[1] 218   5</code></pre>
+<pre class="r"><code># Many of these have small correlations with k7, which are nonetheless statistically significant.  How many if we threshold to correlation coefficient &gt; 0.1?
+beta_topic_corrs_matrix %&gt;% as.data.frame() %&gt;% 
+  dplyr::select(k7) %&gt;% 
+  bind_cols(pval=beta_topic_corrs_p) %&gt;% 
+  rownames_to_column(var = &quot;gene_snp&quot;) %&gt;%  
+   separate(gene_snp, into = c(&quot;genename&quot;, &quot;snp&quot;), sep = &quot;_&quot;) %&gt;% 
+    mutate(snp_short = str_sub(snp, end = -5)) %&gt;% 
+  filter(pval &lt; (0.05/289)) %&gt;% filter(k7&gt;0.1) %&gt;% dim()</code></pre>
+<pre><code>[1] 58  5</code></pre>
+<pre class="r"><code>k7_egenes &lt;- beta_topic_corrs_matrix %&gt;% as.data.frame() %&gt;% 
+  dplyr::select(k7) %&gt;% 
+  bind_cols(pval=beta_topic_corrs_p) %&gt;% 
+  rownames_to_column(var = &quot;gene_snp&quot;) %&gt;%  
+   separate(gene_snp, into = c(&quot;genename&quot;, &quot;snp&quot;), sep = &quot;_&quot;) %&gt;% 
+    mutate(snp_short = str_sub(snp, end = -5)) %&gt;% 
+  filter(pval &lt; (0.05/289)) %&gt;% filter(k7&gt;0.1) %&gt;% pull(genename)</code></pre>
+<p>How many of these are more strongly correlated with k7 than any other
+topic?</p>
+<pre class="r"><code>beta_topic_corrs_matrix %&gt;% as.data.frame() %&gt;% 
+  bind_cols(pval=beta_topic_corrs_p) %&gt;% 
+  rownames_to_column(var = &quot;gene_snp&quot;) %&gt;%  
+   separate(gene_snp, into = c(&quot;genename&quot;, &quot;snp&quot;), sep = &quot;_&quot;) %&gt;% 
+    mutate(snp_short = str_sub(snp, end = -5)) %&gt;% 
+  mutate(max=pmax(abs(k1), abs(k2), abs(k3), abs(k4), abs(k5), abs(k6), abs(k7), abs(k8), abs(k9), abs(k10), abs(k11), abs(k12), abs(k13), abs(k14), abs(k15))) %&gt;% 
+  filter(pval &lt; (0.05/289)) %&gt;% arrange(desc(abs(k7))) %&gt;% 
+  filter(abs(k7)==max)</code></pre>
+<pre><code>  genename             snp         k1         k2        k3          k4
+1   WDR45B 17:82613559:C:G -0.4762630 -0.2143771 0.3363079  0.21655061
+2   CRABP2 1:156697607:C:T -0.4175295  0.2197124 0.1105780 -0.04775569
+          k5         k6        k7         k8         k9         k10        k11
+1 -0.1933042  0.3782810 0.6479771 -0.5483449 -0.1040422 -0.04133576 0.28243572
+2 -0.1547579 -0.2154844 0.4939605 -0.4480681 -0.0995284 -0.05703482 0.02576542
+         k12       k13         k14       k15 pval   snp_short       max
+1 -0.1203454 0.2600357 -0.09620776 0.2044657    0 17:82613559 0.6479771
+2  0.1808643 0.3236386 -0.35874951 0.1856549    0 1:156697607 0.4939605</code></pre>
+<p>Just two, WDR45B and CRABP2. If we zoom out a little…</p>
+<pre class="r"><code>beta_topic_corrs_matrix %&gt;% as.data.frame() %&gt;% 
+  bind_cols(pval=beta_topic_corrs_p) %&gt;% 
+  rownames_to_column(var = &quot;gene_snp&quot;) %&gt;%  
+   separate(gene_snp, into = c(&quot;genename&quot;, &quot;snp&quot;), sep = &quot;_&quot;) %&gt;% 
+    mutate(snp_short = str_sub(snp, end = -5)) %&gt;% 
+  mutate(max=pmax(abs(k1), abs(k2), abs(k3), abs(k4), abs(k5), abs(k6), abs(k7), abs(k8), abs(k9), abs(k10), abs(k11), abs(k12), abs(k13), abs(k14), abs(k15))) %&gt;% 
+  filter(pval &lt; (0.05/289)) %&gt;% arrange(desc(abs(k7))) %&gt;% 
+  head()</code></pre>
+<pre><code>  genename              snp          k1          k2           k3          k4
+1   WDR45B  17:82613559:C:G -0.47626304 -0.21437707  0.336307883  0.21655061
+2     CD44  11:35097776:C:A -0.03095601 -0.10633054  0.181397294  0.07420194
+3   CRABP2  1:156697607:C:T -0.41752949  0.21971242  0.110578011 -0.04775569
+4    ABCA1  9:104975539:T:C  0.02363156  0.01730518 -0.036319954  0.04465866
+5    HCFC2 12:104037468:C:T  0.30490295  0.10961275 -0.112622905  0.09393458
+6    VDAC1  5:134030279:C:T -0.30201833 -0.19674300  0.007900322  0.01729707
+           k5          k6         k7         k8         k9         k10
+1 -0.19330418  0.37828103  0.6479771 -0.5483449 -0.1040422 -0.04133576
+2 -0.11183809  0.37974606  0.5271757 -0.2634827 -0.3312000 -0.29568399
+3 -0.15475792 -0.21548442  0.4939605 -0.4480681 -0.0995284 -0.05703482
+4 -0.02363953  0.25729112  0.3919490 -0.4257625 -0.4764115 -0.19130900
+5 -0.15339217  0.08438449  0.3618857  0.5985740  0.2470685 -0.24524471
+6  0.23850409 -0.12878962 -0.3370507 -0.4171981 -0.1934361  0.18743640
+          k11         k12         k13         k14        k15          pval
+1  0.28243572 -0.12034538  0.26003568 -0.09620776  0.2044657  0.000000e+00
+2  0.02221147 -0.40962609  0.38746240 -0.31516744  0.7224227  0.000000e+00
+3  0.02576542  0.18086434  0.32363861 -0.35874951  0.1856549  0.000000e+00
+4  0.18072025 -0.02815067  0.09773105 -0.52962342  0.7705794  0.000000e+00
+5 -0.05024137 -0.59885445 -0.04588567  0.25086381 -0.3864752  0.000000e+00
+6 -0.20719674  0.80475236 -0.20249931 -0.05215766  0.1284525 1.093908e-282
+     snp_short       max
+1  17:82613559 0.6479771
+2  11:35097776 0.7224227
+3  1:156697607 0.4939605
+4  9:104975539 0.7705794
+5 12:104037468 0.5988545
+6  5:134030279 0.8047524</code></pre>
+<p>We see additional genes (e.g., CD44) that are highly correlated with
+topic 7 but also correlated with other topics as well.</p>
+<p>Now to compare with the</p>
 <pre class="r"><code>mash_by_condition_output &lt;- readRDS(file = &quot;/project2/gilad/umans/oxygen_eqtl/output/combined_mash-by-condition_EE_fine_reharmonized_newmash_032024.rds&quot;) %&gt;% 
   ungroup() 
 
-hypoxia_egenes &lt;- mash_by_condition_output %&gt;% 
-  filter(sig_anywhere) %&gt;% 
-  filter(stim1pct_lfsr &lt; 0.1 &amp; !allsharing ) %&gt;% 
-  pull(gene) %&gt;% unique()
-
- a &lt;- mash_by_condition_output %&gt;% 
-  filter(sig_anywhere) %&gt;% 
-  filter(stim1pct_lfsr &lt; 0.1 &amp; stim21pct_lfsr &gt; 0.1 &amp; control10_lfsr &gt; 0.1) %&gt;% 
-   filter(!allsharing) %&gt;% 
-  pull(gene) %&gt;% unique() 
- 
- b &lt;- mash_by_condition_output %&gt;% 
-  filter(sig_anywhere) %&gt;% 
-  filter(stim1pct_lfsr &gt; 0.1 &amp; stim21pct_lfsr &lt; 0.1 &amp; control10_lfsr &lt; 0.1) %&gt;% 
-   filter(!allsharing) %&gt;% 
-  pull(gene) %&gt;% unique()
-
-d &lt;-  unique(c(a,b))
- 
-beta_topic_corrs_p &lt;- apply(dplyr::select(crm_betas_loadings, -c(PSEUDOCELL, paste0(&quot;k&quot;, seq(15)))) %&gt;% as.matrix(), MARGIN = 2, FUN = function(x) cor.test(x, crm_betas_loadings$k7)$p.value )
-
-k7_egenes &lt;- beta_topic_corrs_matrix %&gt;% as.data.frame() %&gt;% 
-  dplyr::select(k7) %&gt;% 
-  bind_cols(beta_topic_corrs_p) %&gt;% 
-  rownames_to_column(var = &quot;gene_snp&quot;) %&gt;%  
-   separate(gene_snp, into = c(&quot;genename&quot;, &quot;snp&quot;), sep = &quot;_&quot;) %&gt;% 
-    mutate(snp_short = str_sub(snp, end = -5)) %&gt;% 
-  filter(`...2` &lt; (0.05/289)) %&gt;% pull(genename)</code></pre>
-<pre><code>New names:
-• `` -&gt; `...2`</code></pre>
-<pre class="r"><code># As a side note, many of these have small correlations with k7, which are nonetheless statistically significant.  How many if we threshold to correlation coefficient &gt; 0.2?
-beta_topic_corrs_matrix %&gt;% as.data.frame() %&gt;% 
-  dplyr::select(k7) %&gt;% 
-  bind_cols(beta_topic_corrs_p) %&gt;% 
-  rownames_to_column(var = &quot;gene_snp&quot;) %&gt;%  
-   separate(gene_snp, into = c(&quot;genename&quot;, &quot;snp&quot;), sep = &quot;_&quot;) %&gt;% 
-    mutate(snp_short = str_sub(snp, end = -5)) %&gt;% 
-  filter(`...2` &lt; (0.05/289)) %&gt;% filter(k7&gt;0.2) %&gt;% dim()</code></pre>
-<pre><code>New names:
-• `` -&gt; `...2`</code></pre>
-<pre><code>[1] 20  5</code></pre>
-<pre class="r"><code># this yields 20 genes
-
-length(setdiff(k7_egenes, d))</code></pre>
-<pre><code>[1] 210</code></pre>
-<pre class="r"><code># setdiff(k7_egenes, d)</code></pre>
-<p>Specifically looking at hypoxia-specific effects, there are only</p>
-<pre class="r"><code>mash_by_condition_output %&gt;% 
-  filter(sig_anywhere) %&gt;% 
+mash_by_condition_output %&gt;% 
+  filter(stim1pct_lfsr &lt; 0.1 | stim21pct_lfsr &lt; 0.1 | control10_lfsr &lt; 0.1) %&gt;% 
     group_by(source) %&gt;% 
  mutate(class=case_when(allsharing ~ &quot;allsharing&quot;,
                         hypoxia_normoxia_shared &amp; sharing_contexts==1 ~ &quot;hyperoxia_specific&quot;,
@@ -3148,21 +4382,26 @@ length(setdiff(k7_egenes, d))</code></pre>
                         sharing_contexts==2 ~ &quot;partial_shared&quot;, 
                         sharing_contexts==0 ~ &quot;alldiff&quot;
                         )) %&gt;% 
-  filter(class== &quot;hypoxia_specific&quot;) %&gt;% 
+  filter(class== &quot;hypoxia_specific&quot;) %&gt;%
   ungroup() %&gt;% 
   summarize(sum(gene %in% k7_egenes))</code></pre>
 <pre><code># A tibble: 1 × 1
   `sum(gene %in% k7_egenes)`
                        &lt;int&gt;
-1                          4</code></pre>
-<p>4 eGenes detected in our pseudobulk analysis as hypoxia-specific
-which are also found in the topic analysis, leaving 214 undetected.</p>
-<p>Moreover generally, 150 topic 7 eGenes are not eGenes at all in our
+1                          2</code></pre>
+<p>2 eGenes detected in our pseudobulk analysis as hypoxia-specific
+which are also found in the topic analysis, leaving 56 undetected.</p>
+<p>Moreover generally, 38 topic 7 eGenes are not eGenes at all in our
 pseudobulk analysis.</p>
 <pre class="r"><code>length(setdiff(k7_egenes, mash_by_condition_output %&gt;% 
   filter(sig_anywhere) %&gt;% 
   pull(gene) %&gt;% unique() ))</code></pre>
-<pre><code>[1] 150</code></pre>
+<pre><code>[1] 38</code></pre>
+<p>Meaning 20 are eGenes in our pseudobulk analysis:</p>
+<pre class="r"><code>length(intersect(k7_egenes, mash_by_condition_output %&gt;% 
+  filter(stim1pct_lfsr &lt; 0.1 | stim21pct_lfsr &lt; 0.1 | control10_lfsr &lt; 0.1) %&gt;% 
+  pull(gene) %&gt;% unique() ))</code></pre>
+<pre><code>[1] 20</code></pre>
 <pre class="r"><code>pseudocell_exp_loc &lt;- &quot;/project2/gilad/umans/oxygen_eqtl/output/topics_pseudocell_counts_nocontrol21_normalized.tsv&quot;
 plink_prefix &lt;- &quot;/project2/gilad/umans/oxygen_eqtl/data/MatrixEQTL/snps/YRI_genotypes_maf10hwee-6_full/yri_maf0.1_all.hg38&quot;
 g &lt;- &quot;WDR45B&quot;
@@ -3194,7 +4433,7 @@ ggplot(pseudocell_df, aes(x=k7, y=WDR45B, color=genotype)) +
   ylab(&quot;WDR45B Expression&quot;) +
   labs(color=v) </code></pre>
 <pre><code>`geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
-<p><img src="figure/figure3.Rmd/unnamed-chunk-73-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/figure3.Rmd/unnamed-chunk-86-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>Topic 15. How many of the top correlated eGenes are eGenes in the
 individual cell types?</p>
 <pre class="r"><code>beta_topic_corrs_matrix %&gt;% as.data.frame() %&gt;% arrange(desc(abs(k15))) %&gt;% head(n=20) %&gt;% filter(k15&gt;0.6)</code></pre>
@@ -3283,7 +4522,7 @@ ggplot(pseudocell_df2, aes(x=k15, y=ABCA1, color=genotype)) +
   ylab(&quot;ABCA1 Expression&quot;) +
   labs(color=v) </code></pre>
 <pre><code>`geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
-<p><img src="figure/figure3.Rmd/unnamed-chunk-75-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/figure3.Rmd/unnamed-chunk-88-1.png" width="672" style="display: block; margin: auto;" /></p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -3310,14 +4549,17 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
- [1] fastTopics_0.6-142 ggblend_0.1.0      vroom_1.6.4        gdata_2.19.0      
- [5] snpStats_1.46.0    Matrix_1.6-3       survival_3.3-1     qvalue_2.28.0     
- [9] MatrixEQTL_2.3     ggrepel_0.9.4      udr_0.3-153        mashr_0.2.79      
-[13] ashr_2.2-63        viridis_0.6.2      viridisLite_0.4.2  magrittr_2.0.3    
-[17] pheatmap_1.0.12    RColorBrewer_1.1-3 pals_1.8           lubridate_1.9.3   
-[21] forcats_1.0.0      stringr_1.5.0      dplyr_1.1.4        purrr_1.0.2       
-[25] readr_2.1.4        tidyr_1.3.0        tibble_3.2.1       ggplot2_3.4.4     
-[29] tidyverse_2.0.0    SeuratObject_4.1.4 Seurat_4.4.0       workflowr_1.7.0   
+ [1] fastTopics_0.6-142   ggblend_0.1.0        vroom_1.6.4         
+ [4] gdata_2.19.0         snpStats_1.46.0      Matrix_1.6-3        
+ [7] survival_3.3-1       qvalue_2.28.0        MatrixEQTL_2.3      
+[10] ggrepel_0.9.4        udr_0.3-153          mashr_0.2.79        
+[13] ashr_2.2-63          viridis_0.6.2        viridisLite_0.4.2   
+[16] ggpointdensity_0.1.0 magrittr_2.0.3       pheatmap_1.0.12     
+[19] RColorBrewer_1.1-3   pals_1.8             lubridate_1.9.3     
+[22] forcats_1.0.0        stringr_1.5.0        dplyr_1.1.4         
+[25] purrr_1.0.2          readr_2.1.4          tidyr_1.3.0         
+[28] tibble_3.2.1         ggplot2_3.4.4        tidyverse_2.0.0     
+[31] SeuratObject_4.1.4   Seurat_4.4.0         workflowr_1.7.0     
 
 loaded via a namespace (and not attached):
   [1] utf8_1.2.4             spatstat.explore_3.0-6 reticulate_1.34.0     
