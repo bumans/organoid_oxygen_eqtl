@@ -24,7 +24,6 @@ rm(data.temp)
 # Use exchangeable zscore model by setting alpha = 1.
 data.random = mash_set_data(input$random.b, input$random.s, V=Vhat, alpha = 0)
 data.strong = mash_set_data(input$strong.b, input$strong.s, V=Vhat, alpha = 0)
-# why do we use strong.b and not strong.z if alpha=1?
 U.c = cov_canonical(data.random)
 
 V.em = mash_estimate_corr_em(data.random, Ulist = c(U.c), details = TRUE)
