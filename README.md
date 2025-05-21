@@ -1,4 +1,4 @@
-Code for reproducing results and figures in brain organoid eQTL [manuscript](https://www.biorxiv.org/content/10.1101/2024.09.03.611030v1).
+Code for reproducing results and figures in "Oxygen-induced stress reveals context-specific gene regulatory effects in human brain organoids" (Genome Research; doi: 10.1101/gr.280219.124).
 
 A [workflowr][] project.
 
